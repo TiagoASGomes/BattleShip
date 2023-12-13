@@ -1,0 +1,16 @@
+Criar cliente que pode mandar comandos para o servidor e receber os estado do jogo na consola
+Criar servidor que tem uma lista de jogos a correr se nao houver nenhum e um player entrar cria-se um e espera-se por outro
+Depois entrarem vão poder escolher uma personagem e um mapa
+Cada personagem tem navios com formas diferentese mapas tem formas diferentes
+Depois de escolher as personagems podem colocar os navios
+Verificar se estão dentre do espaço, se nao estao em cima uns dos outros, deixar colocar, rodar os navios e trocar de posição os navios
+Depois de mandaram o comando ready o jogo começa
+Selecionar um player random para começar, ele diz uma posição e o jogo responde a ver se acertou ou não
+Verificar se um dos jogadores anda tem navios vivos se nao acabar o jogo
+
+Cada jogador pode ter duas listas uma com o seu mapa outra com o mapa onde disparou
+Posições correspondem ao index da lista
+Navios reprentados cada um por uma letra diferente paredes por | e _ mar por ~
+
+
+
