@@ -1,8 +1,5 @@
 package Battleship;
 
-import Messages.Messages;
-import commands.Command;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -76,6 +73,18 @@ public class Battleship implements Runnable {
                 this.out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+
+        }
+        public void generateMap(String map){
+
+            String [] squareMapSpaces = map.split("\n");
+
+            List<List<String>> squareMap = new ArrayList<>();
+            for (int i = 0; i < squareMapSpaces.length; i++) {
+                List<String> temp = new ArrayList<>();
+                Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
+                squareMap.add(temp);
             }
 
         }
