@@ -1,5 +1,10 @@
 package Battleship;
 
+import Battleship.Character.Character;
+import Battleship.Character.CharacterFactory;
+import Battleship.Character.CharacterType;
+import Messages.Messages;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,17 +58,43 @@ public class Battleship implements Runnable {
         private PrintWriter out;
         private Socket socket;
         private BufferedReader in;
+        private String message;
+
+        private Character character;
 
 
         public PlayerHandler(Socket socket) {
             this.socket = socket;
             try {
                 this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                this.out = new PrintWriter(socket.getOutputStream());
+                this.out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
+        }
+
+        public void sendMessage(String message) {
+            out.println(message);
+        }
+
+        public void chooseCharacter() throws IOException {
+
+            sendMessage(Messages.CHOOSE_CHARACTER);
+            String playerChoice = in.readLine();
+            switch (playerChoice) {
+                case "1":
+                    this.character = CharacterFactory.create(CharacterType.ONE);
+                    break;
+                case "2":
+                    this.character = CharacterFactory.create(CharacterType.TWO);
+                    break;
+                default:
+                    sendMessage(Messages.NO_SUCH_COMMAND);
+                    chooseCharacter();
+
+
+            }
         }
 
 
@@ -72,6 +103,9 @@ public class Battleship implements Runnable {
 
             while (!socket.isClosed()) {
                 try {
+
+                    chooseCharacter();
+
 
                     String line = in.readLine();
 
@@ -87,6 +121,11 @@ public class Battleship implements Runnable {
                     }
                 }
             }
+        }
+
+
+        public String getMessage() {
+            return message;
         }
     }
 
