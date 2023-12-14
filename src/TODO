@@ -12,5 +12,59 @@ Cada jogador pode ter duas listas uma com o seu mapa outra com o mapa onde dispa
 Posições correspondem ao index da lista
 Navios reprentados cada um por uma letra diferente paredes por | e _ mar por ~
 
+Server:
+    Ter lista de jogos a correr com concurrencia (Executor)
+    Criar uma nova instancia de jogo caso um jogador entre e nao exista jogo disponivel
+    Caso exista jogo disponivel colocar la o jogador
+    metodo para remover jogos acabados da lista
 
+Cliente:
+    metodo para enviar o que escreve na consola
+    metodo para receber o que o servidor envia
+    com concurrencia
+
+Battleship:
+    implementa runnable
+    aceita os sockets
+    propriedade se ainda aceita jogadores ou nao
+
+
+
+
+Map:
+    A B C D E F G H I J K L
+  * * * * * * * * * * * * * *
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 1
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 2
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 3
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 4
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 5
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 6
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 7
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 8
+  * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 9
+  * * * * * * * * * * * * * *
+
+Barcos:
+    A A
+
+    B B B
+
+    C C C C
+
+    D D D D D
+
+    A A
+      A A
+
+    A A
+      A
+
+Cada jogador escolhe personagem
+Escolhem o mapa
+Colocar barcos
+
+Player Handler
+Commandos
+Navios
 
