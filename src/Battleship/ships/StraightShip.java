@@ -84,4 +84,12 @@ public abstract class StraightShip implements Ship {
     public boolean isPlaced() {
         return placed;
     }
+
+    public List<ShipPart> getShipParts() {
+        return shipParts;
+    }
+
+    public void removeShip() {
+        placed = false;
+    }
 }

@@ -1,7 +1,8 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
+import Battleship.ships.StraightShip;
+import Battleship.ships.ship_parts.ShipPart;
 import Messages.Messages;
 
 import java.util.List;
@@ -11,22 +12,41 @@ public class PlaceHandler implements CommandHandler {
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler) {
-        List<Ship> shipList = playerHandler.getCharacter().getShipList();
+        List<StraightShip> shipList = playerHandler.getCharacter().getShipList();
         int[] message;
         try {
             message = getMessage(playerHandler.getMessage());
-            checkIfValidPosition(message);
         } catch (NumberFormatException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             return;
         }
         shipList.get(message[0]).setPosition(message[1], message[2]);
+        try {
+            checkIfValidPosition(message, playerHandler, shipList.get(message[0]));
+        } catch (IndexOutOfBoundsException e) {
+            playerHandler.sendMessage("");
+            shipList.get(message[0]).removeShip();
+        }
 
 
     }
 
-    private void checkIfValidPosition(int[] message) {
-        //TODO validar se ja existe navio e se esta dentro do mapa
+    private void checkIfValidPosition(int[] message, Battleship.PlayerHandler playerHandler, StraightShip ship) throws IndexOutOfBoundsException {
+
+        List<List<String>> map = playerHandler.getMyMap();
+        List<ShipPart> shipPositions = ship.getShipParts();
+
+        for (ShipPart shipPart : shipPositions) {
+            int row = shipPart.getRow();
+            int col = shipPart.getCol();
+
+            String position = map.get(row).get(col);
+            if (!position.equals("~")) {
+                throw new IndexOutOfBoundsException();
+            }
+
+        }
+
     }
 
     private int[] getMessage(String message) throws NumberFormatException {
