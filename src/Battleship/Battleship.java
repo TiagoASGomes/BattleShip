@@ -1,5 +1,10 @@
 package Battleship;
 
+import Battleship.Character.Character;
+import Battleship.Character.CharacterFactory;
+import Battleship.Character.CharacterType;
+import Messages.Messages;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -65,6 +70,9 @@ public class Battleship implements Runnable {
         private String message;
 
 
+        private Character character;
+
+
         public PlayerHandler(Socket socket) {
             this.socket = socket;
             ready = false;
@@ -89,6 +97,29 @@ public class Battleship implements Runnable {
 
         }
 
+        public void sendMessage(String message) {
+            out.println(message);
+        }
+
+        public void chooseCharacter() throws IOException {
+
+            sendMessage(Messages.CHOOSE_CHARACTER);
+            String playerChoice = in.readLine();
+            switch (playerChoice) {
+                case "1":
+                    this.character = CharacterFactory.create(CharacterType.ONE);
+                    break;
+                case "2":
+                    this.character = CharacterFactory.create(CharacterType.TWO);
+                    break;
+                default:
+                    sendMessage(Messages.NO_SUCH_COMMAND);
+                    chooseCharacter();
+
+
+            }
+        }
+
 
         @Override
         public void run() {
@@ -96,7 +127,10 @@ public class Battleship implements Runnable {
             while (!socket.isClosed()) {
                 try {
 
+                    chooseCharacter();
                     placeShips();
+
+
 
 
                 } catch (IOException e) {
@@ -104,8 +138,8 @@ public class Battleship implements Runnable {
                     try {
                         socket.close();
                     } catch (IOException ex) {
-                        ex.printStackTrace();
                     }
+                    ex.printStackTrace();
                 }
             }
         }
