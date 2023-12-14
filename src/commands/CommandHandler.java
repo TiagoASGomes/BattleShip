@@ -1,7 +1,9 @@
 package commands;
 
+import Battleship.Battleship;
+
 public interface CommandHandler {
-    void execute(Server server, Server.PlayerHandler playerHandler);
+    void execute(Battleship.PlayerHandler playerHandler);
 }
 
 

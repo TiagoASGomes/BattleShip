@@ -1,5 +1,8 @@
 package Battleship;
 
+import Messages.Messages;
+import commands.Command;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,6 +36,14 @@ public class Battleship implements Runnable {
             }
         }
 
+        while (!player1.isReady() || !player2.isReady()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
     }
 
@@ -50,16 +61,19 @@ public class Battleship implements Runnable {
     public class PlayerHandler implements Runnable {
 
 
-        private PrintWriter out;
-        private Socket socket;
-        private BufferedReader in;
+        private final PrintWriter out;
+        private final Socket socket;
+        private final BufferedReader in;
+        private boolean ready;
+        private String message;
 
 
         public PlayerHandler(Socket socket) {
             this.socket = socket;
+            ready = false;
             try {
                 this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                this.out = new PrintWriter(socket.getOutputStream());
+                this.out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -73,9 +87,7 @@ public class Battleship implements Runnable {
             while (!socket.isClosed()) {
                 try {
 
-                    String line = in.readLine();
-
-                    out.println(line);
+                    placeShips();
 
 
                 } catch (IOException e) {
@@ -87,6 +99,31 @@ public class Battleship implements Runnable {
                     }
                 }
             }
+        }
+
+        private void placeShips() throws IOException {
+            out.println(Messages.SHIP_PLACEMENT);
+            while (!ready) {
+                message = in.readLine();
+                Command command = Command.getCommandFromDescription(message);
+                command.getHandler().execute(this);
+            }
+        }
+
+        public void sendMessage(String message) {
+            out.println(message);
+        }
+
+        public boolean isReady() {
+            return ready;
+        }
+
+        public void setReady() {
+            ready = true;
+        }
+
+        public String getMessage() {
+            return message;
         }
     }
 

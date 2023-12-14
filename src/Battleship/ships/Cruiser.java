@@ -8,12 +8,15 @@ public class Cruiser extends StraightShip {
         super(ShipType.CRUISER.getSIZE(), ShipType.CRUISER);
     }
 
+    @Override
     public void setPosition(int row, int col) {
         if (isRotated) {
             placeVertical(row, col);
+            placed = true;
             return;
         }
         placeHorizontal(row, col);
+        placed = true;
     }
 
     private void placeHorizontal(int row, int col) {
