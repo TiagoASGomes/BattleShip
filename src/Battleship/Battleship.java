@@ -1,10 +1,15 @@
 package Battleship;
 
+import Battleship.Maps.MapType;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -62,6 +67,18 @@ public class Battleship implements Runnable {
                 this.out = new PrintWriter(socket.getOutputStream());
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+
+        }
+        public void generateMap(String map){
+
+            String [] squareMapSpaces = map.split("\n");
+
+            List<List<String>> squareMap = new ArrayList<>();
+            for (int i = 0; i < squareMapSpaces.length; i++) {
+                List<String> temp = new ArrayList<>();
+                Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
+                squareMap.add(temp);
             }
 
         }
