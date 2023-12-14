@@ -17,7 +17,7 @@ public class ReadyHandler implements CommandHandler {
     }
 
     private boolean checkIfShipsPlaced(Battleship.PlayerHandler playerHandler) {
-        List<StraightShip> shipList = playerHandler.getCharacter().getShipList();
+        List<StraightShip> shipList = playerHandler.getCharacter().getPlayerShips();
         for (StraightShip ship : shipList) {
             if (!ship.isPlaced()) {
                 return false;

@@ -2,7 +2,7 @@ package commands;
 
 import Battleship.Battleship;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ShootHandler implements CommandHandler {
 
@@ -10,10 +10,10 @@ public class ShootHandler implements CommandHandler {
     int row;
     char charCol; //y
 
-    ArrayList<Integer> list = new ArrayList<Integer>();
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler) {
+        List<List<String>> map = playerHandler.getMyMap();
         String input = playerHandler.getMessage();
         int col;
         charCol = input.charAt(0);
@@ -21,8 +21,8 @@ public class ShootHandler implements CommandHandler {
 
         row = Integer.parseInt(input);
 
-        list.get(col).get(row);
-        if ((col == 'X' || col == ' ' || col == '*')) {
+        char position = map.get(row).get(col).charAt(0);
+        if ((position == 'X' || position == ' ' || position == '*')) {
             throw new IndexOutOfBoundsException("Row out of bounds");
 
         }

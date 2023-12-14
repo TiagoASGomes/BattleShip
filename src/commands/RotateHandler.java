@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
+import Battleship.ships.StraightShip;
 import Messages.Messages;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public class RotateHandler implements CommandHandler {
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler) {
-        List<Ship> shipList = playerHandler.getCharacter().getShipList();
+        List<StraightShip> shipList = playerHandler.getCharacter().getPlayerShips();
         int boatIndex;
         try {
             boatIndex = getBoatIndex(playerHandler.getMessage());

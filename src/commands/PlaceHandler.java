@@ -12,7 +12,7 @@ public class PlaceHandler implements CommandHandler {
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler) {
-        List<StraightShip> shipList = playerHandler.getCharacter().getShipList();
+        List<StraightShip> shipList = playerHandler.getCharacter().getPlayerShips();
         int[] message;
         try {
             message = getMessage(playerHandler.getMessage());

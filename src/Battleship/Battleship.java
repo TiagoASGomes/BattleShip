@@ -4,12 +4,16 @@ import Battleship.Character.Character;
 import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Messages.Messages;
+import commands.Command;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -69,8 +73,9 @@ public class Battleship implements Runnable {
         private boolean ready;
         private String message;
 
-
         private Character character;
+        private List<List<String>> myMap;
+        private List<List<String>> oppMap;
 
 
         public PlayerHandler(Socket socket) {
@@ -84,22 +89,20 @@ public class Battleship implements Runnable {
             }
 
         }
-        public void generateMap(String map){
 
-            String [] squareMapSpaces = map.split("\n");
+        public void generateMap(String map) {
 
-            List<List<String>> squareMap = new ArrayList<>();
+            String[] squareMapSpaces = map.split("\n");
+
+            myMap = new ArrayList<>();
             for (int i = 0; i < squareMapSpaces.length; i++) {
                 List<String> temp = new ArrayList<>();
                 Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
-                squareMap.add(temp);
+                myMap.add(temp);
             }
 
         }
 
-        public void sendMessage(String message) {
-            out.println(message);
-        }
 
         public void chooseCharacter() throws IOException {
 
@@ -131,15 +134,13 @@ public class Battleship implements Runnable {
                     placeShips();
 
 
-
-
                 } catch (IOException e) {
                     System.out.println("Something went wrong with the server. Connection closing...");
                     try {
                         socket.close();
                     } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
-                    ex.printStackTrace();
                 }
             }
         }
@@ -167,6 +168,14 @@ public class Battleship implements Runnable {
 
         public String getMessage() {
             return message;
+        }
+
+        public Character getCharacter() {
+            return character;
+        }
+
+        public List<List<String>> getMyMap() {
+            return myMap;
         }
     }
 
