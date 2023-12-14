@@ -41,7 +41,9 @@ public class Battleship implements Runnable {
     }
 
     public void acceptPlayer(Socket client) {
-        player2.getSocket();
+        player2 = new PlayerHandler(client);
+        service.submit(player1);
+        service.submit(player2);
     }
 
 
@@ -55,12 +57,15 @@ public class Battleship implements Runnable {
 
         public PlayerHandler(Socket socket) {
             this.socket = socket;
-            this.in = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                this.out = new PrintWriter(socket.getOutputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
         }
 
-        public Socket getSocket() {
-            return socket;
-        }
 
         @Override
         public void run() {
@@ -70,14 +75,9 @@ public class Battleship implements Runnable {
 
                     String line = in.readLine();
 
-                    out.write(line);
-                    out.println();
-                    out.flush();
+                    out.println(line);
 
-                        /*if (line.equals("/quit")) {
-                            socket.close();
-                            System.exit(0);
-                        }*/
+
                 } catch (IOException e) {
                     System.out.println("Something went wrong with the server. Connection closing...");
                     try {
