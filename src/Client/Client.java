@@ -16,6 +16,7 @@ public class Client {
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
         }
+
     }
 
     private void start(String host, int port) throws IOException {
@@ -25,12 +26,21 @@ public class Client {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
         new Thread(new KeyboardHandler(out, socket)).start();
+
         String line;
         while ((line = in.readLine()) != null) {
             System.out.println(line);
         }
-        socket.close();
+
+        close(socket, in, out);
     }
+
+    private void close(Socket socket, BufferedReader in, PrintWriter out) throws IOException {
+        socket.close();
+        in.close();
+        out.close();
+    }
+
 
     private static class KeyboardHandler implements Runnable {
         private final PrintWriter out;
@@ -52,13 +62,19 @@ public class Client {
                     out.println(line);
 
                 } catch (IOException e) {
-                    System.out.println("Something went wrong with the server. Connection closing...");
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    System.out.println(Messages.ERROR);
+                    close();
                 }
+            }
+        }
+
+        private void close() {
+            try {
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }

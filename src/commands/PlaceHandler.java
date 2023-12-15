@@ -16,26 +16,24 @@ public class PlaceHandler implements CommandHandler {
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<Ship> shipList = playerHandler.getCharacter().getPlayerShips();
 
-        int[] message = new int[0];
+        int[] message;
+        Ship ship = null;
         try {
-            message = getMessage(playerHandler.getMessage(), shipList);
-            if (shipList.get(message[0]).isPlaced()) {
-                removeFromMap(shipList.get(message[0]), playerHandler.getMyMap());
+            message = getPlacementPosition(playerHandler.getMessage(), shipList);
+            ship = shipList.get(message[0]);
+            if (ship.isPlaced()) {
+                removeFromMap(ship, playerHandler.getMyMap());
             }
-            shipList.get(message[0]).setPosition(message[1], message[2]);
-            checkIfValidPosition(playerHandler, shipList.get(message[0]));
+            ship.setPosition(message[1], message[2]);
+            checkIfValidPosition(playerHandler, ship);
             playerHandler.sendMessage(Messages.BOAT_PLACED);
-            placeShipInMap(shipList.get(message[0]), playerHandler.getMyMap());
+            placeShipInMap(ship, playerHandler.getMyMap());
 
         } catch (InvalidSyntaxException e) {
             playerHandler.sendMessage(e.getMessage());
-
         } catch (InvalidPositionException e) {
             playerHandler.sendMessage(e.getMessage());
-            shipList.get(message[0]).removeShip();
-        } catch (IndexOutOfBoundsException e) {
-            playerHandler.sendMessage(Messages.CANNOT_PLACE);
-            shipList.get(message[0]).removeShip();
+            ship.removeShip();
         }
     }
 
@@ -57,7 +55,7 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
-    private void checkIfValidPosition(Battleship.PlayerHandler playerHandler, Ship ship) throws InvalidPositionException, IndexOutOfBoundsException {
+    private void checkIfValidPosition(Battleship.PlayerHandler playerHandler, Ship ship) throws InvalidPositionException {
 
         List<List<String>> map = playerHandler.getMyMap();
         List<ShipPart> shipPositions = ship.getShipParts();
@@ -66,6 +64,9 @@ public class PlaceHandler implements CommandHandler {
             int row = shipPart.getRow();
             int col = shipPart.getCol();
 
+            if (row >= map.size() || col >= map.get(row).size()) {
+                throw new InvalidPositionException(Messages.CANNOT_PLACE);
+            }
 
             String position = map.get(row).get(col);
 
@@ -75,7 +76,7 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
-    private int[] getMessage(String message, List<Ship> shipList) throws InvalidSyntaxException {
+    private int[] getPlacementPosition(String message, List<Ship> shipList) throws InvalidSyntaxException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
 
@@ -85,7 +86,7 @@ public class PlaceHandler implements CommandHandler {
         newMessage[2] = separated[3].charAt(0) - 'A' + 1;
 
         if (newMessage[0] >= shipList.size()) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.SHIP_DOESNT_EXIST);
         }
 
         return newMessage;
@@ -93,13 +94,13 @@ public class PlaceHandler implements CommandHandler {
 
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
         if (separated.length > 4) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
         if (!Character.isDigit(separated[1].charAt(0)) || !Character.isDigit(separated[2].charAt(0))) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
         if (separated[3].charAt(0) < 65 || separated[3].charAt(0) > 90) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
 }

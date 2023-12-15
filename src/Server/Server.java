@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,30 +33,32 @@ public class Server {
             serverSocket = new ServerSocket(8888);
             service = Executors.newCachedThreadPool();
 
-            while (true) {
+            while (!serverSocket.isClosed()) {
+
                 Socket client = serverSocket.accept();
-                int index = checkAvailableGame();
-                if (index != -1) {
-                    games.get(index).acceptPlayer(client);
-                } else {
+                Optional<Battleship> game = checkAvailableGame();
+
+                if (game.isEmpty()) {
                     games.add(new Battleship(client));
                     service.submit(games.get(gameIndex++));
+                    continue;
                 }
 
+                game.get().acceptPlayer(client);
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    private int checkAvailableGame() {
-        for (int i = 0; i < games.size(); i++) {
-            if (games.get(i).isOpen()) {
-                return i;
-            }
-        }
-        return -1;
+    private Optional<Battleship> checkAvailableGame() {
+        return games.stream()
+                .filter(Battleship::isOpen)
+                .findFirst();
+    }
+
+    public void removeGame(Battleship game) {
+        games.remove(game);
     }
 }

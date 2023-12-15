@@ -15,28 +15,27 @@ public class RotateHandler implements CommandHandler {
         int boatIndex;
         try {
             boatIndex = getBoatIndex(playerHandler.getMessage());
+            shipList.get(boatIndex).rotate();
+            playerHandler.sendMessage(Messages.ROTATED_SHIP + boatIndex);
         } catch (InvalidSyntaxException e) {
             playerHandler.sendMessage(e.getMessage());
-            return;
         }
-        shipList.get(boatIndex).rotate();
-
     }
 
     private int getBoatIndex(String message) throws InvalidSyntaxException {
-        String[] separated = message.split(" ");
+        String[] separatedMessage = message.split(" ");
 
-        checkValidInput(separated);
+        checkValidInput(separatedMessage);
 
-        return Integer.parseInt(separated[1]);
+        return Integer.parseInt(separatedMessage[1]);
     }
 
     private void checkValidInput(String[] message) throws InvalidSyntaxException {
         if (message.length != 2) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.INVALID_ROTATE_SYNTAX);
         }
         if (!Character.isDigit(message[1].charAt(0))) {
-            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+            throw new InvalidSyntaxException(Messages.INVALID_ROTATE_SYNTAX);
         }
     }
 
