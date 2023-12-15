@@ -13,15 +13,16 @@ public enum MapType {
             * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 8
             * ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ * 9
             * * * * * * * * * * * * * *
-              A B C D E F G H I J K L""");
+            * A B C D E F G H I J K L *    
+             """);
 
-    private final String BOARD_SIZE;
+    private final String MAP;
 
-    MapType(String BOARD_SIZE) {
-        this.BOARD_SIZE = BOARD_SIZE;
+    MapType(String MAP) {
+        this.MAP = MAP;
     }
 
-    public String getBOARD_SIZE() {
-        return BOARD_SIZE;
+    public String getMAP() {
+        return MAP;
     }
 }

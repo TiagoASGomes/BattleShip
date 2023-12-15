@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Messages.Messages;
+import MessagesAndPrinter.Messages;
 
 public class CommandNotFoundHandler implements CommandHandler {
     @Override

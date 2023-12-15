@@ -5,7 +5,8 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
-import Messages.Messages;
+import MessagesAndPrinter.Messages;
+import MessagesAndPrinter.Printer;
 import commands.Command;
 
 import java.io.BufferedReader;
@@ -167,8 +168,9 @@ public class Battleship implements Runnable {
 
 
             try {
-                generateMap(MapType.SQUARE_MAP.getBOARD_SIZE());
-                generateMap(MapType.SQUARE_MAP.getBOARD_SIZE());
+                generateMap(MapType.SQUARE_MAP.getMAP());
+                generateMap(MapType.SQUARE_MAP.getMAP());
+                sendMessage(Printer.createMap(this));
                 chooseCharacter();
                 placeShips();
 
@@ -202,6 +204,7 @@ public class Battleship implements Runnable {
                 command.getHandler().execute(this, Battleship.this);
             }
         }
+
 
         public void sendMessage(String message) {
             out.println(message);

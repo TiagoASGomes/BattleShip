@@ -3,7 +3,7 @@ package commands;
 import Battleship.Battleship;
 import Battleship.ships.Ship;
 import Battleship.ships.ship_parts.ShipPart;
-import Messages.Messages;
+import MessagesAndPrinter.Messages;
 
 import java.util.List;
 
