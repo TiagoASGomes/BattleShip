@@ -16,8 +16,6 @@ public class PlaceHandler implements CommandHandler {
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<Ship> shipList = playerHandler.getCharacter().getPlayerShips();
 
-        execute(playerHandler, game);
-
         int[] message = new int[0];
         try {
             message = getMessage(playerHandler.getMessage());

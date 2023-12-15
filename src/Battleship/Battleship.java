@@ -191,6 +191,7 @@ public class Battleship implements Runnable {
             if (command.equals(Command.NOT_FOUND)) {
                 takeTurn();
             }
+            sendMessage(Printer.createMap(this));
         }
 
         private void placeShips() throws IOException {

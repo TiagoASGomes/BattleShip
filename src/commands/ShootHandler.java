@@ -19,7 +19,7 @@ public class ShootHandler implements CommandHandler {
         List<List<String>> map = playerHandler.getOppMap();
         String[] input = playerHandler.getMessage().split(" ");
         int col;
-        charCol = input[1].charAt(0);
+        charCol = input[2].charAt(0);
         try {
             validateInput(charCol);
         } catch (InvalidKeyException e) {
@@ -33,9 +33,30 @@ public class ShootHandler implements CommandHandler {
         }
         col = charCol - 'A' + 1;
 
-        row = Integer.parseInt(input[2]);
+        row = Integer.parseInt(input[1]);
 
-        char position = map.get(row).get(col).charAt(0);
+        String stringPosition = "";
+        try {
+            stringPosition = map.get(row).get(col);
+
+        } catch (IndexOutOfBoundsException e) {
+            playerHandler.sendMessage(Messages.INVALID_SYNTAX);
+            try {
+                playerHandler.takeTurn();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
+        char position;
+
+        if (stringPosition.length() == 1) {
+            position = stringPosition.charAt(0);
+        } else {
+            position = stringPosition.charAt(5);
+        }
+
         try {
             checkPosition(position);
         } catch (IndexOutOfBoundsException e) {
@@ -69,19 +90,8 @@ public class ShootHandler implements CommandHandler {
     }
 
     private static void validateInput(char input) throws InvalidKeyException {
-        boolean validInput = false;
-
-        if (input == 1) {
-            char letter = input;
-            if (letter >= 65 && letter <= 99) {
-                validInput = true;
-            }
-        }
-        if (validInput) {
-            // your logic here
-        } else {
+        if (input < 65 || input > 90) {
             throw new InvalidKeyException("Wrong letter");
-
         }
     }
 }
