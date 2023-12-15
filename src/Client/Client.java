@@ -1,6 +1,11 @@
 package Client;
 
-import java.io.*;
+import MessagesAndPrinter.Messages;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client {
@@ -9,15 +14,15 @@ public class Client {
         try {
             client.start("localhost", 8888);
         } catch (IOException e) {
-            System.out.println("Connection closed...");
+            System.out.println(Messages.LOST_CONNECTION);
         }
-
     }
 
     private void start(String host, int port) throws IOException {
+
         Socket socket = new Socket(host, port);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
         new Thread(new KeyboardHandler(out, socket)).start();
         String line;
@@ -40,11 +45,10 @@ public class Client {
 
         @Override
         public void run() {
-
             while (!socket.isClosed()) {
                 try {
-                    String line = in.readLine();
 
+                    String line = in.readLine();
                     out.println(line);
 
                 } catch (IOException e) {

@@ -17,10 +17,11 @@ public class Messages {
     public static final String SHIP_PLACEMENT = "Please place your ships.";
     public static final String INVALID_SYNTAX = "Incorrect syntax";
     public static final String CANT_READY_UP = "Please finish placing your ships";
-
     public static final String CHOOSE_CHARACTER = "Please type 1 to choose your character one, and type 2 to choose character two";
     public static final String READY = "READY";
     public static final String BOAT_PLACED = "BOAT PLACED";
+    public static final String LOST_CONNECTION = "Connection closed...";
+    public static final String ERROR = "Something went wrong with the server. Connection closing...";
 
 
 }

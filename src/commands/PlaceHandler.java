@@ -16,6 +16,8 @@ public class PlaceHandler implements CommandHandler {
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<Ship> shipList = playerHandler.getCharacter().getPlayerShips();
 
+        execute(playerHandler, game);
+
         int[] message = new int[0];
         try {
             message = getMessage(playerHandler.getMessage());
@@ -33,6 +35,9 @@ public class PlaceHandler implements CommandHandler {
 
         } catch (InvalidPositionException e) {
             playerHandler.sendMessage(e.getMessage());
+            shipList.get(message[0]).removeShip();
+        } catch (IndexOutOfBoundsException e) {
+            playerHandler.sendMessage(Messages.CANNOT_PLACE);
             shipList.get(message[0]).removeShip();
         }
     }
@@ -55,7 +60,7 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
-    private void checkIfValidPosition(Battleship.PlayerHandler playerHandler, Ship ship) throws InvalidPositionException {
+    private void checkIfValidPosition(Battleship.PlayerHandler playerHandler, Ship ship) throws InvalidPositionException, IndexOutOfBoundsException {
 
         List<List<String>> map = playerHandler.getMyMap();
         List<ShipPart> shipPositions = ship.getShipParts();
@@ -64,7 +69,9 @@ public class PlaceHandler implements CommandHandler {
             int row = shipPart.getRow();
             int col = shipPart.getCol();
 
+
             String position = map.get(row).get(col);
+
             if (!position.equals("~")) {
                 throw new InvalidPositionException(Messages.CANNOT_PLACE);
             }

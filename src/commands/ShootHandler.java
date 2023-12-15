@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Messages.Messages;
+import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
