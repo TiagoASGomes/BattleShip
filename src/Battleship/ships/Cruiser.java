@@ -2,7 +2,9 @@ package Battleship.ships;
 
 import Battleship.ships.ship_parts.ShipPart;
 
-public class Cruiser extends StraightShip {
+import java.util.ArrayList;
+
+public class Cruiser extends Ship {
 
     public Cruiser() {
         super(ShipType.CRUISER.getSIZE(), ShipType.CRUISER);
@@ -10,6 +12,7 @@ public class Cruiser extends StraightShip {
 
     @Override
     public void setPosition(int row, int col) {
+        shipParts = new ArrayList<>();
         if (isRotated) {
             placeVertical(row, col);
             placed = true;

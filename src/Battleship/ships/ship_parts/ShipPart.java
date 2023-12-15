@@ -11,7 +11,7 @@ public class ShipPart {
     }
 
 
-    public void gotHit() {
+    public void setHit() {
         isHit = true;
     }
 

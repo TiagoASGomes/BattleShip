@@ -16,22 +16,28 @@ public class Server {
     private final List<Battleship> games;
     private int gameIndex;
 
-    public Server(){
+    public static void main(String[] args) {
+        Server server = new Server();
+        server.start();
+    }
+
+    public Server() {
         games = new CopyOnWriteArrayList<>();
         gameIndex = 0;
     }
-    public void start(){
+
+    public void start() {
 
         try {
             serverSocket = new ServerSocket(8888);
-            service = Executors.newFixedThreadPool(5);
+            service = Executors.newCachedThreadPool();
 
-            while (true){
+            while (true) {
                 Socket client = serverSocket.accept();
                 int index = checkAvailableGame();
-                if(index != -1){
+                if (index != -1) {
                     games.get(index).acceptPlayer(client);
-                }else {
+                } else {
                     games.add(new Battleship(client));
                     service.submit(games.get(gameIndex++));
                 }
@@ -45,8 +51,8 @@ public class Server {
     }
 
     private int checkAvailableGame() {
-        for(int i = 0; i< games.size();i++){
-            if(games.get(i).isOpen()){
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).isOpen()) {
                 return i;
             }
         }

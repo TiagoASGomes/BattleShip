@@ -1,12 +1,12 @@
 package Battleship.Character;
 
-import Battleship.ships.StraightShip;
+import Battleship.ships.Ship;
 
 import java.util.List;
 
 public abstract class Character {
 
-    protected List<StraightShip> playerShips;
+    protected List<Ship> playerShips;
 
     private CharacterType type;
 
@@ -16,11 +16,11 @@ public abstract class Character {
 
     }
 
-    public void setPlayerShips(List<StraightShip> playerShips) {
+    public void setPlayerShips(List<Ship> playerShips) {
         this.playerShips = playerShips;
     }
 
-    public List<StraightShip> getPlayerShips() {
+    public List<Ship> getPlayerShips() {
         return playerShips;
     }
 }

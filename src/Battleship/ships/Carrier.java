@@ -1,6 +1,6 @@
 package Battleship.ships;
 
-public class Carrier extends StraightShip {
+public class Carrier extends Ship {
 
 
     public Carrier() {

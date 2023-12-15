@@ -1,6 +1,6 @@
 package Battleship.ships;
 
-public class Submarine extends StraightShip {
+public class Submarine extends Ship {
 
 
     public Submarine() {

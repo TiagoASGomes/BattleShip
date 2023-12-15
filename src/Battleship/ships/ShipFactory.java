@@ -2,7 +2,7 @@ package Battleship.ships;
 
 public class ShipFactory {
 
-    public static StraightShip create(ShipType type) {
+    public static Ship create(ShipType type) {
 
         return switch (type) {
             case BIG_SHIP -> new BigShip();

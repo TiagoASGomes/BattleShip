@@ -3,6 +3,8 @@ package Battleship;
 import Battleship.Character.Character;
 import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
+import Battleship.Maps.MapType;
+import Battleship.ships.Ship;
 import Messages.Messages;
 import commands.Command;
 
@@ -14,19 +16,19 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Battleship implements Runnable {
 
     private boolean open = true;
-    private final PlayerHandler player1;
-    private PlayerHandler player2;
+    private final List<PlayerHandler> players = new CopyOnWriteArrayList<>();
     private ExecutorService service;
 
 
     public Battleship(Socket client) {
-        this.player1 = new PlayerHandler(client);
+        players.add(new PlayerHandler(client));
     }
 
 
@@ -34,7 +36,7 @@ public class Battleship implements Runnable {
     public void run() {
 
         service = Executors.newFixedThreadPool(2);
-        while (player1 == null || player2 == null) {
+        while (checkPlayersNotConnected()) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -42,7 +44,7 @@ public class Battleship implements Runnable {
             }
         }
 
-        while (!player1.isReady() || !player2.isReady()) {
+        while (checkPlayersNotReady()) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -50,7 +52,34 @@ public class Battleship implements Runnable {
             }
         }
 
+        while (true) {
+            try {
+                players.get(0).takeTurn();
 
+                players.get(1).takeTurn();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+    }
+
+    public List<PlayerHandler> getPlayers() {
+        return players;
+    }
+
+    private boolean checkPlayersNotReady() {
+        for (PlayerHandler player : players) {
+            if (!player.isReady()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPlayersNotConnected() {
+        return players.size() != 2;
     }
 
     public boolean isOpen() {
@@ -58,9 +87,11 @@ public class Battleship implements Runnable {
     }
 
     public void acceptPlayer(Socket client) {
-        player2 = new PlayerHandler(client);
-        service.submit(player1);
-        service.submit(player2);
+        players.add(new PlayerHandler(client));
+        open = false;
+        for (PlayerHandler player : players) {
+            service.submit(player);
+        }
     }
 
 
@@ -100,6 +131,14 @@ public class Battleship implements Runnable {
                 Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
                 myMap.add(temp);
             }
+            String[] squareMapSpaces2 = map.split("\n");
+
+            oppMap = new ArrayList<>();
+            for (int i = 0; i < squareMapSpaces2.length; i++) {
+                List<String> temp = new ArrayList<>();
+                Arrays.stream(squareMapSpaces2[i].split(" ")).forEach(position -> temp.add(position));
+                oppMap.add(temp);
+            }
 
         }
 
@@ -111,15 +150,14 @@ public class Battleship implements Runnable {
             switch (playerChoice) {
                 case "1":
                     this.character = CharacterFactory.create(CharacterType.ONE);
-                    break;
+                    System.out.println("a");
+                    return;
                 case "2":
                     this.character = CharacterFactory.create(CharacterType.TWO);
-                    break;
+                    return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
                     chooseCharacter();
-
-
             }
         }
 
@@ -127,30 +165,41 @@ public class Battleship implements Runnable {
         @Override
         public void run() {
 
-            while (!socket.isClosed()) {
+
+            try {
+                generateMap(MapType.SQUARE_MAP.getBOARD_SIZE());
+                generateMap(MapType.SQUARE_MAP.getBOARD_SIZE());
+                chooseCharacter();
+                placeShips();
+
+
+            } catch (IOException e) {
+                System.out.println("Something went wrong with the server. Connection closing...");
                 try {
-
-                    chooseCharacter();
-                    placeShips();
-
-
-                } catch (IOException e) {
-                    System.out.println("Something went wrong with the server. Connection closing...");
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    socket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+            }
+
+        }
+
+        public void takeTurn() throws IOException {
+            sendMessage(Messages.YOUR_TURN);
+            message = in.readLine();
+            Command command = Command.getCommandFromDescription(message.split(" ")[0]);
+            command.getHandler().execute(this, Battleship.this);
+            if (command.equals(Command.NOT_FOUND)) {
+                takeTurn();
             }
         }
 
         private void placeShips() throws IOException {
-            out.println(Messages.SHIP_PLACEMENT);
+            sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
                 message = in.readLine();
-                Command command = Command.getCommandFromDescription(message);
-                command.getHandler().execute(this);
+                Command command = Command.getCommandFromDescription(message.split(" ")[0]);
+                command.getHandler().execute(this, Battleship.this);
             }
         }
 
@@ -177,6 +226,20 @@ public class Battleship implements Runnable {
         public List<List<String>> getMyMap() {
             return myMap;
         }
+
+        public List<List<String>> getOppMap() {
+            return oppMap;
+        }
+
+        public boolean checkIfHit(int row, int col) {
+            for (Ship ship : character.getPlayerShips()) {
+                if (ship.gotHit(row, col)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
 

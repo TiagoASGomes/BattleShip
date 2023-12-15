@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.ships.StraightShip;
+import Battleship.ships.Ship;
 import Battleship.ships.ship_parts.ShipPart;
 import Messages.Messages;
 
@@ -11,8 +11,8 @@ public class PlaceHandler implements CommandHandler {
 
 
     @Override
-    public void execute(Battleship.PlayerHandler playerHandler) {
-        List<StraightShip> shipList = playerHandler.getCharacter().getPlayerShips();
+    public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
+        List<Ship> shipList = playerHandler.getCharacter().getPlayerShips();
         int[] message;
         try {
             message = getMessage(playerHandler.getMessage());
@@ -24,14 +24,15 @@ public class PlaceHandler implements CommandHandler {
         try {
             checkIfValidPosition(message, playerHandler, shipList.get(message[0]));
         } catch (IndexOutOfBoundsException e) {
-            playerHandler.sendMessage("");
+            playerHandler.sendMessage("no");
             shipList.get(message[0]).removeShip();
         }
+        playerHandler.sendMessage("yes");
 
 
     }
 
-    private void checkIfValidPosition(int[] message, Battleship.PlayerHandler playerHandler, StraightShip ship) throws IndexOutOfBoundsException {
+    private void checkIfValidPosition(int[] message, Battleship.PlayerHandler playerHandler, Ship ship) throws IndexOutOfBoundsException {
 
         List<List<String>> map = playerHandler.getMyMap();
         List<ShipPart> shipPositions = ship.getShipParts();
