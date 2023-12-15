@@ -1,4 +1,4 @@
-package Messages;
+package MessagesAndPrinter;
 
 public class Messages {
 

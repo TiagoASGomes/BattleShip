@@ -4,6 +4,7 @@ import Battleship.Battleship;
 import Battleship.ships.Ship;
 import Exceptions.InvalidSyntaxException;
 import Messages.Messages;
+import MessagesAndPrinter.Messages;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class RotateHandler implements CommandHandler {
             return;
         }
         shipList.get(boatIndex).rotate();
+
     }
 
     private int getBoatIndex(String message) throws InvalidSyntaxException {
