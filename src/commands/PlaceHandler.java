@@ -22,7 +22,6 @@ public class PlaceHandler implements CommandHandler {
             if (shipList.get(message[0]).isPlaced()) {
                 removeFromMap(shipList.get(message[0]), playerHandler.getMyMap());
             }
-
             shipList.get(message[0]).setPosition(message[1], message[2]);
             checkIfValidPosition(playerHandler, shipList.get(message[0]));
             playerHandler.sendMessage(Messages.BOAT_PLACED);
