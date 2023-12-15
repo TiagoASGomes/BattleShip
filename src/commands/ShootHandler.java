@@ -17,6 +17,7 @@ public class ShootHandler implements CommandHandler {
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<List<String>> map = playerHandler.getOppMap();
+
         String[] input = playerHandler.getMessage().split(" ");
         int col;
         charCol = input[2].charAt(0);
@@ -26,6 +27,7 @@ public class ShootHandler implements CommandHandler {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
                 playerHandler.takeTurn();
+                return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -43,6 +45,7 @@ public class ShootHandler implements CommandHandler {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
                 playerHandler.takeTurn();
+                return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -62,6 +65,7 @@ public class ShootHandler implements CommandHandler {
         } catch (IndexOutOfBoundsException e) {
             try {
                 playerHandler.takeTurn();
+                return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

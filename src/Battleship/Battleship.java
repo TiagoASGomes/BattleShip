@@ -52,18 +52,46 @@ public class Battleship implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+        boolean firstWon = false;
 
-        while (true) {
+        while (gameNotOver()) {
             try {
                 players.get(0).takeTurn();
-
+                updateMaps();
+                if (!gameNotOver()) {
+                    firstWon = true;
+                    break;
+                }
                 players.get(1).takeTurn();
+                updateMaps();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        if (firstWon) {
+            players.get(0).sendMessage(Messages.WINNER);
+            players.get(1).sendMessage(Messages.LOSER);
+        } else {
+            players.get(1).sendMessage(Messages.WINNER);
+            players.get(0).sendMessage(Messages.LOSER);
+        }
 
 
+    }
+
+    private boolean gameNotOver() {
+        for (PlayerHandler player : players) {
+            if (player.allShipsSinked()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void updateMaps() {
+        for (PlayerHandler player : players) {
+            player.sendMessage(Printer.createMap(player));
+        }
     }
 
     public List<PlayerHandler> getPlayers() {
@@ -191,7 +219,6 @@ public class Battleship implements Runnable {
             if (command.equals(Command.NOT_FOUND)) {
                 takeTurn();
             }
-            sendMessage(Printer.createMap(this));
         }
 
         private void placeShips() throws IOException {
@@ -236,12 +263,23 @@ public class Battleship implements Runnable {
         public boolean checkIfHit(int row, int col) {
             for (Ship ship : character.getPlayerShips()) {
                 if (ship.gotHit(row, col)) {
+                    String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
+                    myMap.get(row).set(col, coloredVersion);
                     return true;
                 }
             }
+            myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
             return false;
         }
 
+        public boolean allShipsSinked() {
+            for (Ship ship : character.getPlayerShips()) {
+                if (!ship.isSinked()) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
 

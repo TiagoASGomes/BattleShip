@@ -18,7 +18,7 @@ public class PlaceHandler implements CommandHandler {
 
         int[] message = new int[0];
         try {
-            message = getMessage(playerHandler.getMessage());
+            message = getMessage(playerHandler.getMessage(), shipList);
             if (shipList.get(message[0]).isPlaced()) {
                 removeFromMap(shipList.get(message[0]), playerHandler.getMyMap());
             }
@@ -53,7 +53,7 @@ public class PlaceHandler implements CommandHandler {
             int row = shipPart.getRow();
             int col = shipPart.getCol();
 
-            myMap.get(row).set(col, "A");
+            myMap.get(row).set(col, ship.getType().getICON());
         }
     }
 
@@ -75,7 +75,7 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
-    private int[] getMessage(String message) throws InvalidSyntaxException {
+    private int[] getMessage(String message, List<Ship> shipList) throws InvalidSyntaxException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
 
@@ -83,6 +83,10 @@ public class PlaceHandler implements CommandHandler {
         newMessage[0] = Integer.parseInt(separated[1]);
         newMessage[1] = Integer.parseInt(separated[2]);
         newMessage[2] = separated[3].charAt(0) - 'A' + 1;
+
+        if (newMessage[0] >= shipList.size()) {
+            throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
+        }
 
         return newMessage;
     }
@@ -94,7 +98,7 @@ public class PlaceHandler implements CommandHandler {
         if (!Character.isDigit(separated[1].charAt(0)) || !Character.isDigit(separated[2].charAt(0))) {
             throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
         }
-        if (!Character.isAlphabetic(separated[3].charAt(0))) {
+        if (separated[3].charAt(0) < 65 || separated[3].charAt(0) > 90) {
             throw new InvalidSyntaxException(Messages.INVALID_SYNTAX);
         }
     }
