@@ -149,25 +149,17 @@ public class Battleship implements Runnable {
 
         }
 
-        public void generateMap(String map) {
+        public List<List<String>> generateMap(String map) {
 
             String[] squareMapSpaces = map.split("\n");
 
-            myMap = new ArrayList<>();
+            List<List<String>> mapList = new ArrayList<>();
             for (int i = 0; i < squareMapSpaces.length; i++) {
                 List<String> temp = new ArrayList<>();
                 Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
-                myMap.add(temp);
+                mapList.add(temp);
             }
-            String[] squareMapSpaces2 = map.split("\n");
-
-            oppMap = new ArrayList<>();
-            for (int i = 0; i < squareMapSpaces2.length; i++) {
-                List<String> temp = new ArrayList<>();
-                Arrays.stream(squareMapSpaces2[i].split(" ")).forEach(position -> temp.add(position));
-                oppMap.add(temp);
-            }
-
+            return mapList;
         }
 
 
@@ -194,8 +186,8 @@ public class Battleship implements Runnable {
 
 
             try {
-                generateMap(MapType.SQUARE_MAP.getMAP());
-                generateMap(MapType.SQUARE_MAP.getMAP());
+                myMap = generateMap(MapType.SQUARE_MAP.getMAP());
+                oppMap = generateMap(MapType.SQUARE_MAP.getMAP());
 
                 chooseCharacter();
                 placeShips();
