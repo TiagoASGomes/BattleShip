@@ -11,7 +11,7 @@ public class ReadyHandler implements CommandHandler {
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         if (checkIfShipsPlaced(playerHandler)) {
             playerHandler.setReady();
-            playerHandler.sendMessage("Ready");
+            playerHandler.sendMessage(Messages.READY);
             return;
         }
         playerHandler.sendMessage(Messages.CANT_READY_UP);

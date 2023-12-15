@@ -103,7 +103,6 @@ public class Battleship implements Runnable {
         private final BufferedReader in;
         private boolean ready;
         private String message;
-
         private Character character;
         private List<List<String>> myMap;
         private List<List<String>> oppMap;
@@ -150,7 +149,6 @@ public class Battleship implements Runnable {
             switch (playerChoice) {
                 case "1":
                     this.character = CharacterFactory.create(CharacterType.ONE);
-                    System.out.println("a");
                     return;
                 case "2":
                     this.character = CharacterFactory.create(CharacterType.TWO);
