@@ -3,7 +3,6 @@ package commands;
 import Battleship.Battleship;
 import Battleship.ships.Ship;
 import Exceptions.InvalidSyntaxException;
-import Messages.Messages;
 import MessagesAndPrinter.Messages;
 
 import java.util.List;

@@ -5,7 +5,6 @@ import Battleship.ships.Ship;
 import Battleship.ships.ship_parts.ShipPart;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
-import Messages.Messages;
 import MessagesAndPrinter.Messages;
 
 import java.util.List;

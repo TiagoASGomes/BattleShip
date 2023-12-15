@@ -168,10 +168,9 @@ public class Battleship implements Runnable {
             try {
                 generateMap(MapType.SQUARE_MAP.getMAP());
                 generateMap(MapType.SQUARE_MAP.getMAP());
-                sendMessage(Printer.createMap(this));
+
                 chooseCharacter();
                 placeShips();
-
 
             } catch (IOException e) {
                 System.out.println("Something went wrong with the server. Connection closing...");
@@ -197,6 +196,7 @@ public class Battleship implements Runnable {
         private void placeShips() throws IOException {
             sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
+                sendMessage(Printer.createMap(this));
                 message = in.readLine();
                 Command command = Command.getCommandFromDescription(message.split(" ")[0]);
                 command.getHandler().execute(this, Battleship.this);
