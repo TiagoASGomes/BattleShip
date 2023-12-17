@@ -1,7 +1,9 @@
 package MessagesAndPrinter;
 
 import Battleship.Battleship;
+import Battleship.ships.Ship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Printer {
@@ -29,18 +31,32 @@ public class Printer {
         return finalMap.toString();
     }
 
+    public static String createShipString(Battleship.PlayerHandler playerHandler) {
+        List<String> shipsText = createShipTextArray(playerHandler.getCharacter().getPlayerShips());
+        StringBuilder messageToPrint = new StringBuilder();
 
+        for (int i = 0; i < shipsText.size(); i++) {
+            messageToPrint.append(i).append(" - ").append(shipsText.get(i)).append("\n");
+        }
+        return messageToPrint.toString();
+    }
+
+    private static List<String> createShipTextArray(List<Ship> playerShips) {
+        List<String> ships = new ArrayList<>();
+        for (Ship ship : playerShips) {
+            ships.add(getShipString(ship));
+        }
+        return ships;
+    }
+
+    private static String getShipString(Ship ship) {
+        return switch (ship.getType()) {
+            case BIG_SHIP -> ship.isRotated() ? TextShips.BIG_SHIP_V : TextShips.BIG_SHIP_H;
+            case CARRIER -> ship.isRotated() ? TextShips.CARRIER_V : TextShips.CARRIER_H;
+            case SUBMARINE -> ship.isRotated() ? TextShips.SUBMARINE_V : TextShips.SUBMARINE_H;
+            case DESTROYER -> ship.isRotated() ? TextShips.DESTROYER_V : TextShips.DESTROYER_H;
+            case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
+        };
+    }
+    
 }
-
-/*Barcos:
-    A A
-
-    B B B
-
-    C C C C
-
-    D D D D D
-
-    A A
-      A A
-*/

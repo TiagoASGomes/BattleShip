@@ -217,6 +217,7 @@ public class Battleship implements Runnable {
             sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
                 sendMessage(Printer.createMap(this));
+                sendMessage(Printer.createShipString(this));
                 message = in.readLine();
                 Command command = Command.getCommandFromDescription(message.split(" ")[0]);
                 command.getHandler().execute(this, Battleship.this);

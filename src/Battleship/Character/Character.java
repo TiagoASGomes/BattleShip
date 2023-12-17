@@ -2,11 +2,12 @@ package Battleship.Character;
 
 import Battleship.ships.Ship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Character {
 
-    protected List<Ship> playerShips;
+    protected List<Ship> playerShips = new ArrayList<>();
 
     private CharacterType type;
 

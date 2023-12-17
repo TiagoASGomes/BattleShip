@@ -92,4 +92,8 @@ public abstract class Ship implements ShipI {
         shipParts = null;
         placed = false;
     }
+
+    public boolean isRotated() {
+        return isRotated;
+    }
 }
