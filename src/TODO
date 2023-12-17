@@ -1,6 +1,23 @@
 Ajeitar codigo meter bonito
-dar print ao navios ao escolher com o indice
 poder escolher mapas
 adicionar mais personagens e navios
 adicionar abilidades
 adicionar som
+Bug no shoot e place
+mandar mensagens de acertou falhou afundou
+
+cada personagem ganha 1 ponto por turno
+1 ponto se acertar
+2 pontos se afundar um navio
+
+habilidades
+    comuns a todos
+    mina - podes colocar no teu mapa nao te gasta o turno se o outro acertar na mina uma posição random do seu board e atingida
+    sonar - escolhes onde queres e 3x3 a volta diz o numero de posições que nao sao agua
+    explosao - acerta num 2x2
+
+personagem 1 - dispara numa linha inteira
+personagem 2 - dispara num +
+personagem 3 - dispara em 10 posiçoes random
+
+
