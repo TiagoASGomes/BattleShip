@@ -1,6 +1,7 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
+import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
@@ -37,7 +38,9 @@ public class CharacterOne extends Character {
             if (checkInvalidPosition(position)) {
                 continue;
             }
-            if (opponent.checkIfHit(row, i)) {
+            Ship ship = opponent.checkIfHit(row, i);
+            if (ship != null) {
+                playerHandler.winPoint(ship);
                 playerHandler.getOppMap().get(row).set(i, "\u001B[31mX\u001B[0m");
                 continue;
             }

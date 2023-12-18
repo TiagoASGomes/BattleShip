@@ -1,6 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
+import Battleship.ships.Ship;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -86,9 +87,9 @@ public class ShootHandler implements CommandHandler {
         if (otherPlayer == null) {
             throw new RuntimeException();
         }
-
-        if (otherPlayer.checkIfHit(row, col)) {
-            playerHandler.winPoint(otherPlayer);
+        Ship ship = otherPlayer.checkIfHit(row, col);
+        if (ship != null) {
+            playerHandler.winPoint(ship);
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }

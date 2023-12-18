@@ -139,11 +139,13 @@ public class Battleship implements Runnable {
         private Character character;
         private List<List<String>> myMap;
         private List<List<String>> oppMap;
+        private final PlayerPoints playerPoints;
 
 
         public PlayerHandler(Socket socket) {
             this.socket = socket;
             ready = false;
+            playerPoints = new PlayerPoints();
             try {
                 this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 this.out = new PrintWriter(socket.getOutputStream(), true);
@@ -209,6 +211,7 @@ public class Battleship implements Runnable {
 
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
+            sendMessage(String.valueOf(playerPoints.getPlayerPoints()));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
@@ -257,16 +260,16 @@ public class Battleship implements Runnable {
             return oppMap;
         }
 
-        public boolean checkIfHit(int row, int col) {
+        public Ship checkIfHit(int row, int col) {
             for (Ship ship : character.getPlayerShips()) {
                 if (ship.gotHit(row, col)) {
                     String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
                     myMap.get(row).set(col, coloredVersion);
-                    return true;
+                    return ship;
                 }
             }
             myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
-            return false;
+            return null;
         }
 
         public boolean allShipsSinked() {
@@ -278,16 +281,13 @@ public class Battleship implements Runnable {
             return true;
         }
 
-        public void winPoint(Battleship.PlayerHandler otherPlayer
-        ) {
-            PlayerPoints.setPlayerPoints(PlayerPoints.getPlayerPoints() + pointForHit);
+        public void winPoint(Ship ship) {
+            playerPoints.setPlayerPoints(playerPoints.getPlayerPoints() + pointForHit);
             System.out.println(Messages.HIT_POINTS);
-            for (Ship ship : otherPlayer.getCharacter().getPlayerShips()) {
-                if (ship.isSinked()) {
-                    PlayerPoints.setPlayerPoints(PlayerPoints.getPlayerPoints() + pointForSinking);
-                    System.out.println(Messages.SINK_POINTS);
-                    break;
-                }
+            if (ship.isSinked()) {
+                playerPoints.setPlayerPoints(playerPoints.getPlayerPoints() + pointForSinking);
+                System.out.println(Messages.SINK_POINTS);
+                
             }
         }
     }

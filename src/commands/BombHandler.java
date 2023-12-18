@@ -1,6 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
+import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
@@ -50,7 +51,9 @@ public class BombHandler implements CommandHandler {
                 if (checkInvalidPosition(position)) {
                     continue;
                 }
-                if (opponent.checkIfHit(i, j)) {
+                Ship ship = opponent.checkIfHit(i, j);
+                if (ship != null) {
+                    playerHandler.winPoint(ship);
                     playerHandler.getOppMap().get(i).set(j, "\u001B[31mX\u001B[0m");
                     continue;
                 }

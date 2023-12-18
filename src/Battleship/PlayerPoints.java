@@ -4,7 +4,7 @@ public class PlayerPoints {
     // acertar num barco 1 ponto
     // afundar um barco 2 pontos
 
-    private static int playerPoints;
+    private int playerPoints;
     static final int pointForHit = 1;
     static final int pointForSinking = 2;
 
@@ -13,11 +13,11 @@ public class PlayerPoints {
 
     }
 
-    public static int getPlayerPoints() {
+    public int getPlayerPoints() {
         return playerPoints;
     }
 
-    public static void setPlayerPoints(int playerPoints) {
-        PlayerPoints.playerPoints = playerPoints;
+    public void setPlayerPoints(int playerPoints) {
+        this.playerPoints = playerPoints;
     }
 }
