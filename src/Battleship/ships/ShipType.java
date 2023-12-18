@@ -14,7 +14,6 @@ public enum ShipType {
         this.SIZE = SIZE;
         this.ICON = ICON;
     }
-
     public int getSIZE() {
         return SIZE;
     }

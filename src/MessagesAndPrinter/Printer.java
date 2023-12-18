@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Printer {
 
-
     public static String createMap(Battleship.PlayerHandler playerHandler) {
 
         List<List<String>> map = playerHandler.getMyMap();
@@ -56,7 +55,8 @@ public class Printer {
             case SUBMARINE -> ship.isRotated() ? TextShips.SUBMARINE_V : TextShips.SUBMARINE_H;
             case DESTROYER -> ship.isRotated() ? TextShips.DESTROYER_V : TextShips.DESTROYER_H;
             case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
+
+
         };
     }
-
 }
