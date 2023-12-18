@@ -11,7 +11,7 @@ cada personagem ganha 1 ponto por turno
 2 pontos se afundar um navio
 
 habilidades
-    comuns a todos
+    comuns a todos:
     mina - podes colocar no teu mapa nao te gasta o turno se o outro acertar na mina uma posição random do seu board e atingida
     sonar - escolhes onde queres e 3x3 a volta diz o numero de posições que nao sao agua
     explosao - acerta num 2x2

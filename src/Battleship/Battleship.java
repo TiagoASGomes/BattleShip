@@ -7,7 +7,8 @@ import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
-import commands.Command;
+import commands.GameCommands;
+import commands.PreparationCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -206,9 +207,9 @@ public class Battleship implements Runnable {
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
             message = in.readLine();
-            Command command = Command.getCommandFromDescription(message.split(" ")[0]);
+            GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
-            if (command.equals(Command.NOT_FOUND)) {
+            if (command.equals(GameCommands.NOT_FOUND)) {
                 takeTurn();
             }
         }
@@ -219,7 +220,7 @@ public class Battleship implements Runnable {
                 sendMessage(Printer.createMap(this));
                 sendMessage(Printer.createShipString(this));
                 message = in.readLine();
-                Command command = Command.getCommandFromDescription(message.split(" ")[0]);
+                PreparationCommand command = PreparationCommand.getCommandFromDescription(message.split(" ")[0]);
                 command.getHandler().execute(this, Battleship.this);
             }
         }

@@ -1,23 +1,22 @@
 package commands;
 
-public enum Command {
+public enum PreparationCommand {
     PLACE("place", new PlaceHandler()),
 
     ROTATE("rotate", new RotateHandler()),
 
     READY("ready", new ReadyHandler()),
-    SHOOT("shoot", new ShootHandler()),
     NOT_FOUND("Command not found", new CommandNotFoundHandler());
-    private String description;
-    private CommandHandler handler;
+    private final String description;
+    private final CommandHandler handler;
 
-    Command(String description, CommandHandler handler) {
+    PreparationCommand(String description, CommandHandler handler) {
         this.description = description;
         this.handler = handler;
     }
 
-    public static Command getCommandFromDescription(String description) {
-        for (Command command : values()) {
+    public static PreparationCommand getCommandFromDescription(String description) {
+        for (PreparationCommand command : values()) {
             if (description.equals(command.description)) {
                 return command;
             }
@@ -32,5 +31,5 @@ public enum Command {
     public String getDescription() {
         return description;
     }
-    }
+}
 

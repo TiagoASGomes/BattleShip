@@ -58,5 +58,5 @@ public class Printer {
             case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
         };
     }
-    
+
 }
