@@ -9,9 +9,9 @@ import java.util.List;
 
 public class ShootHandler implements CommandHandler {
 
-    // Lista do player com os barcos
+
     int row;
-    char charCol; //y
+    char charCol;
 
 
     @Override
@@ -75,10 +75,12 @@ public class ShootHandler implements CommandHandler {
         }
 
         if (otherPlayer.checkIfHit(row, col)) {
+            playerHandler.winPoint(otherPlayer);
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }
         playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
+
 
     }
 
@@ -94,4 +96,10 @@ public class ShootHandler implements CommandHandler {
             throw new InvalidKeyException("Wrong letter");
         }
     }
+
+    public int charConverter(int colNumber) {
+        return colNumber = charCol - 'A' + 1;
+    }
+
+
 }

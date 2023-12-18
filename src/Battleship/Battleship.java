@@ -21,6 +21,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static Battleship.PlayerPoints.pointForHit;
+import static Battleship.PlayerPoints.pointForSinking;
+
 public class Battleship implements Runnable {
 
     private boolean open = true;
@@ -242,6 +245,18 @@ public class Battleship implements Runnable {
             return false;
         }
 
+        public void winPoint(Battleship.PlayerHandler otherPlayer
+        ) {
+            PlayerPoints.setPlayerPoints(PlayerPoints.getPlayerPoints() + pointForHit);
+            System.out.println(Messages.HIT_POINTS);
+            for (Ship ship : otherPlayer.getCharacter().getPlayerShips()) {
+                if (ship.isSinked()) {
+                    PlayerPoints.setPlayerPoints(PlayerPoints.getPlayerPoints() + pointForSinking);
+                    System.out.println(Messages.SINK_POINTS);
+                    break;
+                }
+            }
+        }
     }
 
 

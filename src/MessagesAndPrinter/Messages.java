@@ -22,6 +22,8 @@ public class Messages {
     public static final String BOAT_PLACED = "BOAT PLACED";
     public static final String LOST_CONNECTION = "Connection closed...";
     public static final String ERROR = "Something went wrong with the server. Connection closing...";
+    public static final String HIT_POINTS = "You earn 1 point!";
+    public static final String SINK_POINTS = "You earn 2 point!";
 
 
 }
