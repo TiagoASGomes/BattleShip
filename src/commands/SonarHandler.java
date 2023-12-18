@@ -3,6 +3,7 @@ package commands;
 import Battleship.Battleship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
+import Exceptions.NotEnoughPointsException;
 import Exceptions.PlayerNotFoundException;
 import MessagesAndPrinter.Messages;
 
@@ -21,7 +22,7 @@ public class SonarHandler implements CommandHandler {
             List<List<String>> opponentMap = getOpponentMap(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), opponentMap);
             placeSonar(coordinates, map, opponentMap);
-        } catch (InvalidSyntaxException | InvalidPositionException e) {
+        } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
             playerHandler.sendMessage(e.getMessage());
             try {
                 playerHandler.takeTurn();
@@ -34,8 +35,10 @@ public class SonarHandler implements CommandHandler {
         }
     }
 
-    private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) {
-        //TODO verificar pontos
+    private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
+        if (playerHandler.getPlayerPoints().getPlayerPoints() < POINTS_TO_USE) {
+            throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
+        }
     }
 
     private void placeSonar(int[] coordinates, List<List<String>> map, List<List<String>> opponentMap) {

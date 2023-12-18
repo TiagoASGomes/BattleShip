@@ -31,5 +31,6 @@ public class Messages {
 
     public static final String ROTATED_SHIP = "Rotated ship ";
     public static final String PLAYER_DISCONNECTED = "Player Disconnected";
+    public static final String NOT_ENOUGH_POINTS = "You don't have enough points for that ability";
 
 }

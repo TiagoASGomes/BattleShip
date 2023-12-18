@@ -265,9 +265,11 @@ public class Battleship implements Runnable {
                 if (ship.gotHit(row, col)) {
                     String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
                     myMap.get(row).set(col, coloredVersion);
+                    sendMessage("/hit");
                     return ship;
                 }
             }
+            sendMessage("/miss");
             myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
             return null;
         }
@@ -287,8 +289,12 @@ public class Battleship implements Runnable {
             if (ship.isSinked()) {
                 playerPoints.setPlayerPoints(playerPoints.getPlayerPoints() + pointForSinking);
                 System.out.println(Messages.SINK_POINTS);
-                
+
             }
+        }
+
+        public PlayerPoints getPlayerPoints() {
+            return playerPoints;
         }
     }
 
