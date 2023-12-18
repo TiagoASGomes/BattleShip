@@ -22,6 +22,7 @@ public class BombHandler implements CommandHandler {
             Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), opponent.getMyMap());
             doExplosion(coordinates, playerHandler, opponent);
+            playerHandler.getPlayerPoints().setPlayerPoints(playerHandler.getPlayerPoints().getPlayerPoints() - POINTS_TO_USE);
         } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
             playerHandler.sendMessage(e.getMessage());
             try {
@@ -44,6 +45,7 @@ public class BombHandler implements CommandHandler {
     private void doExplosion(int[] coordinates, Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent) {
         int startRow = coordinates[0];
         int startCol = coordinates[1];
+
 
         for (int i = startRow; i < startRow + 2; i++) {
             for (int j = startCol; j < startCol + 2; j++) {

@@ -41,10 +41,10 @@ public class CharacterOne extends Character {
             Ship ship = opponent.checkIfHit(row, i);
             if (ship != null) {
                 playerHandler.winPoint(ship);
-                playerHandler.getOppMap().get(row).set(i, "\u001B[31mX\u001B[0m");
+                playerMap.get(row).set(i, "\u001B[31mX\u001B[0m");
                 continue;
             }
-            playerHandler.getOppMap().get(row).set(i, "\u001B[34mX\u001B[0m");
+            playerMap.get(row).set(i, "\u001B[34mX\u001B[0m");
         }
     }
 

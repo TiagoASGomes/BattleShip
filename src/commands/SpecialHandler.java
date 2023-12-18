@@ -10,13 +10,14 @@ import MessagesAndPrinter.Messages;
 import java.io.IOException;
 
 public class SpecialHandler implements CommandHandler {
-    private static final int POINTS_TO_USE = 7;
+    private static final int POINTS_TO_USE = 0;
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         try {
             checkPlayerPoints(playerHandler);
             playerHandler.getCharacter().special(playerHandler, game);
+            playerHandler.getPlayerPoints().setPlayerPoints(playerHandler.getPlayerPoints().getPlayerPoints() - POINTS_TO_USE);
         } catch (PlayerNotFoundException e) {
             //TODO Fechar jogo
             throw new RuntimeException(e);

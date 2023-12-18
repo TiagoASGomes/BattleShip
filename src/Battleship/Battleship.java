@@ -53,11 +53,11 @@ public class Battleship implements Runnable {
         List<MapType> choices = new CopyOnWriteArrayList<>();
         try {
             choices.add(players.get(0).chooseMap());
-            choices.add( players.get(1).chooseMap());
+            choices.add(players.get(1).chooseMap());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for(int i = 0; i < choices.size();i++) {
+        for (int i = 0; i < choices.size(); i++) {
             int rand = new Random().nextInt(2);
             choices.get(rand);
             players.get(0).setType(choices.get(rand));
@@ -158,7 +158,6 @@ public class Battleship implements Runnable {
         private final PlayerPoints playerPoints;
 
 
-
         private MapType type;
 
         public PlayerHandler(Socket socket) {
@@ -216,6 +215,9 @@ public class Battleship implements Runnable {
                 case "2":
                     this.character = CharacterFactory.create(CharacterType.TWO);
                     return;
+                case "3":
+                    this.character = CharacterFactory.create(CharacterType.THREE);
+                    return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
                     chooseCharacter();
@@ -228,10 +230,10 @@ public class Battleship implements Runnable {
 
             try {
                 sendMessage(Messages.WELCOME);
-                while (type == null){
+                while (type == null) {
                     Thread.sleep(500);
                 }
-             //   chooseMap();
+                //   chooseMap();
                 /*if (getMyMap() == getOppMap()) {
                     myMap = generateMap(this.type.getMAP());
                     oppMap = generateMap(this.type.getMAP());
@@ -311,6 +313,7 @@ public class Battleship implements Runnable {
         public List<List<String>> getOppMap() {
             return oppMap;
         }
+
         public MapType getType() {
             return type;
         }

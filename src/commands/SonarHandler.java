@@ -22,6 +22,7 @@ public class SonarHandler implements CommandHandler {
             List<List<String>> opponentMap = getOpponentMap(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), opponentMap);
             placeSonar(coordinates, map, opponentMap);
+            playerHandler.getPlayerPoints().setPlayerPoints(playerHandler.getPlayerPoints().getPlayerPoints() - POINTS_TO_USE);
         } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
             playerHandler.sendMessage(e.getMessage());
             try {
@@ -44,6 +45,7 @@ public class SonarHandler implements CommandHandler {
     private void placeSonar(int[] coordinates, List<List<String>> map, List<List<String>> opponentMap) {
         int startRow = coordinates[0] - 1;
         int startCol = coordinates[1] - 1;
+
 
         for (int i = startRow; i < startRow + 3; i++) {
             for (int j = startCol; j < startCol + 3; j++) {

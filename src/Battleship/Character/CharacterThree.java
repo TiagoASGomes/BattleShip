@@ -1,6 +1,7 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
+import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
@@ -26,21 +27,56 @@ public class CharacterThree extends Character {
         doSpecial(position, opponent, playerHandler);
     }
 
-    private void doSpecial(int[] position, Battleship.Battleship.PlayerHandler opponent, Battleship.Battleship.PlayerHandler playerHandler) {
-        
+    private void doSpecial(int[] position, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
+        for (int i = position[1] - 2; i < position[1] + 3; i++) {
+            checkHit(opponent, playerHandler, position[0], i);
+        }
+        for (int i = position[0] - 2; i < position[0] + 3; i++) {
+            checkHit(opponent, playerHandler, i, position[1]);
+        }
     }
 
-    private int[] getPosition(Battleship.Battleship.PlayerHandler playerHandler) throws InvalidSyntaxException, InvalidPositionException {
+    private void checkHit(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
+        List<List<String>> playerMap = playerHandler.getOppMap();
+        List<List<String>> opponentMap = opponent.getMyMap();
+        String positionString;
+        try {
+            positionString = opponentMap.get(row).get(col);
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
+
+        if (checkInvalidPosition(positionString)) {
+            return;
+        }
+        Ship ship = opponent.checkIfHit(row, col);
+        if (ship != null) {
+            playerHandler.winPoint(ship);
+            playerMap.get(row).set(col, "\u001B[31mX\u001B[0m");
+            return;
+        }
+        playerMap.get(row).set(col, "\u001B[34mX\u001B[0m");
+    }
+
+    private boolean checkInvalidPosition(String position) {
+        if (position.length() > 1) {
+            return true;
+        }
+        char positionChar = position.charAt(0);
+        return positionChar == ' ' || positionChar == '*';
+    }
+
+    private int[] getPosition(Battleship.PlayerHandler playerHandler) throws InvalidSyntaxException, InvalidPositionException {
         String[] message = playerHandler.getMessage().split(" ");
         checkValidInput(message);
         int[] positions = new int[2];
         positions[0] = Integer.parseInt(message[1]);
         positions[1] = message[2].charAt(0) - 'A' + 1;
-        checkValidPosition(positions, playerHandler.getMyMap());
+        checkValidOutOfBounds(positions, playerHandler.getMyMap());
         return positions;
     }
 
-    private void checkValidPosition(int[] positions, List<List<String>> myMap) throws InvalidPositionException {
+    private void checkValidOutOfBounds(int[] positions, List<List<String>> myMap) throws InvalidPositionException {
         if (positions[0] < 1 || positions[0] >= myMap.size() - 2) {
             throw new InvalidPositionException(Messages.INVALID_POSITION);
         }
