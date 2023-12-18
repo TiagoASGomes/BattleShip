@@ -4,7 +4,7 @@ public class Messages {
 
     public static final String NO_SUCH_COMMAND = "⚠️ Invalid command!";
     public static final String WELCOME = "Welcome to the game!";
-
+    public static final String CHOOSE_MAP = "Choose your map.";
     public static final String PLACE_BOAT = "Place your boat.";
 
     public static final String CANNOT_PLACE = "Sorry, you cannot place the boat there.";

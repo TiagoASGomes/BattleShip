@@ -18,6 +18,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,6 +47,21 @@ public class Battleship implements Runnable {
             }
         }
 
+        List<MapType> choices = new CopyOnWriteArrayList<>();
+        try {
+            choices.add(players.get(0).chooseMap());
+            choices.add( players.get(1).chooseMap());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        for(int i = 0; i < choices.size();i++) {
+            int rand = new Random().nextInt(2);
+            choices.get(rand);
+            players.get(0).setType(choices.get(rand));
+            players.get(1).setType(choices.get(rand));
+
+        }
+
         while (checkPlayersNotReady()) {
             try {
                 Thread.sleep(500);
@@ -55,8 +71,10 @@ public class Battleship implements Runnable {
         }
         boolean firstWon = false;
 
+
         while (gameNotOver()) {
             try {
+
                 players.get(0).takeTurn();
                 updateMaps();
                 if (!gameNotOver()) {
@@ -124,9 +142,7 @@ public class Battleship implements Runnable {
         }
     }
 
-
     public class PlayerHandler implements Runnable {
-
 
         private final PrintWriter out;
         private final Socket socket;
@@ -137,6 +153,9 @@ public class Battleship implements Runnable {
         private List<List<String>> myMap;
         private List<List<String>> oppMap;
 
+
+
+        private MapType type;
 
         public PlayerHandler(Socket socket) {
             this.socket = socket;
@@ -163,6 +182,23 @@ public class Battleship implements Runnable {
             return mapList;
         }
 
+        public MapType chooseMap() throws IOException {
+
+            sendMessage(Messages.CHOOSE_MAP);
+            String playerChoice = in.readLine();
+            switch (playerChoice) {
+                case "1":
+                    return MapType.SQUARE_MAP;
+                case "2":
+                    return MapType.HEXA_MAP;
+                case "3":
+                    return MapType.ROCK_MAP;
+                default:
+                    sendMessage(Messages.NO_SUCH_COMMAND);
+                    chooseMap();
+                    return null;
+            }
+        }
 
         public void chooseCharacter() throws IOException {
 
@@ -185,11 +221,21 @@ public class Battleship implements Runnable {
         @Override
         public void run() {
 
-
             try {
-                myMap = generateMap(MapType.SQUARE_MAP.getMAP());
-                oppMap = generateMap(MapType.SQUARE_MAP.getMAP());
-
+                sendMessage(Messages.WELCOME);
+                while (type == null){
+                    Thread.sleep(500);
+                }
+             //   chooseMap();
+                /*if (getMyMap() == getOppMap()) {
+                    myMap = generateMap(this.type.getMAP());
+                    oppMap = generateMap(this.type.getMAP());
+                } else {
+                    myMap = generateMap(MapType.SQUARE_MAP.getMAP());
+                    oppMap = generateMap(MapType.SQUARE_MAP.getMAP());
+                }*/
+                myMap = generateMap(type.getMAP());
+                oppMap = generateMap(type.getMAP());
                 chooseCharacter();
                 placeShips();
 
@@ -200,6 +246,8 @@ public class Battleship implements Runnable {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
         }
@@ -250,8 +298,15 @@ public class Battleship implements Runnable {
             return myMap;
         }
 
+        public void setType(MapType type) {
+            this.type = type;
+        }
+
         public List<List<String>> getOppMap() {
             return oppMap;
+        }
+        public MapType getType() {
+            return type;
         }
 
         public boolean checkIfHit(int row, int col) {

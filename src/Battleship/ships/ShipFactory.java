@@ -10,7 +10,6 @@ public class ShipFactory {
             case CRUISER -> new Cruiser();
             case DESTROYER -> new Destroyer();
             case SUBMARINE -> new Submarine();
-
         };
     }
 }
