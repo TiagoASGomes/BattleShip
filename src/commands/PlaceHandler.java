@@ -93,7 +93,7 @@ public class PlaceHandler implements CommandHandler {
     }
 
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
-        if (separated.length > 4) {
+        if (separated.length != 4) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
         if (isNotNumber(separated[1]) || isNotNumber(separated[2])) {

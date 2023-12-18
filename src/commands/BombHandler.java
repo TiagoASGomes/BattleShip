@@ -92,7 +92,7 @@ public class BombHandler implements CommandHandler {
     }
 
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
-        if (separated.length > 3) {
+        if (separated.length != 3) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
         if (isNotNumber(separated[1])) {

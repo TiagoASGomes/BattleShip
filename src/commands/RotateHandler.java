@@ -19,6 +19,8 @@ public class RotateHandler implements CommandHandler {
             playerHandler.sendMessage(Messages.ROTATED_SHIP + boatIndex);
         } catch (InvalidSyntaxException e) {
             playerHandler.sendMessage(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            playerHandler.sendMessage(Messages.SHIP_DOESNT_EXIST);
         }
     }
 
