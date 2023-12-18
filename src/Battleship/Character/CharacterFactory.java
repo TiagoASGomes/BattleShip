@@ -11,6 +11,7 @@ public class CharacterFactory {
 //                    new CharacterOne(new ShipType[]{ShipType.BIG_SHIP, ShipType.CRUISER, ShipType.CARRIER, ShipType.DESTROYER, ShipType.SUBMARINE});
             case TWO ->
                     new CharacterTwo(new ShipType[]{ShipType.DESTROYER, ShipType.SUBMARINE, ShipType.BIG_SHIP, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.CRUISER});
+            case THREE -> new CharacterThree(new ShipType[]{ShipType.DESTROYER});
         };
     }
 }
