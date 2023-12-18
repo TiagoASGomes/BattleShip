@@ -101,13 +101,11 @@ public class ShootHandler implements CommandHandler {
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }
-
         playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
-
     }
 
     private static void checkPosition(char position) throws IndexOutOfBoundsException {
-        if ((position == 'X' || position == ' ' || position == '*' || position == 'R')) {
+        if (position == 'X' || position == ' ' || position == '*' || position == 'R') {
             throw new IndexOutOfBoundsException("Row out of bounds");
         }
     }

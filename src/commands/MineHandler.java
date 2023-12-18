@@ -33,7 +33,7 @@ public class MineHandler implements CommandHandler {
         } catch (InvalidKeyException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
-                playerHandler.takeTurn();
+                playerHandler.placeMine();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -48,7 +48,7 @@ public class MineHandler implements CommandHandler {
         } catch (IndexOutOfBoundsException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
-                playerHandler.takeTurn();
+                playerHandler.placeMine();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -66,7 +66,7 @@ public class MineHandler implements CommandHandler {
             checkPosition(position);
         } catch (IndexOutOfBoundsException e) {
             try {
-                playerHandler.takeTurn();
+                playerHandler.placeMine();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -80,10 +80,11 @@ public class MineHandler implements CommandHandler {
 
 
     private static void checkPosition(char position) throws IndexOutOfBoundsException {
-        if ((position == 'X' || position == ' ' || position == '*' || position == 'R')) {
-            throw new IndexOutOfBoundsException("Row out of bounds");
+        if (position != '~') {
+            throw new IndexOutOfBoundsException("Row out of bounds.");
         }
     }
+
 
     private static void validateInput(char input) throws InvalidKeyException {
         if (input < 65 || input > 90) {
