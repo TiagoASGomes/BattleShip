@@ -96,11 +96,20 @@ public class PlaceHandler implements CommandHandler {
         if (separated.length > 4) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
-        if (!Character.isDigit(separated[1].charAt(0)) || !Character.isDigit(separated[2].charAt(0))) {
+        if (isNotNumber(separated[1]) || isNotNumber(separated[2])) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
         if (separated[3].charAt(0) < 65 || separated[3].charAt(0) > 90) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
+    }
+
+    private boolean isNotNumber(String number) {
+        for (char digit : number.toCharArray()) {
+            if (!Character.isDigit(digit)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
