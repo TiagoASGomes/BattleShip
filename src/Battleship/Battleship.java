@@ -187,8 +187,8 @@ public class Battleship implements Runnable {
 
 
             try {
-                myMap = generateMap(MapType.HEXA_MAP.getMAP());
-                oppMap = generateMap(MapType.HEXA_MAP.getMAP());
+                myMap = generateMap(MapType.SQUARE_MAP.getMAP());
+                oppMap = generateMap(MapType.SQUARE_MAP.getMAP());
 
                 chooseCharacter();
                 placeShips();

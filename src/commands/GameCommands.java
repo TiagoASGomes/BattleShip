@@ -3,6 +3,7 @@ package commands;
 public enum GameCommands {
     SHOOT("shoot", new ShootHandler()),
     SONAR("sonar", new SonarHandler()),
+    BOMB("bomb", new BombHandler()),
     NOT_FOUND("Command not found", new CommandNotFoundHandler());
 
     private final String description;
