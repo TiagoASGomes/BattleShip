@@ -4,6 +4,7 @@ public enum GameCommands {
     SHOOT("shoot", new ShootHandler()),
     SONAR("sonar", new SonarHandler()),
     BOMB("bomb", new BombHandler()),
+    SPECIAL("special", new SpecialHandler()),
     NOT_FOUND("Command not found", new CommandNotFoundHandler());
 
     private final String description;

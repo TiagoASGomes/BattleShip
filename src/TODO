@@ -13,7 +13,7 @@ habilidades
     comuns a todos:
     mina - podes colocar no teu mapa nao te gasta o turno se o outro acertar na mina uma posição random do seu board e atingida -> Joaquim
     sonar - escolhes onde queres e 3x3 a volta diz o numero de posições que nao sao agua -> Tiago
-    explosao - acerta num 2x2
+    explosao - acerta num 2x2 -> Tiago
 
 personagem 1 - dispara numa linha inteira
 personagem 2 - dispara num +

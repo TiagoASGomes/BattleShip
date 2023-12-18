@@ -1,6 +1,10 @@
 package Battleship.Character;
 
+import Battleship.Battleship;
 import Battleship.ships.Ship;
+import Exceptions.InvalidPositionException;
+import Exceptions.InvalidSyntaxException;
+import Exceptions.PlayerNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,4 +28,6 @@ public abstract class Character {
     public List<Ship> getPlayerShips() {
         return playerShips;
     }
+
+    public abstract void special(Battleship.PlayerHandler playerHandler, Battleship game) throws PlayerNotFoundException, InvalidSyntaxException, InvalidPositionException;
 }

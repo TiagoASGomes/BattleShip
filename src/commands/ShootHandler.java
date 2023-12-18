@@ -19,6 +19,15 @@ public class ShootHandler implements CommandHandler {
         List<List<String>> map = playerHandler.getOppMap();
 
         String[] input = playerHandler.getMessage().split(" ");
+        if (input.length != 3) {
+            try {
+                playerHandler.sendMessage(Messages.INVALID_SYNTAX);
+                playerHandler.takeTurn();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
         int col;
         charCol = input[2].charAt(0);
         try {
