@@ -27,4 +27,6 @@ public class Messages {
     public static final String ERROR = "Something went wrong with the server. Connection closing...";
     public static final String ROTATED_SHIP = "Rotated ship ";
 
+    public static final String PLACE_MINE = "Place your mine or type 0 to continue.";
+
 }

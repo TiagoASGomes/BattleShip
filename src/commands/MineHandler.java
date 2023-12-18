@@ -7,20 +7,27 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
-public class ShootHandler implements CommandHandler {
-
-    // Lista do player com os barcos
-    int row;
-    char charCol; //y
+public class MineHandler implements CommandHandler {
 
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
-        List<List<String>> map = playerHandler.getOppMap();
 
-        String[] input = playerHandler.getMessage().split(" ");
-        int col;
-        charCol = input[2].charAt(0);
+       /* if (playerHandler.getPlayerPoints().getPlayerPoints()) < 2){
+    playerHandler.sendMessage(TODO MESSAGE DONT HAVE ENOUGH POINTS);
+    return;
+
+}*/
+
+//check if player has points. if not, sout message and return.
+
+
+        List<List<String>> map = playerHandler.getMyMap();
+
+        String[] message = playerHandler.getMessage().split(" ");
+
+        int row = Integer.parseInt(message[1]);
+        char charCol = message[2].charAt(0);
         try {
             validateInput(charCol);
         } catch (InvalidKeyException e) {
@@ -31,16 +38,13 @@ public class ShootHandler implements CommandHandler {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
         }
-        col = charCol - 'A' + 1;
 
-        row = Integer.parseInt(input[1]);
+        int col = charCol - 'A' + 1;
 
-        String stringPosition = "";
+        String stringPosition;
         try {
             stringPosition = map.get(row).get(col);
-
         } catch (IndexOutOfBoundsException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
@@ -51,15 +55,12 @@ public class ShootHandler implements CommandHandler {
             }
         }
 
-
         char position;
-
         if (stringPosition.length() == 1) {
             position = stringPosition.charAt(0);
         } else {
             position = stringPosition.charAt(5);
         }
-
 
         try {
             checkPosition(position);
@@ -72,50 +73,17 @@ public class ShootHandler implements CommandHandler {
             }
         }
 
-
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst().orElse(null);
-        if (otherPlayer == null) {
-            throw new RuntimeException();
-        }
-
-        if (checkForMine(otherPlayer, row, col)) {
-
-            otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-            playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-
-            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 3 + 1) + 1);
-            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 3 + 1) + 1);
-
-            if (playerHandler.checkIfHit(randRow, randCol)) {
-                playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
-                return;
-            }
-            playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
-            return;
-        }
-
-
-        if (otherPlayer.checkIfHit(row, col)) {
-            playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
-            return;
-        }
-
-        playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
-
+        playerHandler.getMyMap().get(row).set(col, "O");
+        // TODO perde 2 pontos
+        //playerHandler.getPlayerPoints().setPlayerPoints(playerHandler.getPlayerPoints().getPlayerPoints()-2)
     }
+
 
     private static void checkPosition(char position) throws IndexOutOfBoundsException {
         if ((position == 'X' || position == ' ' || position == '*' || position == 'R')) {
             throw new IndexOutOfBoundsException("Row out of bounds");
         }
     }
-
-    private static boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
-        return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
-    }
-
 
     private static void validateInput(char input) throws InvalidKeyException {
         if (input < 65 || input > 90) {
