@@ -85,8 +85,8 @@ public class ShootHandler implements CommandHandler {
             otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
             playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
 
-            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 3 + 1) + 1);
-            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 3 + 1) + 1);
+            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 4 + 1) + 1);
+            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 4 + 1) + 1);
 
             if (playerHandler.checkIfHit(randRow, randCol)) {
                 playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
