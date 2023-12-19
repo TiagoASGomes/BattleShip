@@ -108,8 +108,11 @@ public class Client {
         public void run() {
             while (!socket.isClosed()) {
                 try {
-                    if (!myTurn) continue;
                     String line = in.readLine();
+                    if (!myTurn) {
+                        System.out.println("Not my turn");
+                        continue;
+                    }
                     out.println(line);
                     myTurn = false;
 
