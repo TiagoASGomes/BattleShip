@@ -61,6 +61,17 @@ public class ShootHandler implements CommandHandler {
 
 
 
+
+    /**
+     * @param message receives a String as parameter.
+     * @param map     receives a List of Lists of Strings as parameter.
+     *                creates an array of String by splitting the String message by the spaces.
+     *                Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
+     * @return returns an array of int type that represents two coordinates of the map.
+     * @throws InvalidSyntaxException   if the input is not allowed.
+     * @throws InvalidPositionException if the coordinates are off of the map size, if the length is bigger than 1,
+     *                                  and if there is already a space, an '*', or 'R' in that coordinate on the map.
+     */
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
