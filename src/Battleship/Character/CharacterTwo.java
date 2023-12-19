@@ -49,6 +49,10 @@ public class CharacterTwo extends Character {
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
         }
+        if (checkForMine(opponent, row, col)) {
+            mineExplosion(playerHandler, opponent, row, col);
+            return;
+        }
         Ship ship = opponent.checkIfHit(row, col);
         if (ship != null) {
             playerHandler.winPoint(ship);
@@ -57,7 +61,7 @@ public class CharacterTwo extends Character {
         }
         playerMap.get(row).set(col, "\u001B[34mX\u001B[0m");
     }
-    
+
 
     private int[] getPosition(Battleship.PlayerHandler playerHandler) throws InvalidSyntaxException, InvalidPositionException {
         String[] message = playerHandler.getMessage().split(" ");

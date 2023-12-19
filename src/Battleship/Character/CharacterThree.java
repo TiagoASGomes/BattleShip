@@ -45,6 +45,10 @@ public class CharacterThree extends Character {
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
         }
+        if (checkForMine(opponent, row, col)) {
+            mineExplosion(playerHandler, opponent, row, col);
+            return;
+        }
         Ship ship = opponent.checkIfHit(row, col);
         if (ship != null) {
             playerHandler.winPoint(ship);

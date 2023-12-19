@@ -49,6 +49,10 @@ public class BombHandler implements CommandHandler {
                 if (checkInvalidPosition(i, j, opponent.getMyMap())) {
                     continue;
                 }
+                if (checkForMine(opponent, i, j)) {
+                    mineExplosion(playerHandler, opponent, i, j);
+                    continue;
+                }
 
                 Ship ship = opponent.checkIfHit(i, j);
                 if (ship != null) {

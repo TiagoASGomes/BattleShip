@@ -2,6 +2,7 @@ package commands;
 
 import Battleship.Battleship;
 import Battleship.PointValues;
+import Battleship.ships.Ship;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.NotEnoughPointsException;
 import Exceptions.PlayerNotFoundException;
@@ -56,5 +57,23 @@ public class CommandHelper {
         }
         char positionChar = position.charAt(0);
         return positionChar == ' ' || positionChar == '*' || positionChar == 'R';
+    }
+
+    public static boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
+        return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
+    }
+
+    public static void mineExplosion(Battleship.PlayerHandler player, Battleship.PlayerHandler opponent, int row, int col) {
+        opponent.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+        player.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+
+        int randRow = (int) (Math.random() * (player.getMyMap().size() - 4 + 1) + 1);
+        int randCol = (int) (Math.random() * (player.getMyMap().get(0).size() - 4 + 1) + 1);
+        Ship ship = opponent.checkIfHit(row, col);
+        if (ship != null) {
+            player.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
+            return;
+        }
+        player.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
     }
 }
