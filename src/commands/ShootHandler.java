@@ -15,7 +15,14 @@ import static commands.CommandHelper.*;
 
 public class ShootHandler implements CommandHandler {
 
-
+    /**
+     * Implements the GameCommand SHOOT.
+     * Calls getCoordinates method on the message input by the user and checks if it hit Ship, water or Mine
+     * on the opponents map.
+     *
+     * @param playerHandler receives a PlayerHandler as the one who is targeted.
+     * @param game          receives a Battleship game being disputed, as the outer class of PlayerHandler.
+     */
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
 
@@ -42,6 +49,15 @@ public class ShootHandler implements CommandHandler {
 
     }
 
+    /**
+     * Checks if a ship was hit by one player's shot, and marks it as hit if true.
+     * If a ship was not hit, it also marks the spot on the map.
+     *
+     * @param playerHandler receives a PlayerHandler as the one who shot.
+     * @param opponent      receives a PlayerHandler as the one who was targeted.
+     * @param row           receives int representing the row of that shot.
+     * @param col           receives int representing the column of that shot.
+     */
     private void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
         Ship ship = opponent.checkIfHit(row, col);
 
@@ -63,10 +79,11 @@ public class ShootHandler implements CommandHandler {
 
 
     /**
+     * Creates an array of String by splitting the String message by spaces.
+     * Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
+     *
      * @param message receives a String as parameter.
      * @param map     receives a List of Lists of Strings as parameter.
-     *                creates an array of String by splitting the String message by the spaces.
-     *                Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
      * @return returns an array of int type that represents two coordinates of the map.
      * @throws InvalidSyntaxException   if the input is not allowed.
      * @throws InvalidPositionException if the coordinates are off of the map size, if the length is bigger than 1,

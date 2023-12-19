@@ -60,6 +60,13 @@ public class SonarHandler implements CommandHandler {
         }
     }
 
+    /**
+     * It marks the coordinate on which the sonar is placed on one's representation of opponent's map.
+     *
+     * @param row receives int representing a row on the map.
+     * @param col receives int representing a column on the map.
+     * @param map receives a List of a List of String representing a map.
+     */
     private void putMarkOnMap(int row, int col, List<List<String>> map) {
         if (map.get(row).get(col).length() > 1) {
             return;
@@ -68,6 +75,17 @@ public class SonarHandler implements CommandHandler {
     }
 
 
+    /**
+     * Creates an array of String by splitting the String message by spaces.
+     * Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
+     *
+     * @param message receives a String as parameter.
+     * @param map     receives a List of Lists of Strings as parameter.
+     * @return returns an array of int type that represents two coordinates of the map.
+     * @throws InvalidSyntaxException   if the input is not allowed.
+     * @throws InvalidPositionException if the coordinates are off of the map size, if the length is bigger than 1,
+     *                                  and if there is already a space, an '*', or 'R' in that coordinate on the map.
+     */
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
@@ -83,7 +101,6 @@ public class SonarHandler implements CommandHandler {
         if (position == '*') {
             throw new InvalidPositionException(Messages.INVALID_POSITION);
         }
-
         return coordinates;
     }
 
