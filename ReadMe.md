@@ -1,4 +1,4 @@
-# battleship
+# Battleship
 
 ![alt text](https://i.gyazo.com/6b573dcdcbc0f8fe7e9bb12459b196ee.png)
 
