@@ -1,6 +1,6 @@
 # battleship
 
-![alt text](https://i.gyazo.com/22eea79d3de3c06c5ce49dfcff102ef7.png)
+![alt text](https://i.gyazo.com/6b573dcdcbc0f8fe7e9bb12459b196ee.png)
 
 BattleShip is a MindSwap BootCamp game created by Joaquim Verde, José Vieira, Pedro Soares and Tiago Gomes.
 
