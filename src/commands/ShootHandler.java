@@ -133,8 +133,5 @@ public class ShootHandler implements CommandHandler {
         }
     }
 
-    public int charConverter(int colNumber) {
-        return colNumber = charCol - 'A' + 1;
-    }
 
 }

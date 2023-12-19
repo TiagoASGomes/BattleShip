@@ -10,7 +10,6 @@ public enum PointCosts {
 
     private final int pointCost;
 
-
     PointCosts(int pointCost) {
         this.pointCost = pointCost;
 

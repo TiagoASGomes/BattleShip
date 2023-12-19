@@ -10,6 +10,7 @@ import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class SonarHandler implements CommandHandler {
 
@@ -32,7 +33,8 @@ public class SonarHandler implements CommandHandler {
                 throw new RuntimeException(ex);
             }
         } catch (PlayerNotFoundException e) {
-            //TODO Fechar jogo
+            //TODO mensagem desconecçao
+            game.closeGame();
             throw new RuntimeException(e);
         }
     }
@@ -114,13 +116,10 @@ public class SonarHandler implements CommandHandler {
     }
 
     private List<List<String>> getOpponentMap(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst()
-                .orElse(null);
-        if (otherPlayer == null) {
+        Optional<Battleship.PlayerHandler> otherPlayer = game.getOtherPlayer(playerHandler);
+        if (otherPlayer.isEmpty()) {
             throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
         }
-        return otherPlayer.getMyMap();
+        return otherPlayer.get().getMyMap();
     }
 }

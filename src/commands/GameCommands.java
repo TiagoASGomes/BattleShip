@@ -30,7 +30,4 @@ public enum GameCommands {
         return handler;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

@@ -11,6 +11,7 @@ import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class BombHandler implements CommandHandler {
 
@@ -31,7 +32,8 @@ public class BombHandler implements CommandHandler {
                 throw new RuntimeException(ex);
             }
         } catch (PlayerNotFoundException e) {
-            //TODO Fechar jogo
+            //TODO mensagem de desconecção
+            game.closeGame();
             throw new RuntimeException(e);
         }
     }
@@ -121,14 +123,11 @@ public class BombHandler implements CommandHandler {
     }
 
     private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst()
-                .orElse(null);
-        if (otherPlayer == null) {
+        Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
+        if (opponent.isEmpty()) {
             throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
         }
-        return otherPlayer;
+        return opponent.get();
     }
 
 }

@@ -28,8 +28,5 @@ public enum PreparationCommand {
         return handler;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }
 

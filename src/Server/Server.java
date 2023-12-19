@@ -52,13 +52,16 @@ public class Server {
 
     }
 
+    private void removeFinishedGames() {
+        games.stream()
+                .filter(Battleship::isFinished)
+                .forEach(games::remove);
+    }
+
     private Optional<Battleship> checkAvailableGame() {
+        removeFinishedGames();
         return games.stream()
                 .filter(Battleship::isOpen)
                 .findFirst();
-    }
-
-    public void removeGame(Battleship game) {
-        games.remove(game);
     }
 }

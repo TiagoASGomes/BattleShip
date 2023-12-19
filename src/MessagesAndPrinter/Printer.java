@@ -17,13 +17,13 @@ public class Printer {
 
         for (int i = 0; i < map.size(); i++) {
             List<String> line = map.get(i);
-            for (int j = 0; j < line.size(); j++) {
-                finalMap.append(line.get(j)).append(" ");
+            for (String position : line) {
+                finalMap.append(position).append(" ");
             }
             finalMap.append("\t\t");
             List<String> lineOpp = mapOpp.get(i);
-            for (int j = 0; j < lineOpp.size(); j++) {
-                finalMap.append(lineOpp.get(j)).append(" ");
+            for (String position : lineOpp) {
+                finalMap.append(position).append(" ");
             }
             finalMap.append("\n");
         }
@@ -55,8 +55,6 @@ public class Printer {
             case SUBMARINE -> ship.isRotated() ? TextShips.SUBMARINE_V : TextShips.SUBMARINE_H;
             case DESTROYER -> ship.isRotated() ? TextShips.DESTROYER_V : TextShips.DESTROYER_H;
             case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
-
-
         };
     }
 }

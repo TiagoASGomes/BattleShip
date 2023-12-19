@@ -19,7 +19,8 @@ public class SpecialHandler implements CommandHandler {
             playerHandler.getCharacter().special(playerHandler, game);
             playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointCosts.SPECIAL.getPointCost());
         } catch (PlayerNotFoundException e) {
-            //TODO Fechar jogo
+            //TODO mensagem desconecção
+            game.closeGame();
             throw new RuntimeException(e);
         } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
             playerHandler.sendMessage(e.getMessage());

@@ -29,11 +29,16 @@ public class Battleship implements Runnable {
     private final List<PlayerHandler> players = new CopyOnWriteArrayList<>();
     private final ExecutorService service;
     private final List<MapType> choices = new CopyOnWriteArrayList<>();
+    private boolean finished;
 
+    public boolean isFinished() {
+        return finished;
+    }
 
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
         service = Executors.newFixedThreadPool(2);
+        finished = false;
     }
 
 
@@ -49,6 +54,15 @@ public class Battleship implements Runnable {
         int loserIndex = playGame();
 
         printWinner(loserIndex);
+
+        closeGame();
+    }
+
+    public void closeGame() {
+        finished = true;
+        for (PlayerHandler player : players) {
+            player.close();
+        }
     }
 
     private void printWinner(int loserIndex) {
@@ -56,7 +70,7 @@ public class Battleship implements Runnable {
         getOtherPlayer(players.get(loserIndex)).ifPresent(loser -> loser.sendMessage(Messages.WINNER));
     }
 
-    private Optional<PlayerHandler> getOtherPlayer(PlayerHandler playerHandler) {
+    public Optional<PlayerHandler> getOtherPlayer(PlayerHandler playerHandler) {
         return players.stream()
                 .filter(player -> !player.equals(playerHandler))
                 .findFirst();
@@ -379,6 +393,15 @@ public class Battleship implements Runnable {
         }
 
 
+        public void close() {
+            try {
+                socket.close();
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
