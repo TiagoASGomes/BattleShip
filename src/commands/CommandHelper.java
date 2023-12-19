@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class CommandHelper {
+
+    /**
+     * @param number Receives a String
+     * @return Returns true if that String is not a number
+     */
     public static boolean isNotNumber(String number) {
         for (char digit : number.toCharArray()) {
             if (!Character.isDigit(digit)) {
@@ -22,6 +27,12 @@ public class CommandHelper {
         return false;
     }
 
+    /**
+     * @param separated receives an array of String as parameter.
+     * @throws InvalidSyntaxException throws InvalidSyntaxException if that array is not of length 3,
+     *                                if the second index of that array is not a number,
+     *                                if the third index of that array is not a char between A and Z.
+     */
     public static void checkValidInput(String[] separated) throws InvalidSyntaxException {
         if (separated.length != 3) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
@@ -34,6 +45,12 @@ public class CommandHelper {
         }
     }
 
+    /**
+     * @param game          receives a Battleship game as parameter
+     * @param playerHandler receives a PlayerHandler as parameter
+     * @return returns a PlayerHandler that is not himself, if there is one,
+     * @throws PlayerNotFoundException and throws a PlayerNotFoundException if there is none.
+     */
     public static Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
         Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
         if (opponent.isEmpty()) {
@@ -60,6 +77,12 @@ public class CommandHelper {
         return positionChar == ' ' || positionChar == '*' || positionChar == 'R';
     }
 
+    /**
+     * @param otherPlayer Receives a PlayerHandler
+     * @param row         receives an int that represents a row as parameter
+     * @param col         receives another int that represents a column as parameter
+     * @return returns true if that coordinate in that PlayerHandler's Map has the char 'O'
+     */
     public static boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
         return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
     }
