@@ -48,10 +48,7 @@ public class Client {
 
         String line;
         while ((line = in.readLine()) != null) {
-            if (line.startsWith("/")) {
-                playSound(line);
-                continue;
-            }
+            playSound(line);
             System.out.println(line);
         }
 
@@ -60,10 +57,10 @@ public class Client {
 
     private void playSound(String line) {
         switch (line) {
-            case "/hit":
+            case Messages.BOOM:
                 play(0);
                 break;
-            case "/miss":
+            case Messages.MISSED:
                 play(1);
                 break;
         }

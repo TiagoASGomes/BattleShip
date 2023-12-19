@@ -5,6 +5,7 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
+import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -224,6 +225,7 @@ public class Battleship implements Runnable {
         public void chooseMap() throws IOException {
 
             sendMessage(Messages.CHOOSE_MAP);
+            sendMessage(MapString.ALL_MAPS);
             String playerChoice = in.readLine();
             switch (playerChoice) {
                 case "1":
