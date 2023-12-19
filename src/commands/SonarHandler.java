@@ -50,6 +50,9 @@ public class SonarHandler implements CommandHandler {
                 if (checkInvalidPosition(i, j, opponentMap)) {
                     continue;
                 }
+                if (opponentMap.get(i).get(j).equals("~")) {
+                    continue;
+                }
 
                 putMarkOnMap(i, j, map);
             }

@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Client {
     private final List<Clip> clips = new ArrayList<>();
+    private final Object lock = new Object();
 
 
     public Client() {
@@ -48,20 +49,34 @@ public class Client {
 
         String line;
         while ((line = in.readLine()) != null) {
-            playSound(line);
+            if (line.startsWith("/")) {
+                checkCommand(line);
+                continue;
+            }
             System.out.println(line);
         }
 
         close(socket, in, out);
     }
 
-    private void playSound(String line) {
+    private void checkCommand(String line) {
         switch (line) {
             case Messages.BOOM:
                 play(0);
                 break;
             case Messages.MISSED:
                 play(1);
+                break;
+            case Messages.GIVE_TURN_PERMISSION:
+                synchronized (lock) {
+                    lock.notifyAll();
+                }
+                break;
+            case Messages.GIVE_TURN_PERMISSION2:
+                synchronized (lock) {
+                    lock.notifyAll();
+                }
+                System.out.println(Messages.YOUR_TURN);
                 break;
         }
     }
@@ -79,28 +94,35 @@ public class Client {
     }
 
 
-    private static class KeyboardHandler implements Runnable {
+    private class KeyboardHandler implements Runnable {
         private final PrintWriter out;
         private final Socket socket;
         private final BufferedReader in;
+
 
         public KeyboardHandler(PrintWriter out, Socket socket) {
             this.out = out;
             this.socket = socket;
             this.in = new BufferedReader(new InputStreamReader(System.in));
+
         }
 
         @Override
         public void run() {
             while (!socket.isClosed()) {
                 try {
+                    synchronized (lock) {
+                        String line = in.readLine();
+                        out.println(line);
+                        lock.wait();
+                    }
 
-                    String line = in.readLine();
-                    out.println(line);
 
                 } catch (IOException e) {
                     System.out.println(Messages.ERROR);
                     close();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

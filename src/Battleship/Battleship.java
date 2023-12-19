@@ -245,6 +245,7 @@ public class Battleship implements Runnable {
 
         public void chooseCharacter() throws IOException {
 
+            sendMessage(Messages.GIVE_TURN_PERMISSION);
             sendMessage(Messages.CHOOSE_CHARACTER);
             String playerChoice = in.readLine();
             switch (playerChoice) {
@@ -297,11 +298,12 @@ public class Battleship implements Runnable {
             while (type == null) {
                 Thread.sleep(100);
             }
+            sendMessage(Messages.GIVE_TURN_PERMISSION);
         }
 
 
         public void takeTurn() throws IOException {
-            sendMessage(Messages.YOUR_TURN);
+            sendMessage(Messages.GIVE_TURN_PERMISSION2);
             sendMessage(String.format(Messages.POINTS, playerPoints));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
@@ -315,6 +317,7 @@ public class Battleship implements Runnable {
         private void placeShips() throws IOException {
             sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
+                sendMessage(Messages.GIVE_TURN_PERMISSION);
                 sendMessage(Printer.createMap(this));
                 sendMessage(Printer.createShipString(this));
                 message = in.readLine();

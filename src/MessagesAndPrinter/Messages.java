@@ -25,6 +25,8 @@ public class Messages {
     public static final String CHOOSE_MAP = "Choose your map.";
     public static final String CANNOT_PLACE = "Sorry, you cannot place the boat there.";
     public static final String YOUR_TURN = "It´s your turn to play!";
+    public static final String GIVE_TURN_PERMISSION = "/turn";
+    public static final String GIVE_TURN_PERMISSION2 = "/turn2";
     public static final String MISSED = "Sorry, you missed.";
     public static final String BOOM = "Boom! You hit the ship.";
     public static final String KABOOM = "Kaboom! You sunk the ship.";
