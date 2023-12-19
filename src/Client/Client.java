@@ -66,12 +66,12 @@ public class Client {
             case "/miss":
                 play(1);
                 break;
-        }
+          }
     }
 
     private void play(int index) {
-//        clips.get(index).setMicrosecondPosition(0);
-//        clips.get(index).start();
+        clips.get(index).setMicrosecondPosition(0);
+        clips.get(index).start();
     }
 
 

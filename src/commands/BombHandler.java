@@ -7,6 +7,7 @@ import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.NotEnoughPointsException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -60,10 +61,10 @@ public class BombHandler implements CommandHandler {
                 Ship ship = opponent.checkIfHit(i, j);
                 if (ship != null) {
                     playerHandler.winPoint(ship);
-                    playerHandler.getOppMap().get(i).set(j, "\u001B[31mX\u001B[0m");
+                    playerHandler.getOppMap().get(i).set(j, Colors.RED + "X" + Colors.RESET);
                     continue;
                 }
-                playerHandler.getOppMap().get(i).set(j, "\u001B[34mX\u001B[0m");
+                playerHandler.getOppMap().get(i).set(j, Colors.BLUE + "X" + Colors.RESET);
             }
         }
     }

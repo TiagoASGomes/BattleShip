@@ -5,6 +5,7 @@ import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -45,24 +46,24 @@ public class ShootHandler implements CommandHandler {
 
         if (ship != null) {
             playerHandler.winPoint(ship);
-            playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
+            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X"+ Colors.RESET);
             return;
         }
-        playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
+        playerHandler.getOppMap().get(row).set(col, Colors.BLUE +"X"+ Colors.RESET);
     }
 
     private void mineExplosion(Battleship.PlayerHandler player, Battleship.PlayerHandler opponent, int row, int col) {
-        opponent.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-        player.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+        opponent.getMyMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
+        player.getOppMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
 
         int randRow = (int) (Math.random() * (player.getMyMap().size() - 4 + 1) + 1);
         int randCol = (int) (Math.random() * (player.getMyMap().get(0).size() - 4 + 1) + 1);
         Ship ship = opponent.checkIfHit(row, col);
         if (ship != null) {
-            player.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
+            player.getMyMap().get(randRow).set(randCol, Colors.RED +"X" + Colors.RESET);
             return;
         }
-        player.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
+        player.getMyMap().get(randRow).set(randCol, Colors.BLUE + "X" + Colors.RESET);
     }
 
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
