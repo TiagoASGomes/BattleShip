@@ -10,11 +10,12 @@ import java.util.List;
 
 public class Client {
     private final List<Clip> clips = new ArrayList<>();
-    private final Object lock = new Object();
+    private boolean myTurn;
 
 
     public Client() {
         getClips();
+        myTurn = true;
     }
 
     private void getClips() {
@@ -67,17 +68,13 @@ public class Client {
             case Messages.MISSED:
                 play(1);
                 break;
-//            case Messages.GIVE_TURN_PERMISSION:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                break;
-//            case Messages.GIVE_TURN_PERMISSION2:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                System.out.println(Messages.YOUR_TURN);
-//                break;
+            case Messages.GIVE_TURN_PERMISSION:
+                myTurn = true;
+                break;
+            case Messages.GIVE_TURN_PERMISSION2:
+                myTurn = true;
+                System.out.println(Messages.YOUR_TURN);
+                break;
         }
     }
 
@@ -111,20 +108,16 @@ public class Client {
         public void run() {
             while (!socket.isClosed()) {
                 try {
-//                    synchronized (lock) {
+                    if (!myTurn) continue;
                     String line = in.readLine();
                     out.println(line);
-//                        lock.wait();
-//                    }
+                    myTurn = false;
 
 
                 } catch (IOException e) {
                     System.out.println(Messages.ERROR);
                     close();
                 }
-//                catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
             }
         }
 
