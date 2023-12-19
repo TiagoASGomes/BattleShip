@@ -5,8 +5,6 @@ public class Messages {
     public static final String NO_SUCH_COMMAND = "⚠️ Invalid command!";
     public static final String WELCOME = "Welcome to the game!";
     public static final String CHOOSE_MAP = "Choose your map.";
-    public static final String PLACE_BOAT = "Place your boat.";
-
     public static final String CANNOT_PLACE = "Sorry, you cannot place the boat there.";
     public static final String YOUR_TURN = "It´s your turn to play!";
     public static final String MISSED = "Sorry, you missed.";
@@ -28,6 +26,7 @@ public class Messages {
     public static final String ERROR = "Something went wrong with the server. Connection closing...";
     public static final String HIT_POINTS = "You earn 1 point!";
     public static final String SINK_POINTS = "You earn 2 point!";
+    public static final String POINTS = "You have: %s points.";
 
     public static final String ROTATED_SHIP = "Rotated ship ";
     public static final String PLAYER_DISCONNECTED = "Player Disconnected";
@@ -36,6 +35,6 @@ public class Messages {
     public static final String PLACE_MINE = "Place your mine or type 0 to continue.";
     public static final String ALREADY_MINED = "You already have a mine there!";
     public static final String WAS_TARGETED = "That location was already targeted!";
-
-
+    public static final String WAIT_FOR_OPPONENT = "Waiting for opponent.";
+    public static final String ALL_SHIPS_PLACED = "All ships in place.";
 }

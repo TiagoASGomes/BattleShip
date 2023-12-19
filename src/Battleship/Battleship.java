@@ -45,6 +45,7 @@ public class Battleship implements Runnable {
     @Override
     public void run() {
 
+
         checkPlayersConnected();
 
         mapSelection();
@@ -99,14 +100,7 @@ public class Battleship implements Runnable {
 
     private void checkPlayersReady() {
         while (checkPlayersNotReady()) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
-
     private void mapSelection() {
         while (choices.size() < 2) {
             try {
@@ -114,22 +108,14 @@ public class Battleship implements Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
         int rand = new Random().nextInt(choices.size());
         players.get(0).setType(choices.get(rand));
         players.get(1).setType(choices.get(rand));
     }
-
     private void checkPlayersConnected() {
         while (checkPlayersNotConnected()) {
-            try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
-
     public void submitMapChoice(MapType type) {
         choices.add(type);
     }
@@ -296,7 +282,7 @@ public class Battleship implements Runnable {
 
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
-            sendMessage(String.valueOf(playerPoints));
+            sendMessage(String.format(Messages.POINTS, playerPoints.getPlayerPoints()));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
@@ -315,8 +301,15 @@ public class Battleship implements Runnable {
                 PreparationCommand command = PreparationCommand.getCommandFromDescription(message.split(" ")[0]);
                 command.getHandler().execute(this, Battleship.this);
             }
-        }
 
+            try {
+                sendMessage(Messages.ALL_SHIPS_PLACED);
+                sendMessage(Messages.WAIT_FOR_OPPONENT);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public void sendMessage(String message) {
             out.println(message);
@@ -359,13 +352,17 @@ public class Battleship implements Runnable {
                 if (ship.gotHit(row, col)) {
                     String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
                     myMap.get(row).set(col, coloredVersion);
-                    sendMessage("/hit");
+                    sendMessage(Messages.BOOM);
                     return ship;
                 }
+                if (ship.isSinked()) {
+                    sendMessage(Messages.KABOOM);
+                }
             }
-            sendMessage("/miss");
+            sendMessage(Messages.MISSED);
             myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
             return null;
+
         }
 
         public boolean allShipsSinked() {
