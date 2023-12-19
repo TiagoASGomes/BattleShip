@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,27 +27,73 @@ public class Battleship implements Runnable {
 
     private boolean open = true;
     private final List<PlayerHandler> players = new CopyOnWriteArrayList<>();
-    private ExecutorService service;
+    private final ExecutorService service;
     private final List<MapType> choices = new CopyOnWriteArrayList<>();
 
 
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
+        service = Executors.newFixedThreadPool(2);
     }
 
 
     @Override
     public void run() {
 
-        service = Executors.newFixedThreadPool(2);
-        while (checkPlayersNotConnected()) {
+        checkPlayersConnected();
+
+        mapSelection();
+
+        checkPlayersReady();
+
+        int loserIndex = playGame();
+
+        printWinner(loserIndex);
+    }
+
+    private void printWinner(int loserIndex) {
+        players.get(loserIndex).sendMessage(Messages.LOSER);
+        getOtherPlayer(players.get(loserIndex)).ifPresent(loser -> loser.sendMessage(Messages.WINNER));
+    }
+
+    private Optional<PlayerHandler> getOtherPlayer(PlayerHandler playerHandler) {
+        return players.stream()
+                .filter(player -> !player.equals(playerHandler))
+                .findFirst();
+    }
+
+    private int playGame() {
+        int currentPlayerIndex = new Random().nextInt(players.size());
+        while (gameNotOver()) {
+            currentPlayerIndex = swapPlayer(currentPlayerIndex);
+            PlayerHandler currentPlayer = players.get(swapPlayer(currentPlayerIndex));
+            try {
+                currentPlayer.playerPoints += 1;
+                currentPlayer.takeTurn();
+                updateMaps();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return currentPlayerIndex;
+    }
+
+    private int swapPlayer(int playerIndex) {
+        return playerIndex == 0 ? 1 : 0;
+
+    }
+
+    private void checkPlayersReady() {
+        while (checkPlayersNotReady()) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
 
+    private void mapSelection() {
         while (choices.size() < 2) {
             try {
                 Thread.sleep(100);
@@ -61,44 +104,16 @@ public class Battleship implements Runnable {
         int rand = new Random().nextInt(choices.size());
         players.get(0).setType(choices.get(rand));
         players.get(1).setType(choices.get(rand));
+    }
 
-
-        while (checkPlayersNotReady()) {
+    private void checkPlayersConnected() {
+        while (checkPlayersNotConnected()) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        boolean firstWon = false;
-
-
-        while (gameNotOver()) {
-            try {
-                players.get(0).playerPoints += 1;
-                players.get(0).takeTurn();
-
-                updateMaps();
-                if (!gameNotOver()) {
-                    firstWon = true;
-                    break;
-                }
-                players.get(1).playerPoints += 1;
-                players.get(1).takeTurn();
-                updateMaps();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        if (firstWon) {
-            players.get(0).sendMessage(Messages.WINNER);
-            players.get(1).sendMessage(Messages.LOSER);
-        } else {
-            players.get(1).sendMessage(Messages.WINNER);
-            players.get(0).sendMessage(Messages.LOSER);
-        }
-
-
     }
 
     public void submitMapChoice(MapType type) {
@@ -182,9 +197,8 @@ public class Battleship implements Runnable {
             String[] squareMapSpaces = map.split("\n");
 
             List<List<String>> mapList = new ArrayList<>();
-            for (int i = 0; i < squareMapSpaces.length; i++) {
-                List<String> temp = new ArrayList<>();
-                Arrays.stream(squareMapSpaces[i].split(" ")).forEach(position -> temp.add(position));
+            for (String squareMapSpace : squareMapSpaces) {
+                List<String> temp = new ArrayList<>(Arrays.asList(squareMapSpace.split(" ")));
                 mapList.add(temp);
             }
             return mapList;
@@ -197,13 +211,13 @@ public class Battleship implements Runnable {
             switch (playerChoice) {
                 case "1":
                     submitMapChoice(MapType.SQUARE_MAP);
-                    break;
+                    return;
                 case "2":
                     submitMapChoice(MapType.HEXA_MAP);
-                    break;
+                    return;
                 case "3":
                     submitMapChoice(MapType.ROCK_MAP);
-                    break;
+                    return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
                     chooseMap();
@@ -236,13 +250,14 @@ public class Battleship implements Runnable {
 
             try {
                 sendMessage(Messages.WELCOME);
+
                 chooseMap();
-                while (type == null) {
-                    Thread.sleep(100);
-                }
+                waitForMapSelected();
                 myMap = generateMap(type.getMAP());
                 oppMap = generateMap(type.getMAP());
+
                 chooseCharacter();
+
                 placeShips();
 
             } catch (IOException e) {
@@ -256,6 +271,12 @@ public class Battleship implements Runnable {
                 throw new RuntimeException(e);
             }
 
+        }
+
+        private void waitForMapSelected() throws InterruptedException {
+            while (type == null) {
+                Thread.sleep(100);
+            }
         }
 
 
@@ -344,7 +365,6 @@ public class Battleship implements Runnable {
 
         public void winPoint(Ship ship) {
             playerPoints += HIT.getPointCost();
-            System.out.println(Messages.HIT_POINTS);
             if (ship.isSinked()) {
                 playerPoints += SINK.getPointCost();
             }
@@ -358,18 +378,6 @@ public class Battleship implements Runnable {
             this.playerPoints = point;
         }
 
-
-        public void shootMessage(Ship ship, PlayerHandler playerHandler, int row, int col) {
-            if (checkIfHit(row, col) == ship) {
-                sendMessage(Messages.BOOM);
-            }
-            if (checkIfHit(row, col) == null) {
-                playerHandler.sendMessage(Messages.MISSED);
-            }
-            if (ship.isSinked()) {
-                playerHandler.sendMessage(Messages.KABOOM);
-            }
-        }
 
     }
 
