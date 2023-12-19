@@ -1,23 +1,21 @@
 package commands;
 
-public enum GameCommands {
-    SHOOT("shoot", new ShootHandler()),
-    SONAR("sonar", new SonarHandler()),
-    BOMB("bomb", new BombHandler()),
-    SPECIAL("special", new SpecialHandler()),
-    NOT_FOUND("Command not found", new CommandNotFoundHandler());
+public enum MineCommand {
+
+    NOT_FOUND("Command not found", new CommandNotFoundHandler()),
+    MINE("mine", new MineHandler());
 
 
     private final String description;
     private final CommandHandler handler;
 
-    GameCommands(String description, CommandHandler handler) {
+    MineCommand(String description, CommandHandler handler) {
         this.description = description;
         this.handler = handler;
     }
 
-    public static GameCommands getCommandFromDescription(String description) {
-        for (GameCommands command : values()) {
+    public static MineCommand getCommandFromDescription(String description) {
+        for (MineCommand command : values()) {
             if (description.equals(command.description)) {
                 return command;
             }
@@ -33,3 +31,4 @@ public enum GameCommands {
         return description;
     }
 }
+

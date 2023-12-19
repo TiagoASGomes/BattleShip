@@ -21,10 +21,17 @@ public abstract class Character {
 
     }
 
+    /**
+     * @param playerShips Receives a list of Ships and sets it has that Player's playerShips.
+     */
     public void setPlayerShips(List<Ship> playerShips) {
         this.playerShips = playerShips;
     }
 
+
+    /**
+     * @return returns that Player's list of Ship objects.
+     */
     public List<Ship> getPlayerShips() {
         return playerShips;
     }

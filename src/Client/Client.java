@@ -36,7 +36,6 @@ public class Client {
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
         }
-
     }
 
     private void start(String host, int port) throws IOException {

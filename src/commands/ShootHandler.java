@@ -70,6 +70,7 @@ public class ShootHandler implements CommandHandler {
             position = stringPosition.charAt(5);
         }
 
+
         try {
             checkPosition(position);
         } catch (IndexOutOfBoundsException e) {
@@ -81,6 +82,7 @@ public class ShootHandler implements CommandHandler {
             }
         }
 
+
         Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
                 .filter(player -> !player.equals(playerHandler))
                 .findFirst().orElse(null);
@@ -91,6 +93,25 @@ public class ShootHandler implements CommandHandler {
         if (ship != null) {
             playerHandler.winPoint(ship);
             playerHandler.shootMessage(ship, playerHandler, row, col);
+
+        if (checkForMine(otherPlayer, row, col)) {
+
+            otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+            playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+
+            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 4 + 1) + 1);
+            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 4 + 1) + 1);
+
+            if (playerHandler.checkIfHit(randRow, randCol)) {
+                playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
+                return;
+            }
+            playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
+            return;
+        }
+
+
+        if (otherPlayer.checkIfHit(row, col)) {
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }
@@ -100,11 +121,15 @@ public class ShootHandler implements CommandHandler {
     }
 
     private static void checkPosition(char position) throws IndexOutOfBoundsException {
-        if ((position == 'X' || position == ' ' || position == '*')) {
+        if (position == 'X' || position == ' ' || position == '*' || position == 'R') {
             throw new IndexOutOfBoundsException("Row out of bounds");
-
         }
     }
+
+    private static boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
+        return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
+    }
+
 
     private static void validateInput(char input) throws InvalidKeyException {
         if (input < 65 || input > 90) {

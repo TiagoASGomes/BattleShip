@@ -33,4 +33,9 @@ public class Messages {
     public static final String PLAYER_DISCONNECTED = "Player Disconnected";
     public static final String NOT_ENOUGH_POINTS = "You don't have enough points for that ability";
 
+    public static final String PLACE_MINE = "Place your mine or type 0 to continue.";
+    public static final String ALREADY_MINED = "You already have a mine there!";
+    public static final String WAS_TARGETED = "That location was already targeted!";
+
+
 }

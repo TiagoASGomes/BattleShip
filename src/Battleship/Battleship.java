@@ -8,6 +8,7 @@ import Battleship.ships.Ship;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
+import commands.MineCommand;
 import commands.PreparationCommand;
 
 import java.io.BufferedReader;
@@ -77,6 +78,7 @@ public class Battleship implements Runnable {
 
         while (gameNotOver()) {
             try {
+                players.get(0).placeMine();
 
                 players.get(0).playerPoints.setPlayerPoints(players.get(0).playerPoints.getPlayerPoints() + 1);
                 players.get(0).takeTurn();
@@ -86,6 +88,7 @@ public class Battleship implements Runnable {
                     firstWon = true;
                     break;
                 }
+                players.get(1).placeMine();
                 players.get(1).playerPoints.setPlayerPoints(players.get(1).playerPoints.getPlayerPoints() + 1);
                 players.get(1).takeTurn();
                 updateMaps();
@@ -262,12 +265,27 @@ public class Battleship implements Runnable {
 
         }
 
+
+        public void placeMine() throws IOException {
+            sendMessage(Messages.PLACE_MINE);
+            message = in.readLine();
+            if (message.equals("0")) {
+                return;
+            }
+            MineCommand command = MineCommand.getCommandFromDescription(message.split(" ")[0]);
+            command.getHandler().execute(this, Battleship.this);
+            if (command.equals(MineCommand.NOT_FOUND)) {
+                placeMine();
+            }
+        }
+
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
             sendMessage(String.valueOf(playerPoints.getPlayerPoints()));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
+
             if (command.equals(GameCommands.NOT_FOUND)) {
                 takeTurn();
             }
