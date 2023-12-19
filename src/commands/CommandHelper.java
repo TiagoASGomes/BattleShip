@@ -65,6 +65,14 @@ public class CommandHelper {
         }
     }
 
+    /**
+     * @param row receives int representing row on the map.
+     * @param col receives int representing column on the map.
+     * @param map receives List of a List of Strings representing a map.
+     * @return returns true if either row or column are bigger than map size, thus exceeding the boundaries of the map.
+     * Row must not exceed the List size.
+     * Column must not exceed the size of the List within the List (index represented by row).
+     */
     public static boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
         if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
             return true;
@@ -87,6 +95,14 @@ public class CommandHelper {
         return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
     }
 
+    /**
+     * Marks the mine at opponent's map has hit, and shoots randomly at player's own map as backfire.
+     *
+     * @param player   receives a PlayerHandler as the one who shot the opponent's mine.
+     * @param opponent receives a PlayerHandler as the one who's mine was targeted.
+     * @param row      receives int representing the row of that mine.
+     * @param col      receives int representing the column of that mine.
+     */
     public static void mineExplosion(Battleship.PlayerHandler player, Battleship.PlayerHandler opponent, int row, int col) {
         opponent.getMyMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
         player.getOppMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
