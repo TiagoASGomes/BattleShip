@@ -66,9 +66,9 @@ public class CommandHelper {
     }
 
     /**
-     * @param row receives int representing row on the map.
-     * @param col receives int representing column on the map.
-     * @param map receives List of a List of Strings representing a map.
+     * @param row         receives int representing row on the map.
+     * @param col         receives int representing column on the map.
+     * @param opponentMap receives List of a List of Strings representing a map.
      * @return returns true if either row or column are bigger than map size, thus exceeding the boundaries of the map.
      * Row must not exceed the List size.
      * Column must not exceed the size of the List within the List (index represented by row).
