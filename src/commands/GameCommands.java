@@ -5,6 +5,7 @@ public enum GameCommands {
     SONAR("sonar", new SonarHandler()),
     BOMB("bomb", new BombHandler()),
     SPECIAL("special", new SpecialHandler()),
+    MINE("mine", new MineHandler()),
     NOT_FOUND("Command not found", new CommandNotFoundHandler());
 
 

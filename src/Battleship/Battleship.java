@@ -8,7 +8,6 @@ import Battleship.ships.Ship;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
-import commands.MineCommand;
 import commands.PreparationCommand;
 
 import java.io.BufferedReader;
@@ -24,14 +23,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Battleship.PlayerPoints.pointForHit;
-import static Battleship.PlayerPoints.pointForSinking;
+import static Battleship.PointCosts.HIT;
+import static Battleship.PointCosts.SINK;
 
 public class Battleship implements Runnable {
 
     private boolean open = true;
     private final List<PlayerHandler> players = new CopyOnWriteArrayList<>();
     private ExecutorService service;
+    private final List<MapType> choices = new CopyOnWriteArrayList<>();
 
 
     public Battleship(Socket client) {
@@ -51,20 +51,17 @@ public class Battleship implements Runnable {
             }
         }
 
-        List<MapType> choices = new CopyOnWriteArrayList<>();
-        try {
-            choices.add(players.get(0).chooseMap());
-            choices.add(players.get(1).chooseMap());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        while (choices.size() < 2) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        for (int i = 0; i < choices.size(); i++) {
-            int rand = new Random().nextInt(2);
-            choices.get(rand);
-            players.get(0).setType(choices.get(rand));
-            players.get(1).setType(choices.get(rand));
+        int rand = new Random().nextInt(choices.size());
+        players.get(0).setType(choices.get(rand));
+        players.get(1).setType(choices.get(rand));
 
-        }
 
         while (checkPlayersNotReady()) {
             try {
@@ -78,9 +75,7 @@ public class Battleship implements Runnable {
 
         while (gameNotOver()) {
             try {
-                players.get(0).placeMine();
-
-                players.get(0).playerPoints.setPlayerPoints(players.get(0).playerPoints.getPlayerPoints() + 1);
+                players.get(0).playerPoints += 1;
                 players.get(0).takeTurn();
 
                 updateMaps();
@@ -88,8 +83,7 @@ public class Battleship implements Runnable {
                     firstWon = true;
                     break;
                 }
-                players.get(1).placeMine();
-                players.get(1).playerPoints.setPlayerPoints(players.get(1).playerPoints.getPlayerPoints() + 1);
+                players.get(1).playerPoints += 1;
                 players.get(1).takeTurn();
                 updateMaps();
             } catch (IOException e) {
@@ -105,6 +99,10 @@ public class Battleship implements Runnable {
         }
 
 
+    }
+
+    public void submitMapChoice(MapType type) {
+        choices.add(type);
     }
 
     private boolean gameNotOver() {
@@ -161,7 +159,7 @@ public class Battleship implements Runnable {
         private Character character;
         private List<List<String>> myMap;
         private List<List<String>> oppMap;
-        private final PlayerPoints playerPoints;
+        private int playerPoints;
 
 
         private MapType type;
@@ -169,7 +167,7 @@ public class Battleship implements Runnable {
         public PlayerHandler(Socket socket) {
             this.socket = socket;
             ready = false;
-            playerPoints = new PlayerPoints();
+
             try {
                 this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 this.out = new PrintWriter(socket.getOutputStream(), true);
@@ -192,21 +190,23 @@ public class Battleship implements Runnable {
             return mapList;
         }
 
-        public MapType chooseMap() throws IOException {
+        public void chooseMap() throws IOException {
 
             sendMessage(Messages.CHOOSE_MAP);
             String playerChoice = in.readLine();
             switch (playerChoice) {
                 case "1":
-                    return MapType.SQUARE_MAP;
+                    submitMapChoice(MapType.SQUARE_MAP);
+                    break;
                 case "2":
-                    return MapType.HEXA_MAP;
+                    submitMapChoice(MapType.HEXA_MAP);
+                    break;
                 case "3":
-                    return MapType.ROCK_MAP;
+                    submitMapChoice(MapType.ROCK_MAP);
+                    break;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
                     chooseMap();
-                    return null;
             }
         }
 
@@ -236,17 +236,10 @@ public class Battleship implements Runnable {
 
             try {
                 sendMessage(Messages.WELCOME);
+                chooseMap();
                 while (type == null) {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 }
-                //   chooseMap();
-                /*if (getMyMap() == getOppMap()) {
-                    myMap = generateMap(this.type.getMAP());
-                    oppMap = generateMap(this.type.getMAP());
-                } else {
-                    myMap = generateMap(MapType.SQUARE_MAP.getMAP());
-                    oppMap = generateMap(MapType.SQUARE_MAP.getMAP());
-                }*/
                 myMap = generateMap(type.getMAP());
                 oppMap = generateMap(type.getMAP());
                 chooseCharacter();
@@ -266,22 +259,9 @@ public class Battleship implements Runnable {
         }
 
 
-        public void placeMine() throws IOException {
-            sendMessage(Messages.PLACE_MINE);
-            message = in.readLine();
-            if (message.equals("0")) {
-                return;
-            }
-            MineCommand command = MineCommand.getCommandFromDescription(message.split(" ")[0]);
-            command.getHandler().execute(this, Battleship.this);
-            if (command.equals(MineCommand.NOT_FOUND)) {
-                placeMine();
-            }
-        }
-
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
-            sendMessage(String.valueOf(playerPoints.getPlayerPoints()));
+            sendMessage(String.valueOf(playerPoints));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
@@ -363,17 +343,19 @@ public class Battleship implements Runnable {
         }
 
         public void winPoint(Ship ship) {
-            playerPoints.setPlayerPoints(playerPoints.getPlayerPoints() + pointForHit);
+            playerPoints += HIT.getPointCost();
             System.out.println(Messages.HIT_POINTS);
             if (ship.isSinked()) {
-                playerPoints.setPlayerPoints(playerPoints.getPlayerPoints() + pointForSinking);
-                System.out.println(Messages.SINK_POINTS);
-
+                playerPoints += SINK.getPointCost();
             }
         }
 
-        public PlayerPoints getPlayerPoints() {
+        public int getPlayerPoints() {
             return playerPoints;
+        }
+
+        public void setPlayerPoints(int point) {
+            this.playerPoints = point;
         }
 
 

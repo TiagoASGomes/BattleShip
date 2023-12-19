@@ -1,6 +1,8 @@
 package commands;
 
 import Battleship.Battleship;
+import Battleship.PointCosts;
+import Exceptions.NotEnoughPointsException;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -13,13 +15,17 @@ public class MineHandler implements CommandHandler {
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
 
-       /* if (playerHandler.getPlayerPoints().getPlayerPoints()) < 2){
-    playerHandler.sendMessage(TODO MESSAGE DONT HAVE ENOUGH POINTS);
-    return;
-
-}*/
-
-//check if player has points. if not, sout message and return.
+        try {
+            checkPlayerPoints(playerHandler);
+        } catch (NotEnoughPointsException e) {
+            playerHandler.sendMessage(Messages.NOT_ENOUGH_POINTS);
+            try {
+                playerHandler.takeTurn();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new RuntimeException(e);
+        }
 
 
         List<List<String>> map = playerHandler.getMyMap();
@@ -33,7 +39,7 @@ public class MineHandler implements CommandHandler {
         } catch (InvalidKeyException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
-                playerHandler.placeMine();
+                playerHandler.takeTurn();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -48,7 +54,7 @@ public class MineHandler implements CommandHandler {
         } catch (IndexOutOfBoundsException e) {
             playerHandler.sendMessage(Messages.INVALID_SYNTAX);
             try {
-                playerHandler.placeMine();
+                playerHandler.takeTurn();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -66,7 +72,7 @@ public class MineHandler implements CommandHandler {
             checkPosition(position);
         } catch (IndexOutOfBoundsException e) {
             try {
-                playerHandler.placeMine();
+                playerHandler.takeTurn();
                 return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -74,8 +80,12 @@ public class MineHandler implements CommandHandler {
         }
 
         playerHandler.getMyMap().get(row).set(col, "O");
-        // TODO perde 2 pontos
-        //playerHandler.getPlayerPoints().setPlayerPoints(playerHandler.getPlayerPoints().getPlayerPoints()-2)
+        playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointCosts.MINE.getPointCost());
+        try {
+            playerHandler.takeTurn();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -89,6 +99,12 @@ public class MineHandler implements CommandHandler {
     private void validateInput(char input) throws InvalidKeyException {
         if (input < 65 || input > 90) {
             throw new InvalidKeyException("Wrong letter");
+        }
+    }
+
+    private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
+        if (playerHandler.getPlayerPoints() < PointCosts.MINE.getPointCost()) {
+            throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
         }
     }
 }
