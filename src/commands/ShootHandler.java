@@ -37,7 +37,7 @@ public class ShootHandler implements CommandHandler {
                 throw new RuntimeException(ex);
             }
         }
-        
+
     }
 
     private void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
@@ -65,6 +65,16 @@ public class ShootHandler implements CommandHandler {
         player.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
     }
 
+    /**
+     * @param message receives a String as parameter.
+     * @param map     receives a List of Lists of Strings as parameter.
+     *                creates an array of String by splitting the String message by the spaces.
+     *                Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
+     * @return returns an array of int type that represents two coordinates of the map.
+     * @throws InvalidSyntaxException   if the input is not allowed.
+     * @throws InvalidPositionException if the coordinates are off of the map size, if the length is bigger than 1,
+     *                                  and if there is already a space, an '*', or 'R' in that coordinate on the map.
+     */
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
@@ -88,6 +98,12 @@ public class ShootHandler implements CommandHandler {
         return coordinates;
     }
 
+    /**
+     * @param separated receives an array of String as parameter.
+     * @throws InvalidSyntaxException throws InvalidSyntaxException if that array is not of length 3,
+     *                                if the second index of that array is not a number,
+     *                                if the third index of that array is not a char between A and Z.
+     */
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
         if (separated.length != 3) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
@@ -100,6 +116,10 @@ public class ShootHandler implements CommandHandler {
         }
     }
 
+    /**
+     * @param number Receives a String
+     * @return Returns true if that String is not a number
+     */
     private boolean isNotNumber(String number) {
         for (char digit : number.toCharArray()) {
             if (!Character.isDigit(digit)) {
@@ -109,12 +129,22 @@ public class ShootHandler implements CommandHandler {
         return false;
     }
 
-
+    /**
+     * @param otherPlayer Receives a PlayerHandler
+     * @param row         receives an int that represents a row as parameter
+     * @param col         receives another int that represents a column as parameter
+     * @return returns true if that coordinate in that PlayerHandler's Map has the char 'O'
+     */
     private boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
         return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
     }
 
-
+    /**
+     * @param game          receives a Battleship game as parameter
+     * @param playerHandler receives a PlayerHandler as parameter
+     * @return returns a PlayerHandler that is not himself, if there is one,
+     * @throws PlayerNotFoundException and throws a PlayerNotFoundException if there is none.
+     */
     private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
         Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
         if (opponent.isEmpty()) {
