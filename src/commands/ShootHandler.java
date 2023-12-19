@@ -89,36 +89,30 @@ public class ShootHandler implements CommandHandler {
         if (otherPlayer == null) {
             throw new RuntimeException();
         }
+        if (checkForMine(otherPlayer, row, col)) {
+
+            otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+            playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+
+            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 4 + 1) + 1);
+            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 4 + 1) + 1);
+            Ship ship = otherPlayer.checkIfHit(row, col);
+            if (ship != null) {
+                playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
+                return;
+            }
+            playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
+            return;
+        }
         Ship ship = otherPlayer.checkIfHit(row, col);
+
         if (ship != null) {
             playerHandler.winPoint(ship);
             playerHandler.shootMessage(ship, playerHandler, row, col);
-
-            if (checkForMine(otherPlayer, row, col)) {
-
-                otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-                playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-
-                int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 4 + 1) + 1);
-                int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 4 + 1) + 1);
-
-                if (playerHandler.checkIfHit(randRow, randCol)) {
-                    playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
-                    return;
-                }
-                playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
-                return;
-            }
-
-
-            if (otherPlayer.checkIfHit(row, col)) {
-                playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
-                return;
-            }
-            playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
-
-
+            playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
+            return;
         }
+        playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
 
 
     }

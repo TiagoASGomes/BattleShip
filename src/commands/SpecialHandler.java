@@ -10,7 +10,7 @@ import MessagesAndPrinter.Messages;
 import java.io.IOException;
 
 public class SpecialHandler implements CommandHandler {
-    private static final int POINTS_TO_USE = 0;
+    private static final int POINTS_TO_USE = 7;
 
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
