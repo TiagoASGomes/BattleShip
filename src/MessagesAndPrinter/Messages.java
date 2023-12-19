@@ -23,20 +23,20 @@ public class Messages {
             "                                                                      888                   \n" +
             "                                                                      888                   \n";
     public static final String CHOOSE_MAP = "Choose your map.";
-    public static final String CANNOT_PLACE = "Sorry, you cannot place the boat there.";
+    public static final String CANNOT_PLACE = "Sorry, you cannot place the boat there.⛔";
     public static final String YOUR_TURN = "It´s your turn to play!";
     public static final String GIVE_TURN_PERMISSION = "/turn";
     public static final String GIVE_TURN_PERMISSION2 = "/turn2";
-    public static final String MISSED = "Sorry, you missed.";
-    public static final String BOOM = "Boom! You hit the ship.";
-    public static final String KABOOM = "Kaboom! You sunk the ship.";
+    public static final String MISSED = "Sorry, you missed.💦";
+    public static final String BOOM ="💥 Boom! You hit the ship.";
+    public static final String KABOOM = "💥 Kaboom! You sunk the ship.";
     public static final String WINNER = "Great! You won the battle!";
     public static final String LOSER = "Sorry, you lost this time.";
     public static final String SHIP_PLACEMENT = "Please place your ships.";
-    public static final String INVALID_SYNTAX = "Incorrect syntax.";
-    public static final String INVALID_ROTATE_SYNTAX = "Incorrect syntax use: rotate <ship_number>";
-    public static final String INVALID_PLACEMENT_SYNTAX = "Incorrect syntax use: place <ship_number> <row> <column>";
-    public static final String SHIP_DOESNT_EXIST = "Ship number doesn't match any ship please choose again,";
+    public static final String INVALID_SYNTAX = "Incorrect syntax. ⛔";
+    public static final String INVALID_ROTATE_SYNTAX = "Incorrect syntax use: rotate <ship_number> ⛔";
+    public static final String INVALID_PLACEMENT_SYNTAX = "Incorrect syntax use: place <ship_number> <row> <column> ⛔";
+    public static final String SHIP_DOESNT_EXIST = "Ship number doesn't match any ship please choose again. ⛔";
     public static final String INVALID_POSITION = "Invalid Position";
     public static final String CANT_READY_UP = "Please finish placing your ships.";
     public static final String CHOOSE_CHARACTER = "Please type 1 for character 1, 2 for character 2 and 3 for character 3";

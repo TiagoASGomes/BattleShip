@@ -6,6 +6,7 @@ import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
 import MessagesAndPrinter.MapString;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -39,6 +40,7 @@ public class Battleship implements Runnable {
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
         service = Executors.newFixedThreadPool(2);
+
         finished = false;
     }
 
@@ -373,14 +375,15 @@ public class Battleship implements Runnable {
         public Ship checkIfHit(int row, int col) {
             for (Ship ship : character.getPlayerShips()) {
                 if (ship.gotHit(row, col)) {
-                    String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
+                    String coloredVersion = Colors.RED + ship.getType().getICON() + Colors.RESET;
                     myMap.get(row).set(col, coloredVersion);
                     return ship;
                 }
                 if (ship.isSinked()) {
                 }
             }
-            myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
+
+            myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
             return null;
 
         }

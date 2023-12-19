@@ -5,6 +5,7 @@ import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -51,12 +52,14 @@ public class ShootHandler implements CommandHandler {
             } else {
                 playerHandler.sendMessage(Messages.BOOM);
             }
-            playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
+            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X"+ Colors.RESET);
             return;
         }
         playerHandler.sendMessage(Messages.MISSED);
-        playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
+        playerHandler.getOppMap().get(row).set(col, Colors.BLUE +"X"+ Colors.RESET);
     }
+
+
 
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");

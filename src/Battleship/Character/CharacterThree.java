@@ -7,6 +7,7 @@ import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.util.List;
@@ -52,10 +53,10 @@ public class CharacterThree extends Character {
         Ship ship = opponent.checkIfHit(row, col);
         if (ship != null) {
             playerHandler.winPoint(ship);
-            playerMap.get(row).set(col, "\u001B[31mX\u001B[0m");
+            playerMap.get(row).set(col, Colors.RED + "X" + Colors.RESET);
             return;
         }
-        playerMap.get(row).set(col, "\u001B[34mX\u001B[0m");
+        playerMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
     }
 
 //    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {

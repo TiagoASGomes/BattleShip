@@ -45,6 +45,7 @@ public class Server {
                 }
 
                 game.get().acceptPlayer(client);
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
