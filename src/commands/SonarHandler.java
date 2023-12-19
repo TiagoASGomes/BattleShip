@@ -6,6 +6,7 @@ import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.NotEnoughPointsException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class SonarHandler implements CommandHandler {
         if (map.get(row).get(col).length() > 1) {
             return;
         }
-        map.get(row).set(col, "\033[0;35m?\033[0m");
+        map.get(row).set(col, Colors.PURPLE + "?" + Colors.RESET);
     }
 
 

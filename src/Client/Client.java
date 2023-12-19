@@ -67,17 +67,17 @@ public class Client {
             case Messages.MISSED:
                 play(1);
                 break;
-            case Messages.GIVE_TURN_PERMISSION:
-                synchronized (lock) {
-                    lock.notifyAll();
-                }
-                break;
-            case Messages.GIVE_TURN_PERMISSION2:
-                synchronized (lock) {
-                    lock.notifyAll();
-                }
-                System.out.println(Messages.YOUR_TURN);
-                break;
+//            case Messages.GIVE_TURN_PERMISSION:
+//                synchronized (lock) {
+//                    lock.notifyAll();
+//                }
+//                break;
+//            case Messages.GIVE_TURN_PERMISSION2:
+//                synchronized (lock) {
+//                    lock.notifyAll();
+//                }
+//                System.out.println(Messages.YOUR_TURN);
+//                break;
         }
     }
 
@@ -111,19 +111,20 @@ public class Client {
         public void run() {
             while (!socket.isClosed()) {
                 try {
-                    synchronized (lock) {
-                        String line = in.readLine();
-                        out.println(line);
-                        lock.wait();
-                    }
+//                    synchronized (lock) {
+                    String line = in.readLine();
+                    out.println(line);
+//                        lock.wait();
+//                    }
 
 
                 } catch (IOException e) {
                     System.out.println(Messages.ERROR);
                     close();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 }
+//                catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
         }
 
