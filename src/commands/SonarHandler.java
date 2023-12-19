@@ -63,6 +63,13 @@ public class SonarHandler implements CommandHandler {
         }
     }
 
+    /**
+     * It marks the coordinate on which the sonar is placed on one's representation of opponent's map.
+     *
+     * @param row receives int representing a row on the map.
+     * @param col receives int representing a column on the map.
+     * @param map receives a List of a List of String representing a map.
+     */
     private void putMarkOnMap(int row, int col, List<List<String>> map) {
         if (map.get(row).get(col).length() > 1) {
             return;
@@ -70,10 +77,29 @@ public class SonarHandler implements CommandHandler {
         map.get(row).set(col, "\033[0;35mO\033[0m");
     }
 
+    /**
+     * @param row receives int representing row on the map.
+     * @param col receives int representing column on the map.
+     * @param map receives List of a List of Strings representing a map.
+     * @return returns true if either row or column are bigger than map size, thus exceeding the boundaries of the map.
+     * Row must not exceed the List size.
+     * Column must not exceed the size of the List within the List (index represented by row).
+     */
     private boolean checkInvalidCoordinate(int row, int col, List<List<String>> map) {
         return row >= map.size() || col >= map.get(row).size();
     }
 
+    /**
+     * Creates an array of String by splitting the String message by spaces.
+     * Takes two ints from that array index 1 and 2, and stores them in an array of length 2.
+     *
+     * @param message receives a String as parameter.
+     * @param map     receives a List of Lists of Strings as parameter.
+     * @return returns an array of int type that represents two coordinates of the map.
+     * @throws InvalidSyntaxException   if the input is not allowed.
+     * @throws InvalidPositionException if the coordinates are off of the map size, if the length is bigger than 1,
+     *                                  and if there is already a space, an '*', or 'R' in that coordinate on the map.
+     */
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
@@ -89,10 +115,15 @@ public class SonarHandler implements CommandHandler {
         if (position == '*') {
             throw new InvalidPositionException(Messages.INVALID_POSITION);
         }
-
         return coordinates;
     }
 
+    /**
+     * @param separated receives an array of String as parameter.
+     * @throws InvalidSyntaxException throws InvalidSyntaxException if that array is not of length 3,
+     *                                if the second index of that array is not a number,
+     *                                if the third index of that array is not a char between A and Z.
+     */
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
         if (separated.length != 3) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
@@ -105,6 +136,10 @@ public class SonarHandler implements CommandHandler {
         }
     }
 
+    /**
+     * @param number Receives a String as parameter.
+     * @return Returns true if that String is not a number.
+     */
     private boolean isNotNumber(String number) {
         for (char digit : number.toCharArray()) {
             if (!Character.isDigit(digit)) {
@@ -114,6 +149,12 @@ public class SonarHandler implements CommandHandler {
         return false;
     }
 
+    /**
+     * @param game          receives a Battleship game as parameter.
+     * @param playerHandler receives a PlayerHandler as parameter that represents the opponent.
+     * @return returns a List of a List of Strings that is the opponent's representation of his own map.
+     * @throws PlayerNotFoundException if the PlayerHandler representing the opponent is null.
+     */
     private List<List<String>> getOpponentMap(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
         Optional<Battleship.PlayerHandler> otherPlayer = game.getOtherPlayer(playerHandler);
         if (otherPlayer.isEmpty()) {
