@@ -40,13 +40,8 @@ public class CharacterThree extends Character {
         List<List<String>> playerMap = playerHandler.getOppMap();
         List<List<String>> opponentMap = opponent.getMyMap();
         String positionString;
-        try {
-            positionString = opponentMap.get(row).get(col);
-        } catch (IndexOutOfBoundsException e) {
-            return;
-        }
 
-        if (checkInvalidPosition(positionString)) {
+        if (checkInvalidPosition(row, col, opponentMap)) {
             return;
         }
         Ship ship = opponent.checkIfHit(row, col);
@@ -58,7 +53,11 @@ public class CharacterThree extends Character {
         playerMap.get(row).set(col, "\u001B[34mX\u001B[0m");
     }
 
-    private boolean checkInvalidPosition(String position) {
+    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
+        if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
+            return true;
+        }
+        String position = opponentMap.get(row).get(col);
         if (position.length() > 1) {
             return true;
         }
