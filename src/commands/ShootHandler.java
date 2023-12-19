@@ -108,7 +108,6 @@ public class ShootHandler implements CommandHandler {
 
         if (ship != null) {
             playerHandler.winPoint(ship);
-            playerHandler.shootMessage(ship, playerHandler, row, col);
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }

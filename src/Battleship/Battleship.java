@@ -205,6 +205,7 @@ public class Battleship implements Runnable {
                     return MapType.ROCK_MAP;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
+
                     chooseMap();
                     return null;
             }
@@ -236,7 +237,9 @@ public class Battleship implements Runnable {
 
             try {
                 sendMessage(Messages.WELCOME);
+
                 while (type == null) {
+
                     Thread.sleep(500);
                 }
                 //   chooseMap();
@@ -281,7 +284,7 @@ public class Battleship implements Runnable {
 
         public void takeTurn() throws IOException {
             sendMessage(Messages.YOUR_TURN);
-            sendMessage(String.valueOf(playerPoints.getPlayerPoints()));
+            sendMessage(String.format(Messages.POINTS, playerPoints.getPlayerPoints()));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
@@ -300,8 +303,15 @@ public class Battleship implements Runnable {
                 PreparationCommand command = PreparationCommand.getCommandFromDescription(message.split(" ")[0]);
                 command.getHandler().execute(this, Battleship.this);
             }
-        }
 
+            try {
+                sendMessage(Messages.ALL_SHIPS_PLACED);
+                sendMessage(Messages.WAIT_FOR_OPPONENT);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public void sendMessage(String message) {
             out.println(message);
@@ -344,13 +354,17 @@ public class Battleship implements Runnable {
                 if (ship.gotHit(row, col)) {
                     String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
                     myMap.get(row).set(col, coloredVersion);
-                    sendMessage("/hit");
+                    sendMessage(Messages.BOOM);
                     return ship;
                 }
+                if (ship.isSinked()) {
+                    sendMessage(Messages.KABOOM);
+                }
             }
-            sendMessage("/miss");
+            sendMessage(Messages.MISSED);
             myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
             return null;
+
         }
 
         public boolean allShipsSinked() {
@@ -376,18 +390,6 @@ public class Battleship implements Runnable {
             return playerPoints;
         }
 
-
-        public void shootMessage(Ship ship, PlayerHandler playerHandler, int row, int col) {
-            if (checkIfHit(row, col) == ship) {
-                sendMessage(Messages.BOOM);
-            }
-            if (checkIfHit(row, col) == null) {
-                playerHandler.sendMessage(Messages.MISSED);
-            }
-            if (ship.isSinked()) {
-                playerHandler.sendMessage(Messages.KABOOM);
-            }
-        }
 
     }
 
