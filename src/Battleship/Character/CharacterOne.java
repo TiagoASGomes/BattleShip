@@ -9,8 +9,10 @@ import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
 import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-import static commands.CommandHelper.*;
+
 import java.util.List;
+
+import static commands.CommandHelper.*;
 
 /**
  * Represents a specific type of character in the Battleship game - Character One.
@@ -78,19 +80,6 @@ public class CharacterOne extends Character {
         }
     }
 
-    /**
-     * Checks if the position is invalid.
-     *
-     * @param position The position to be checked.
-     * @return True if the position is ' ' or '*'.
-     */
-    private boolean checkInvalidPosition(String position) {
-        if (position.length() > 1) {
-            return true;
-        }
-        char positionChar = position.charAt(0);
-        return positionChar == ' ' || positionChar == '*';
-    }
 
     /**
      * Checks if the specified row is valid within the given map.
@@ -133,37 +122,4 @@ public class CharacterOne extends Character {
         }
     }
 
-    /**
-     * Gets the opponent player handler.
-     *
-     * @param game          The Battleship game instance.
-     * @param playerHandler The player handler for the current player.
-     * @return The opponent player handler.
-     * @throws PlayerNotFoundException If the opponent player is not found.
-     */
-    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst()
-                .orElse(null);
-        if (otherPlayer == null) {
-            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
-        }
-        return otherPlayer;
-    }
-
-    /**
-     * Checks if the given string is not a number.
-     *
-     * @param number The string to be checked.
-     * @return True if the string is not a number, false otherwise.
-     */
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!java.lang.Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
