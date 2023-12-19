@@ -5,6 +5,8 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
+import MessagesAndPrinter.MapString;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -38,6 +40,7 @@ public class Battleship implements Runnable {
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
         service = Executors.newFixedThreadPool(2);
+
         finished = false;
     }
 
@@ -224,6 +227,7 @@ public class Battleship implements Runnable {
         public void chooseMap() throws IOException {
 
             sendMessage(Messages.CHOOSE_MAP);
+            sendMessage(MapString.ALL_MAPS);
             String playerChoice = in.readLine();
             switch (playerChoice) {
                 case "1":
@@ -243,6 +247,7 @@ public class Battleship implements Runnable {
 
         public void chooseCharacter() throws IOException {
 
+            sendMessage(Messages.GIVE_TURN_PERMISSION);
             sendMessage(Messages.CHOOSE_CHARACTER);
             String playerChoice = in.readLine();
             switch (playerChoice) {
@@ -295,11 +300,12 @@ public class Battleship implements Runnable {
             while (type == null) {
                 Thread.sleep(100);
             }
+            sendMessage(Messages.GIVE_TURN_PERMISSION);
         }
 
 
         public void takeTurn() throws IOException {
-            sendMessage(Messages.YOUR_TURN);
+            sendMessage(Messages.GIVE_TURN_PERMISSION2);
             sendMessage(String.format(Messages.POINTS, playerPoints));
             message = in.readLine();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
@@ -313,6 +319,7 @@ public class Battleship implements Runnable {
         private void placeShips() throws IOException {
             sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
+                sendMessage(Messages.GIVE_TURN_PERMISSION);
                 sendMessage(Printer.createMap(this));
                 sendMessage(Printer.createShipString(this));
                 message = in.readLine();
@@ -368,17 +375,15 @@ public class Battleship implements Runnable {
         public Ship checkIfHit(int row, int col) {
             for (Ship ship : character.getPlayerShips()) {
                 if (ship.gotHit(row, col)) {
-                    String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
+                    String coloredVersion = Colors.RED + ship.getType().getICON() + Colors.RESET;
                     myMap.get(row).set(col, coloredVersion);
-                    sendMessage(Messages.BOOM);
                     return ship;
                 }
                 if (ship.isSinked()) {
-                    sendMessage(Messages.KABOOM);
                 }
             }
-            sendMessage(Messages.MISSED);
-            myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
+
+            myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
             return null;
 
         }

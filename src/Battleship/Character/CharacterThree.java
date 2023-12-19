@@ -7,14 +7,17 @@ import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-
+import static commands.CommandHelper.*;
 import java.util.List;
 
 /**
  * Represents a specific type of character in the Battleship game - Character Three.
  * Extends the abstract class Character.
  */
+
+
 public class CharacterThree extends Character {
     /**
      * Constructor for CharacterOne class.
@@ -79,15 +82,30 @@ public class CharacterThree extends Character {
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
         }
+        if (checkForMine(opponent, row, col)) {
+            mineExplosion(playerHandler, opponent, row, col);
+            return;
+        }
         Ship ship = opponent.checkIfHit(row, col);
         if (ship != null) {
             playerHandler.winPoint(ship);
-            playerMap.get(row).set(col, "\u001B[31mX\u001B[0m");
+            playerMap.get(row).set(col, Colors.RED + "X" + Colors.RESET);
             return;
         }
-        playerMap.get(row).set(col, "\u001B[34mX\u001B[0m");
+        playerMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
     }
 
+//    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
+//        if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
+//            return true;
+//        }
+//        String position = opponentMap.get(row).get(col);
+//        if (position.length() > 1) {
+//            return true;
+//        }
+//        char positionChar = position.charAt(0);
+//        return positionChar == ' ' || positionChar == '*';
+//    }
     /**
      * Checks if the specified row and column positions on the opponent's map are invalid.
      *
@@ -161,7 +179,6 @@ public class CharacterThree extends Character {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
-
     /**
      * Gets the opponent player handler.
      *

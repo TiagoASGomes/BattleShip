@@ -9,6 +9,8 @@ import MessagesAndPrinter.Messages;
 
 import java.util.List;
 
+import static commands.CommandHelper.isNotNumber;
+
 public class PlaceHandler implements CommandHandler {
 
 
@@ -104,12 +106,4 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -7,14 +7,17 @@ import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
+import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-
+import static commands.CommandHelper.*;
 import java.util.List;
 
 /**
  * Represents a specific type of character in the Battleship game - Character One.
  * Extends the abstract class Character.
  */
+
+
 public class CharacterOne extends Character {
     /**
      * Constructor for CharacterOne class.
@@ -58,17 +61,20 @@ public class CharacterOne extends Character {
         List<List<String>> playerMap = playerHandler.getOppMap();
         List<List<String>> opponentMap = opponent.getMyMap();
         for (int i = 1; i < playerMap.get(row).size() - 2; i++) {
-            String position = opponentMap.get(row).get(i);
-            if (checkInvalidPosition(position)) {
+            if (checkInvalidPosition(row, i, opponentMap)) {
+                continue;
+            }
+            if (checkForMine(opponent, row, i)) {
+                mineExplosion(playerHandler, opponent, row, i);
                 continue;
             }
             Ship ship = opponent.checkIfHit(row, i);
             if (ship != null) {
                 playerHandler.winPoint(ship);
-                playerMap.get(row).set(i, "\u001B[31mX\u001B[0m");
+                playerMap.get(row).set(i, Colors.RED + "X" + Colors.RESET);
                 continue;
             }
-            playerMap.get(row).set(i, "\u001B[34mX\u001B[0m");
+            playerMap.get(row).set(i, Colors.BLUE + "X" + Colors.RESET);
         }
     }
 
