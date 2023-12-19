@@ -79,14 +79,14 @@ public class MineHandler implements CommandHandler {
     }
 
 
-    private static void checkPosition(char position) throws IndexOutOfBoundsException {
+    private void checkPosition(char position) throws IndexOutOfBoundsException {
         if (position != '~') {
             throw new IndexOutOfBoundsException("Row out of bounds.");
         }
     }
 
 
-    private static void validateInput(char input) throws InvalidKeyException {
+    private void validateInput(char input) throws InvalidKeyException {
         if (input < 65 || input > 90) {
             throw new InvalidKeyException("Wrong letter");
         }
