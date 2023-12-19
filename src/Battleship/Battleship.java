@@ -372,14 +372,11 @@ public class Battleship implements Runnable {
                 if (ship.gotHit(row, col)) {
                     String coloredVersion = "\u001B[31m" + ship.getType().getICON() + "\u001B[0m";
                     myMap.get(row).set(col, coloredVersion);
-                    sendMessage(Messages.BOOM);
                     return ship;
                 }
                 if (ship.isSinked()) {
-                    sendMessage(Messages.KABOOM);
                 }
             }
-            sendMessage(Messages.MISSED);
             myMap.get(row).set(col, "\u001B[34mX\u001B[0m");
             return null;
 

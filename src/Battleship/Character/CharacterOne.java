@@ -11,6 +11,8 @@ import MessagesAndPrinter.Messages;
 
 import java.util.List;
 
+import static commands.CommandHelper.*;
+
 public class CharacterOne extends Character {
 
 
@@ -34,8 +36,7 @@ public class CharacterOne extends Character {
         List<List<String>> playerMap = playerHandler.getOppMap();
         List<List<String>> opponentMap = opponent.getMyMap();
         for (int i = 1; i < playerMap.get(row).size() - 2; i++) {
-            String position = opponentMap.get(row).get(i);
-            if (checkInvalidPosition(position)) {
+            if (checkInvalidPosition(row, i, opponentMap)) {
                 continue;
             }
             Ship ship = opponent.checkIfHit(row, i);
@@ -48,13 +49,6 @@ public class CharacterOne extends Character {
         }
     }
 
-    private boolean checkInvalidPosition(String position) {
-        if (position.length() > 1) {
-            return true;
-        }
-        char positionChar = position.charAt(0);
-        return positionChar == ' ' || positionChar == '*';
-    }
 
     private void checkValidRow(int row, List<List<String>> myMap) throws InvalidPositionException {
         if (row < 1 || row >= myMap.size() - 2) {
@@ -80,23 +74,5 @@ public class CharacterOne extends Character {
 
     }
 
-    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst()
-                .orElse(null);
-        if (otherPlayer == null) {
-            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
-        }
-        return otherPlayer;
-    }
 
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!java.lang.Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

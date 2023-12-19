@@ -10,7 +10,8 @@ import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+
+import static commands.CommandHelper.*;
 
 public class MineHandler implements CommandHandler {
 
@@ -19,7 +20,7 @@ public class MineHandler implements CommandHandler {
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
 
         try {
-            checkPlayerPoints(playerHandler);
+            checkPlayerPoints(playerHandler, PointValues.MINE);
             Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), opponent.getMyMap());
             placeMine(playerHandler, coordinates[0], coordinates[1]);
@@ -52,12 +53,6 @@ public class MineHandler implements CommandHandler {
     }
 
 
-    private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
-        if (playerHandler.getPlayerPoints() < PointValues.MINE.getPoints()) {
-            throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
-        }
-    }
-
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
@@ -76,32 +71,5 @@ public class MineHandler implements CommandHandler {
         return coordinates;
     }
 
-    private void checkValidInput(String[] separated) throws InvalidSyntaxException {
-        if (separated.length != 3) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (isNotNumber(separated[1])) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (separated[2].charAt(0) < 65 || separated[2].charAt(0) > 90) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-    }
 
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
-        if (opponent.isEmpty()) {
-            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
-        }
-        return opponent.get();
-    }
 }

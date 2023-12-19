@@ -9,7 +9,8 @@ import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+
+import static commands.CommandHelper.*;
 
 public class ShootHandler implements CommandHandler {
 
@@ -37,7 +38,7 @@ public class ShootHandler implements CommandHandler {
                 throw new RuntimeException(ex);
             }
         }
-        
+
     }
 
     private void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
@@ -45,9 +46,15 @@ public class ShootHandler implements CommandHandler {
 
         if (ship != null) {
             playerHandler.winPoint(ship);
+            if (ship.isSinked()) {
+                playerHandler.sendMessage(Messages.KABOOM);
+            } else {
+                playerHandler.sendMessage(Messages.BOOM);
+            }
             playerHandler.getOppMap().get(row).set(col, "\u001B[31mX\u001B[0m");
             return;
         }
+        playerHandler.sendMessage(Messages.MISSED);
         playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
     }
 
@@ -73,54 +80,17 @@ public class ShootHandler implements CommandHandler {
         coordinates[0] = Integer.parseInt(separated[1]);
         coordinates[1] = separated[2].charAt(0) - 'A' + 1;
 
-        if (coordinates[0] >= map.size() - 1 || coordinates[1] >= map.get(coordinates[0]).size() - 1) {
+        if (checkInvalidPosition(coordinates[0], coordinates[1], map)) {
             throw new InvalidPositionException(Messages.INVALID_POSITION);
         }
-        String positionString = map.get(coordinates[0]).get(coordinates[1]);
-        if (positionString.length() > 1) {
-            throw new InvalidPositionException(Messages.INVALID_POSITION);
-        }
-        char position = positionString.charAt(0);
-        if (position == ' ' || position == '*' || position == 'R') {
-            throw new InvalidPositionException(Messages.INVALID_POSITION);
-        }
+
 
         return coordinates;
-    }
-
-    private void checkValidInput(String[] separated) throws InvalidSyntaxException {
-        if (separated.length != 3) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (isNotNumber(separated[1])) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (separated[2].charAt(0) < 65 || separated[2].charAt(0) > 90) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-    }
-
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
     private boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
         return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
-    }
-
-
-    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
-        if (opponent.isEmpty()) {
-            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
-        }
-        return opponent.get();
     }
 
 
