@@ -78,12 +78,15 @@ public class Battleship implements Runnable {
         while (gameNotOver()) {
             try {
 
+                players.get(0).playerPoints.setPlayerPoints(players.get(0).playerPoints.getPlayerPoints() + 1);
                 players.get(0).takeTurn();
+
                 updateMaps();
                 if (!gameNotOver()) {
                     firstWon = true;
                     break;
                 }
+                players.get(1).playerPoints.setPlayerPoints(players.get(1).playerPoints.getPlayerPoints() + 1);
                 players.get(1).takeTurn();
                 updateMaps();
             } catch (IOException e) {
@@ -354,6 +357,20 @@ public class Battleship implements Runnable {
         public PlayerPoints getPlayerPoints() {
             return playerPoints;
         }
+
+
+        public void shootMessage(Ship ship, PlayerHandler playerHandler, int row, int col) {
+            if (checkIfHit(row, col) == ship) {
+                sendMessage(Messages.BOOM);
+            }
+            if (checkIfHit(row, col) == null) {
+                playerHandler.sendMessage(Messages.MISSED);
+            }
+            if (ship.isSinked()) {
+                playerHandler.sendMessage(Messages.KABOOM);
+            }
+        }
+
     }
 
 
