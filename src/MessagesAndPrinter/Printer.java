@@ -48,6 +48,11 @@ public class Printer {
         return ships;
     }
 
+    /**
+     * Receives Ship, checks his type and if it is rotated or not,
+     * @param ship receives a Ship,
+     * @return String of the ship that represents is form.
+     */
     private static String getShipString(Ship ship) {
         return switch (ship.getType()) {
             case BIG_SHIP -> ship.isRotated() ? TextShips.BIG_SHIP_V : TextShips.BIG_SHIP_H;
