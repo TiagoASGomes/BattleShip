@@ -37,7 +37,7 @@ public class Messages {
     public static final String SHIP_DOESNT_EXIST = "Ship number doesn't match any ship please choose again,";
     public static final String INVALID_POSITION = "Invalid Position";
     public static final String CANT_READY_UP = "Please finish placing your ships.";
-    public static final String CHOOSE_CHARACTER = "Please type 1 to choose your character one, and type 2 to choose character two.";
+    public static final String CHOOSE_CHARACTER = "Please type 1 for character 1, 2 for character 2 and 3 for character 3";
     public static final String READY = "READY!";
     public static final String BOAT_PLACED = "BOAT PLACED";
     public static final String LOST_CONNECTION = "Connection closed...";
