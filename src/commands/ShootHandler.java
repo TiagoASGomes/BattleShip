@@ -2,109 +2,46 @@ package commands;
 
 import Battleship.Battleship;
 import Battleship.ships.Ship;
+import Exceptions.InvalidPositionException;
+import Exceptions.InvalidSyntaxException;
+import Exceptions.PlayerNotFoundException;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.Optional;
 
 public class ShootHandler implements CommandHandler {
 
 
-    int row;
-    char charCol;
-
-
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
-        List<List<String>> map = playerHandler.getOppMap();
 
-        String[] input = playerHandler.getMessage().split(" ");
-        if (input.length != 3) {
+        try {
+            Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
+            int[] coordinates = getCoordinates(playerHandler.getMessage(), opponent.getMyMap());
+
+            if (checkForMine(opponent, coordinates[0], coordinates[1])) {
+                mineExplosion(playerHandler, opponent, coordinates[0], coordinates[1]);
+                return;
+            }
+            checkHit(playerHandler, opponent, coordinates[0], coordinates[1]);
+        } catch (PlayerNotFoundException e) {
+            //TODO mensagem desconecçao
+            game.closeGame();
+        } catch (InvalidSyntaxException | InvalidPositionException e) {
             try {
                 playerHandler.sendMessage(Messages.INVALID_SYNTAX);
                 playerHandler.takeTurn();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-        int col;
-        charCol = input[2].charAt(0);
-        try {
-            validateInput(charCol);
-        } catch (InvalidKeyException e) {
-            playerHandler.sendMessage(Messages.INVALID_SYNTAX);
-            try {
-                playerHandler.takeTurn();
-                return;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
-        }
-        col = charCol - 'A' + 1;
-
-        row = Integer.parseInt(input[1]);
-
-        String stringPosition = "";
-        try {
-            stringPosition = map.get(row).get(col);
-
-        } catch (IndexOutOfBoundsException e) {
-            playerHandler.sendMessage(Messages.INVALID_SYNTAX);
-            try {
-                playerHandler.takeTurn();
-                return;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
+        
+    }
 
-
-        char position;
-
-        if (stringPosition.length() == 1) {
-            position = stringPosition.charAt(0);
-        } else {
-            position = stringPosition.charAt(5);
-        }
-
-
-        try {
-            checkPosition(position);
-        } catch (IndexOutOfBoundsException e) {
-            try {
-                playerHandler.takeTurn();
-                return;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst().orElse(null);
-        if (otherPlayer == null) {
-            throw new RuntimeException();
-        }
-        if (checkForMine(otherPlayer, row, col)) {
-
-            otherPlayer.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-            playerHandler.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
-
-            int randRow = (int) (Math.random() * (playerHandler.getMyMap().size() - 4 + 1) + 1);
-            int randCol = (int) (Math.random() * (playerHandler.getMyMap().get(0).size() - 4 + 1) + 1);
-            Ship ship = otherPlayer.checkIfHit(row, col);
-            if (ship != null) {
-                playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
-                return;
-            }
-            playerHandler.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
-            return;
-        }
-        Ship ship = otherPlayer.checkIfHit(row, col);
+    private void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
+        Ship ship = opponent.checkIfHit(row, col);
 
         if (ship != null) {
             playerHandler.winPoint(ship);
@@ -112,25 +49,78 @@ public class ShootHandler implements CommandHandler {
             return;
         }
         playerHandler.getOppMap().get(row).set(col, "\u001B[34mX\u001B[0m");
-
-
     }
 
-    private void checkPosition(char position) throws IndexOutOfBoundsException {
-        if (position == 'X' || position == ' ' || position == '*' || position == 'R') {
-            throw new IndexOutOfBoundsException("Row out of bounds");
+    private void mineExplosion(Battleship.PlayerHandler player, Battleship.PlayerHandler opponent, int row, int col) {
+        opponent.getMyMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+        player.getOppMap().get(row).set(col, "\u001B[34mR\u001B[0m");
+
+        int randRow = (int) (Math.random() * (player.getMyMap().size() - 4 + 1) + 1);
+        int randCol = (int) (Math.random() * (player.getMyMap().get(0).size() - 4 + 1) + 1);
+        Ship ship = opponent.checkIfHit(row, col);
+        if (ship != null) {
+            player.getMyMap().get(randRow).set(randCol, "\u001B[31mX\u001B[0m");
+            return;
+        }
+        player.getMyMap().get(randRow).set(randCol, "\u001B[34mX\u001B[0m");
+    }
+
+    private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
+        String[] separated = message.split(" ");
+        checkValidInput(separated);
+
+        int[] coordinates = new int[2];
+        coordinates[0] = Integer.parseInt(separated[1]);
+        coordinates[1] = separated[2].charAt(0) - 'A' + 1;
+
+        if (coordinates[0] >= map.size() - 1 || coordinates[1] >= map.get(coordinates[0]).size() - 1) {
+            throw new InvalidPositionException(Messages.INVALID_POSITION);
+        }
+        String positionString = map.get(coordinates[0]).get(coordinates[1]);
+        if (positionString.length() > 1) {
+            throw new InvalidPositionException(Messages.INVALID_POSITION);
+        }
+        char position = positionString.charAt(0);
+        if (position == ' ' || position == '*' || position == 'R') {
+            throw new InvalidPositionException(Messages.INVALID_POSITION);
+        }
+
+        return coordinates;
+    }
+
+    private void checkValidInput(String[] separated) throws InvalidSyntaxException {
+        if (separated.length != 3) {
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
+        }
+        if (isNotNumber(separated[1])) {
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
+        }
+        if (separated[2].charAt(0) < 65 || separated[2].charAt(0) > 90) {
+            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
+
+    private boolean isNotNumber(String number) {
+        for (char digit : number.toCharArray()) {
+            if (!Character.isDigit(digit)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private boolean checkForMine(Battleship.PlayerHandler otherPlayer, int row, int col) {
         return otherPlayer.getMyMap().get(row).get(col).charAt(0) == 'O';
     }
 
 
-    private void validateInput(char input) throws InvalidKeyException {
-        if (input < 65 || input > 90) {
-            throw new InvalidKeyException("Wrong letter");
+    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
+        Optional<Battleship.PlayerHandler> opponent = game.getOtherPlayer(playerHandler);
+        if (opponent.isEmpty()) {
+            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
         }
+        return opponent.get();
     }
 
 

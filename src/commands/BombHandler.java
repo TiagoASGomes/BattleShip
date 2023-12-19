@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.PointCosts;
+import Battleship.PointValues;
 import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
@@ -23,7 +23,7 @@ public class BombHandler implements CommandHandler {
             Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), opponent.getMyMap());
             doExplosion(coordinates, playerHandler, opponent);
-            playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointCosts.BOMB.getPointCost());
+            playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointValues.BOMB.getPoints());
         } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
             playerHandler.sendMessage(e.getMessage());
             try {
@@ -34,12 +34,11 @@ public class BombHandler implements CommandHandler {
         } catch (PlayerNotFoundException e) {
             //TODO mensagem de desconecção
             game.closeGame();
-            throw new RuntimeException(e);
         }
     }
 
     private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
-        if (playerHandler.getPlayerPoints() < PointCosts.BOMB.getPointCost()) {
+        if (playerHandler.getPlayerPoints() < PointValues.BOMB.getPoints()) {
             throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
         }
     }

@@ -20,8 +20,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Battleship.PointCosts.HIT;
-import static Battleship.PointCosts.SINK;
+import static Battleship.PointValues.HIT;
+import static Battleship.PointValues.SINK;
 
 public class Battleship implements Runnable {
 
@@ -378,9 +378,9 @@ public class Battleship implements Runnable {
         }
 
         public void winPoint(Ship ship) {
-            playerPoints += HIT.getPointCost();
+            playerPoints += HIT.getPoints();
             if (ship.isSinked()) {
-                playerPoints += SINK.getPointCost();
+                playerPoints += SINK.getPoints();
             }
         }
 

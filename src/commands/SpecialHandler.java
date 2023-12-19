@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.PointCosts;
+import Battleship.PointValues;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.NotEnoughPointsException;
@@ -17,7 +17,7 @@ public class SpecialHandler implements CommandHandler {
         try {
             checkPlayerPoints(playerHandler);
             playerHandler.getCharacter().special(playerHandler, game);
-            playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointCosts.SPECIAL.getPointCost());
+            playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointValues.SPECIAL.getPoints());
         } catch (PlayerNotFoundException e) {
             //TODO mensagem desconecção
             game.closeGame();
@@ -34,7 +34,7 @@ public class SpecialHandler implements CommandHandler {
     }
 
     private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
-        if (playerHandler.getPlayerPoints() < PointCosts.SPECIAL.getPointCost()) {
+        if (playerHandler.getPlayerPoints() < PointValues.SPECIAL.getPoints()) {
             throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
         }
     }

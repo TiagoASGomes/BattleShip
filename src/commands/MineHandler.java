@@ -1,7 +1,7 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.PointCosts;
+import Battleship.PointValues;
 import Exceptions.NotEnoughPointsException;
 import MessagesAndPrinter.Messages;
 
@@ -80,7 +80,7 @@ public class MineHandler implements CommandHandler {
         }
 
         playerHandler.getMyMap().get(row).set(col, "O");
-        playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointCosts.MINE.getPointCost());
+        playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointValues.MINE.getPoints());
         try {
             playerHandler.takeTurn();
         } catch (IOException e) {
@@ -103,7 +103,7 @@ public class MineHandler implements CommandHandler {
     }
 
     private void checkPlayerPoints(Battleship.PlayerHandler playerHandler) throws NotEnoughPointsException {
-        if (playerHandler.getPlayerPoints() < PointCosts.MINE.getPointCost()) {
+        if (playerHandler.getPlayerPoints() < PointValues.MINE.getPoints()) {
             throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
         }
     }
