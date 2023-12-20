@@ -4,7 +4,9 @@ import MessagesAndPrinter.Messages;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class Client {
      */
     private void getClips() {
         try {
-            File[] files = new File("./Resources/SoundFiles").listFiles();
+            File[] files = new File("../Resources/SoundFiles").listFiles();
             for (File file : files) {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(file);
                 clips.put(file.getName(), AudioSystem.getClip());
@@ -43,14 +45,43 @@ public class Client {
      * @param args address and port to start enter the server.
      */
     public static void main(String[] args) {
-        Client client = new Client();
         try {
-            client.start("localhost", 8888);
+            Client client = new Client();
+            InetAddress ip = getIp(args);
+            int port = getPort(args);
+            client.start(ip, port);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
             System.exit(0);
         }
     }
+
+    private static int getPort(String[] args) {
+        if (args.length < 2) {
+            return 8888;
+        }
+        try {
+            return Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            return 8888;
+        }
+    }
+
+    private static InetAddress getIp(String[] args) {
+        try {
+            if (args.length < 2) {
+                return InetAddress.getByName("localhost");
+            }
+            return InetAddress.getByName(args[0]);
+        } catch (UnknownHostException e) {
+            try {
+                return InetAddress.getByName("localhost");
+            } catch (UnknownHostException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
 
     /**
      * This method starts the connection between client and server,
@@ -60,7 +91,7 @@ public class Client {
      * @param port int port as a parameter,
      * @throws IOException when it's not possible to connect to the server
      */
-    private void start(String host, int port) throws IOException {
+    private void start(InetAddress host, int port) throws IOException {
 
         Socket socket = new Socket(host, port);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

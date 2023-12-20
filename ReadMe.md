@@ -124,6 +124,10 @@ Special abilities:
 
 Instructions to run:
 
-    Compile the server and run it;
-    Compile the Client and run it 2 times;
+    Compile the server with  javac -d ./out/ @serverSources.txt
+    Compile the client with  javac -d ./out/ @clientSources.txt
+    Run server by going to out folder in console and running java Server.Server <Port Number>   
+    Default port is 8888
+    Run client by going to out folder in console and running java Client.Client <Host IP> <Host Port Number>   
+    Default ip is localhost, default port is 8888
     Enjoy the game 😊

@@ -24,7 +24,19 @@ public class Server {
      */
     public static void main(String[] args) {
         Server server = new Server();
-        server.start();
+        int port = getPort(args);
+        server.start(port);
+    }
+
+    private static int getPort(String[] args) {
+        if (args.length < 1) {
+            return 8888;
+        }
+        try {
+            return Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            return 8888;
+        }
     }
 
     /**
@@ -41,10 +53,10 @@ public class Server {
      * Check if there is an available game and if there isn't, a game is open,
      * If there is an open game, it accepts another player to join the game.
      */
-    public void start() {
+    public void start(int port) {
 
         try {
-            serverSocket = new ServerSocket(8888);
+            serverSocket = new ServerSocket(port);
             service = Executors.newCachedThreadPool();
 
             while (!serverSocket.isClosed()) {
