@@ -5,11 +5,11 @@ import MessagesAndPrinter.Messages;
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Client {
-    private final List<Clip> clips = new ArrayList<>();
+    private final Map<String, Clip> clips = new HashMap<>();
     private boolean myTurn;
 
     /**
@@ -26,10 +26,10 @@ public class Client {
     private void getClips() {
         try {
             File[] files = new File("Resources/SoundFiles").listFiles();
-            for (int i = 0; i < files.length; i++) {
-                AudioInputStream ais = AudioSystem.getAudioInputStream(files[i]);
-                clips.add(AudioSystem.getClip());
-                clips.get(i).open(ais);
+            for (File file : files) {
+                AudioInputStream ais = AudioSystem.getAudioInputStream(file);
+                clips.put(file.getName(), AudioSystem.getClip());
+                clips.get(file.getName()).open(ais);
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.out.println(Messages.ERROR);
@@ -91,11 +91,11 @@ public class Client {
         switch (line) {
             case Messages.BOOM_COMMAND:
                 System.out.println(Messages.BOOM);
-                play(0);
+                play("Explosion.wav");
                 break;
             case Messages.MISSED_COMMAND:
                 System.out.println(Messages.MISSED);
-                play(2);
+                play("Splash.wav");
                 break;
             case Messages.GIVE_TURN_PERMISSION:
                 myTurn = true;
@@ -105,7 +105,7 @@ public class Client {
                 System.out.println(Messages.YOUR_TURN);
                 break;
             case Messages.WELCOME_COMMAND:
-                play(1);
+                play("EntryMusic.wav");
                 break;
             case Messages.QUIT_COMMAND:
                 try {
@@ -119,11 +119,11 @@ public class Client {
     /**
      * Plays a Clip from certain index.
      *
-     * @param index receives an int that is the index position of that Clip.
+     * @param name receives an int that is the index position of that Clip.
      */
-    private void play(int index) {
-        clips.get(index).setMicrosecondPosition(0);
-        clips.get(index).start();
+    private void play(String name) {
+        clips.get(name).setMicrosecondPosition(0);
+        clips.get(name).start();
     }
 
     /**
