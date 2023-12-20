@@ -39,7 +39,7 @@ public class ShootHandler implements CommandHandler {
             try {
                 playerHandler.sendMessage(Messages.INVALID_SYNTAX);
                 playerHandler.takeTurn();
-            } catch (IOException ex) {
+            } catch (IOException | PlayerNotFoundException ex) {
                 game.closeGame();
             }
         }

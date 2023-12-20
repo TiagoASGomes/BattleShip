@@ -37,7 +37,7 @@ public class SonarHandler implements CommandHandler {
             playerHandler.sendMessage(e.getMessage());
             try {
                 playerHandler.takeTurn();
-            } catch (IOException ex) {
+            } catch (IOException | PlayerNotFoundException ex) {
                 game.closeGame();
             }
         } catch (PlayerNotFoundException e) {

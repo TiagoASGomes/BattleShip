@@ -58,5 +58,4 @@ public class Messages {
     public static final String MAP_CHOOSEN = "Map choosen: ";
     public static final String DIFFERENT_MAP = "Different maps chosen randomizing choices.";
     public static final String QUIT_COMMAND = "/quit";
-    public static final String EXIT_INSTRUCTION = "Game over press enter to close";
 }

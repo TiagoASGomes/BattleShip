@@ -45,7 +45,7 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
         try {
-            client.start("192.168.3.110", 8888);
+            client.start("localhost", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
             System.exit(0);
@@ -108,7 +108,6 @@ public class Client {
                 play("EntryMusic.wav");
                 break;
             case Messages.QUIT_COMMAND:
-                System.out.println(Messages.EXIT_INSTRUCTION);
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -166,6 +165,9 @@ public class Client {
             while (!socket.isClosed()) {
                 try {
                     String line = in.readLine();
+                    if (line.equals("/quit")) {
+                        close();
+                    }
                     if (!myTurn) {
                         System.out.println(Messages.NOT_YOUR_TURN);
                         continue;
@@ -186,6 +188,7 @@ public class Client {
          */
         private void close() {
             try {
+                socket.shutdownOutput();
                 in.close();
                 out.close();
                 socket.close();

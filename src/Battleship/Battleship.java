@@ -5,6 +5,7 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
+import Exceptions.PlayerNotFoundException;
 import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Messages;
@@ -126,11 +127,19 @@ public class Battleship implements Runnable {
                 currentPlayer.playerPoints += 1;
                 currentPlayer.takeTurn();
                 updateMaps();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | PlayerNotFoundException e) {
+                closeGame();
             }
         }
         return currentPlayerIndex;
+    }
+
+    private void checkForDisconnect() throws PlayerNotFoundException {
+        for (PlayerHandler player : players) {
+            if (!player.isConnected()) {
+                throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
+            }
+        }
     }
 
     /**
@@ -415,6 +424,7 @@ public class Battleship implements Runnable {
             }
         }
 
+
         /**
          * Executes the main logic for handling a player's connection and participation in the Battleship game.
          * The method begins by sending welcome messages to the player, prompting them to choose a map type, and
@@ -440,11 +450,9 @@ public class Battleship implements Runnable {
 
                 placeShips();
 
-            } catch (IOException e) {
-                close();
-
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 closeGame();
+
             }
 
         }
@@ -471,10 +479,11 @@ public class Battleship implements Runnable {
          *
          * @throws IOException If an I/O error occurs while reading the player's command.
          */
-        public void takeTurn() throws IOException {
+        public void takeTurn() throws IOException, PlayerNotFoundException {
             sendMessage(Messages.GIVE_TURN_PERMISSION2);
             sendMessage(String.format(Messages.POINTS, playerPoints));
             message = in.readLine();
+            checkForDisconnect();
             GameCommands command = GameCommands.getCommandFromDescription(message.split(" ")[0]);
             command.getHandler().execute(this, Battleship.this);
 

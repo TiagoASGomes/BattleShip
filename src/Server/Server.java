@@ -20,7 +20,8 @@ public class Server {
     /**
      * Main method of the class Server
      * Creates a new Server and starts it.
-     * @param args  Array of Strings
+     *
+     * @param args Array of Strings
      */
     public static void main(String[] args) {
         Server server = new Server();
@@ -55,7 +56,7 @@ public class Server {
 
                 if (game.isEmpty()) {
                     games.add(new Battleship(client));
-                    service.submit(games.get(gameIndex++));
+                    service.submit(games.getLast());
                     continue;
                 }
 
@@ -79,6 +80,7 @@ public class Server {
 
     /**
      * calls removeFinishedGames method.
+     *
      * @return Battleship game if there is one open.
      */
     private Optional<Battleship> checkAvailableGame() {
