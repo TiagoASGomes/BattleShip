@@ -62,10 +62,12 @@ public class Client {
 
     private void checkCommand(String line) {
         switch (line) {
-            case Messages.BOOM:
+            case Messages.BOOM_COMMAND:
+                System.out.println(Messages.BOOM);
                 play(0);
                 break;
-            case Messages.MISSED:
+            case Messages.MISSED_COMMAND:
+                System.out.println(Messages.MISSED);
                 play(1);
                 break;
             case Messages.GIVE_TURN_PERMISSION:
@@ -79,8 +81,8 @@ public class Client {
     }
 
     private void play(int index) {
-//        clips.get(index).setMicrosecondPosition(0);
-//        clips.get(index).start();
+        clips.get(index).setMicrosecondPosition(0);
+        clips.get(index).start();
     }
 
 
@@ -110,7 +112,7 @@ public class Client {
                 try {
                     String line = in.readLine();
                     if (!myTurn) {
-                        System.out.println("Not my turn");
+                        System.out.println(Messages.NOT_YOUR_TURN);
                         continue;
                     }
                     out.println(line);

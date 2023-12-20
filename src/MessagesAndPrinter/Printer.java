@@ -61,7 +61,8 @@ public class Printer {
             case SUBMARINE -> ship.isRotated() ? TextShips.SUBMARINE_V : TextShips.SUBMARINE_H;
             case DESTROYER -> ship.isRotated() ? TextShips.DESTROYER_V : TextShips.DESTROYER_H;
             case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
-            case BATTLECRUISER -> null;
+            case CROSS_SHIP -> TextShips.CROSSSHIP;
+            case BATTLECRUISER -> ship.isRotated() ? TextShips.BATTLECRUISER_V : TextShips.BATTLECRUISER_H;
         };
     }
 }

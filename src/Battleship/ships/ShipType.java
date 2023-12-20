@@ -6,6 +6,7 @@ public enum ShipType {
     SUBMARINE(3, "S"),
     DESTROYER(2, "D"),
     CRUISER(4, "Z"),
+    CROSS_SHIP(5, "K"),
     BATTLECRUISER(5, "P");
 
     private final int SIZE;
