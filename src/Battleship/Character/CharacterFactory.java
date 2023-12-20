@@ -2,15 +2,12 @@ package Battleship.Character;
 
 import Battleship.ships.ShipType;
 
-/**
- * A factory class for creating instances of the Character class based on the specified CharacterType.
- */
 public class CharacterFactory {
     /**
-     * Creates a new Character instance based on the provided CharacterType.
+     * Creates a new instance of the Character class based on the specified CharacterType.
      *
-     * @param type The type of character to be created.
-     * @return A new Character instance corresponding to the specified type.
+     * @param type The type of character to create.
+     * @return A new instance of the Character class corresponding to the given type.
      */
     public static Character create(CharacterType type) {
 

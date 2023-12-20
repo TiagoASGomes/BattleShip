@@ -9,20 +9,18 @@ import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
 import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-import static commands.CommandHelper.*;
+
 import java.util.List;
 
-/**
- * Represents a specific type of character in the Battleship game - Character Three.
- * Extends the abstract class Character.
- */
-
+import static commands.CommandHelper.checkForMine;
+import static commands.CommandHelper.mineExplosion;
 
 public class CharacterThree extends Character {
     /**
-     * Constructor for CharacterOne class.
+     * Constructs a CharacterThree instance with the specified array of ShipTypes,
+     * initializing the player's fleet with the corresponding ships.
      *
-     * @param ships An array of ShipType objects representing the initial ships for Character Three.
+     * @param ships An array of ShipTypes representing the initial fleet composition for CharacterThree.
      */
     public CharacterThree(ShipType[] ships) {
         super(CharacterType.ONE);
@@ -67,7 +65,8 @@ public class CharacterThree extends Character {
     }
 
     /**
-     * Checks if the specified position on the opponent's map is a hit and updates the player's map accordingly.
+     * Checks if the specified position on the opponent's map is a hit, handles mine explosions,
+     * and updates the player's map accordingly.
      *
      * @param opponent      The opponent player handler.
      * @param playerHandler The player handler for the current player.
@@ -106,13 +105,15 @@ public class CharacterThree extends Character {
 //        char positionChar = position.charAt(0);
 //        return positionChar == ' ' || positionChar == '*';
 //    }
+
     /**
      * Checks if the specified row and column positions on the opponent's map are invalid.
+     * Positions are considered invalid if they are outside the map boundaries or occupied by a mine.
      *
      * @param row         The row position to be checked.
      * @param col         The column position to be checked.
      * @param opponentMap The opponent's map to validate the positions against.
-     * @return True if the position is ' ' or '*'.
+     * @return True if the positions are invalid, false otherwise.
      */
     private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
         if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
@@ -127,13 +128,13 @@ public class CharacterThree extends Character {
     }
 
     /**
-     * Extracts the row and column positions from the player's message and validates them.
+     * Retrieves the row and column positions from the player's message, validates the input syntax,
+     * and checks if the positions are within the bounds of the player's map.
      *
-     * @param playerHandler The player handler containing the message and map information.
+     * @param playerHandler The player handler for the current player.
      * @return An array of integers representing the row and column positions.
-     * positions[0] corresponds to the row, and positions[1] corresponds to the column.
      * @throws InvalidSyntaxException   If there is an issue with the syntax of the player's message.
-     * @throws InvalidPositionException If the extracted positions are out of bounds on the game map.
+     * @throws InvalidPositionException If there is an issue with the extracted positions.
      */
     private int[] getPosition(Battleship.PlayerHandler playerHandler) throws InvalidSyntaxException, InvalidPositionException {
         String[] message = playerHandler.getMessage().split(" ");
@@ -146,12 +147,11 @@ public class CharacterThree extends Character {
     }
 
     /**
-     * Checks the validity of ship placement positions to ensure they are within the bounds of the game map.
+     * Checks if the specified row and column positions are within the valid bounds of the map.
      *
-     * @param positions An array representing the row and column positions.
-     *                  positions[0] corresponds to the row, and positions[1] corresponds to the column.
-     * @param myMap     The game map to validate the positions against.
-     * @throws InvalidPositionException If the positions are out of bounds.
+     * @param positions An array of integers representing the row and column positions to be checked.
+     * @param myMap     The map to validate the positions against.
+     * @throws InvalidPositionException If the positions are outside the valid bounds.
      */
     private void checkValidOutOfBounds(int[] positions, List<List<String>> myMap) throws InvalidPositionException {
         if (positions[0] < 1 || positions[0] >= myMap.size() - 2) {
@@ -179,11 +179,12 @@ public class CharacterThree extends Character {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
+
     /**
-     * Gets the opponent player handler.
+     * Retrieves the opponent player handler for the given player from the Battleship game.
      *
      * @param game          The Battleship game instance.
-     * @param playerHandler The player handler for the current player.
+     * @param playerHandler The player handler for which to find the opponent.
      * @return The opponent player handler.
      * @throws PlayerNotFoundException If the opponent player is not found.
      */
@@ -199,10 +200,10 @@ public class CharacterThree extends Character {
     }
 
     /**
-     * Checks if the given string is not a number.
+     * Checks if the given string represents a numeric value.
      *
-     * @param number The string to be checked.
-     * @return True if the string is not a number, false otherwise.
+     * @param number The string to be checked for numeric content.
+     * @return True if the string contains non-digit characters, indicating it is not a number; otherwise, false.
      */
     private boolean isNotNumber(String number) {
         for (char digit : number.toCharArray()) {

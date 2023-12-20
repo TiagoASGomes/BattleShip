@@ -5,8 +5,8 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
-import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Colors;
+import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -33,10 +33,20 @@ public class Battleship implements Runnable {
     private final List<MapType> choices = new CopyOnWriteArrayList<>();
     private boolean finished;
 
+    /**
+     * Checks whether the game has finished.
+     *
+     * @return True if the game has finished, false otherwise.
+     */
     public boolean isFinished() {
         return finished;
     }
 
+    /**
+     * Constructs a Battleship game instance with an initial player connected.
+     *
+     * @param client The socket representing the connection of the initial player.
+     */
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
         service = Executors.newFixedThreadPool(2);
@@ -44,7 +54,12 @@ public class Battleship implements Runnable {
         finished = false;
     }
 
-
+    /**
+     * Runs the main logic of the Battleship game, including player connection checks,
+     * map selection, player readiness checks, game execution, winner determination,
+     * and game closure.
+     * Overrides the run method of the Runnable interface.
+     */
     @Override
     public void run() {
 
@@ -62,6 +77,10 @@ public class Battleship implements Runnable {
         closeGame();
     }
 
+    /**
+     * Closes the Battleship game by setting the 'finished' flag to true
+     * and closing the connections for all connected players.
+     */
     public void closeGame() {
         finished = true;
         for (PlayerHandler player : players) {
@@ -69,17 +88,33 @@ public class Battleship implements Runnable {
         }
     }
 
+    /**
+     * Prints winner and loser messages to the players.
+     *
+     * @param loserIndex The index of the losing player in the 'players' list.
+     */
     private void printWinner(int loserIndex) {
         players.get(loserIndex).sendMessage(Messages.LOSER);
         getOtherPlayer(players.get(loserIndex)).ifPresent(loser -> loser.sendMessage(Messages.WINNER));
     }
 
+    /**
+     * Retrieves the other player (not equal to the given player) from the 'players' list.
+     *
+     * @param playerHandler The player for which to find the other player.
+     * @return An Optional containing the other player, or empty if not found.
+     */
     public Optional<PlayerHandler> getOtherPlayer(PlayerHandler playerHandler) {
         return players.stream()
                 .filter(player -> !player.equals(playerHandler))
                 .findFirst();
     }
 
+    /**
+     * Plays the main game loop, taking turns between players until the game is over.
+     *
+     * @return The index of the losing player in the 'players' list.
+     */
     private int playGame() {
         int currentPlayerIndex = new Random().nextInt(players.size());
         while (gameNotOver()) {
@@ -96,6 +131,12 @@ public class Battleship implements Runnable {
         return currentPlayerIndex;
     }
 
+    /**
+     * Swaps the player index to toggle between players in a two-player game.
+     *
+     * @param playerIndex The current player index.
+     * @return The index of the other player.
+     */
     private int swapPlayer(int playerIndex) {
         return playerIndex == 0 ? 1 : 0;
 
@@ -111,6 +152,10 @@ public class Battleship implements Runnable {
         }
     }
 
+    /**
+     * Waits until two map choices are available and assigns the chosen maps to the players.
+     * Checks continuously for player readiness at a short interval.
+     */
     private void mapSelection() {
         while (choices.size() < 2) {
             try {
@@ -125,6 +170,10 @@ public class Battleship implements Runnable {
 
     }
 
+    /**
+     * Waits until the required number of players are connected before starting the game.
+     * Checks continuously for player connection at a short interval.
+     */
     private void checkPlayersConnected() {
         while (checkPlayersNotConnected()) {
             try {
@@ -135,10 +184,20 @@ public class Battleship implements Runnable {
         }
     }
 
+    /**
+     * Submits a chosen map type to the list of available choices.
+     *
+     * @param type The chosen map type to be added to the list of choices.
+     */
     public void submitMapChoice(MapType type) {
         choices.add(type);
     }
 
+    /**
+     * Checks if the game is not over by verifying if any player still has active ships.
+     *
+     * @return True if the game is not over (at least one player has active ships), false otherwise.
+     */
     private boolean gameNotOver() {
         for (PlayerHandler player : players) {
             if (player.allShipsSinked()) {
@@ -148,16 +207,29 @@ public class Battleship implements Runnable {
         return true;
     }
 
+    /**
+     * Updates the maps for all players by sending the current state of their maps to each player.
+     */
     private void updateMaps() {
         for (PlayerHandler player : players) {
             player.sendMessage(Printer.createMap(player));
         }
     }
 
+    /**
+     * Retrieves the list of player handlers participating in the game.
+     *
+     * @return The list of player handlers.
+     */
     public List<PlayerHandler> getPlayers() {
         return players;
     }
 
+    /**
+     * Checks if any player is not ready to proceed with the game.
+     *
+     * @return True if at least one player is not ready, false otherwise.
+     */
     private boolean checkPlayersNotReady() {
         for (PlayerHandler player : players) {
             if (!player.isReady()) {
@@ -167,14 +239,31 @@ public class Battleship implements Runnable {
         return false;
     }
 
+    /**
+     * Checks if the required number of players is not connected to the game.
+     *
+     * @return True if the number of connected players is not equal to the required number, false otherwise.
+     */
     private boolean checkPlayersNotConnected() {
         return players.size() != 2;
     }
 
+    /**
+     * Checks if the game is open for accepting new players.
+     *
+     * @return True if the game is open, allowing new players to join; false otherwise.
+     */
     public boolean isOpen() {
         return open;
     }
 
+    /**
+     * Accepts a new player by adding a player handler for the given socket to the game.
+     * Marks the game as closed to new players after accepting the first player.
+     * Submits each player handler to the executor service for concurrent processing.
+     *
+     * @param client The socket representing the connection to the new player.
+     */
     public void acceptPlayer(Socket client) {
         players.add(new PlayerHandler(client));
         open = false;
@@ -199,6 +288,11 @@ public class Battleship implements Runnable {
 
         private MapType type;
 
+        /**
+         * Constructs a player handler for handling communication with a player connected via the given socket.
+         *
+         * @param socket The socket representing the connection to the player.
+         */
         public PlayerHandler(Socket socket) {
             this.socket = socket;
             ready = false;
@@ -212,6 +306,12 @@ public class Battleship implements Runnable {
 
         }
 
+        /**
+         * Generates a 2D list representing a map from the provided string representation.
+         *
+         * @param map The string representation of the map with rows separated by newline characters and columns by spaces.
+         * @return A 2D list representing the generated map.
+         */
         public List<List<String>> generateMap(String map) {
 
             String[] squareMapSpaces = map.split("\n");
@@ -224,6 +324,14 @@ public class Battleship implements Runnable {
             return mapList;
         }
 
+        /**
+         * Allows the player to choose a map type by displaying options and processing the player's choice.
+         * The available map types are presented with corresponding numeric options.
+         * The player's choice is read from the input stream, and the appropriate map type is selected.
+         * In case of an invalid choice, an error message is sent, and the player is prompted to choose again.
+         *
+         * @throws IOException If an I/O error occurs during communication with the player.
+         */
         public void chooseMap() throws IOException {
 
             sendMessage(Messages.CHOOSE_MAP);
@@ -245,6 +353,14 @@ public class Battleship implements Runnable {
             }
         }
 
+        /**
+         * Allows the player to choose a character type by displaying options and processing the player's choice.
+         * The available character types are presented with corresponding numeric options.
+         * The player's choice is read from the input stream, and the appropriate character type is selected.
+         * In case of an invalid choice, an error message is sent, and the player is prompted to choose again.
+         *
+         * @throws IOException If an I/O error occurs during communication with the player.
+         */
         public void chooseCharacter() throws IOException {
 
             sendMessage(Messages.GIVE_TURN_PERMISSION);
@@ -266,7 +382,15 @@ public class Battleship implements Runnable {
             }
         }
 
-
+        /**
+         * Executes the main logic for handling a player's connection and participation in the Battleship game.
+         * The method begins by sending welcome messages to the player, prompting them to choose a map type, and
+         * waiting for the selected map type. Once the map type is selected, the player's maps are initialized based
+         * on the chosen type. The player is then prompted to choose a character type, and their ships are placed on the
+         * map. If an I/O error occurs during communication with the player or if an interruption occurs while waiting
+         * for events, appropriate actions are taken, such as closing the connection and printing error messages.
+         * Overrides the run method of the Runnable interface.
+         */
         @Override
         public void run() {
 
@@ -296,6 +420,13 @@ public class Battleship implements Runnable {
 
         }
 
+        /**
+         * Waits until the player has selected a map type before proceeding. It continuously checks
+         * if the map type has been set (not null) at regular intervals. Once the map type is selected,
+         * it sends a message to the player indicating that they can proceed to the next step.
+         *
+         * @throws InterruptedException If the waiting thread is interrupted while sleeping.
+         */
         private void waitForMapSelected() throws InterruptedException {
             while (type == null) {
                 Thread.sleep(100);
@@ -303,7 +434,14 @@ public class Battleship implements Runnable {
             sendMessage(Messages.GIVE_TURN_PERMISSION);
         }
 
-
+        /**
+         * Initiates the player's turn during the game. It prompts the player for their move by sending
+         * a message with the current point score and then reads the player's command. It interprets the
+         * command and executes the corresponding game action. If the command is not recognized, it
+         * recursively calls itself to prompt the player again until a valid command is received.
+         *
+         * @throws IOException If an I/O error occurs while reading the player's command.
+         */
         public void takeTurn() throws IOException {
             sendMessage(Messages.GIVE_TURN_PERMISSION2);
             sendMessage(String.format(Messages.POINTS, playerPoints));
@@ -316,6 +454,17 @@ public class Battleship implements Runnable {
             }
         }
 
+        /**
+         * Handles the ship placement phase of the game for the player. It sends messages to instruct
+         * the player to place their ships and continuously prompts them for ship placement until all
+         * ships are placed. During this process, it provides visual feedback to the player by sending
+         * the current state of their map and the ships they have placed. Once all ships are placed,
+         * it notifies the player that all ships are placed and instructs them to wait for the opponent.
+         * Additionally, it introduces a delay to allow time for the opponent to finish ship placement.
+         *
+         * @throws IOException          If an I/O error occurs while interacting with the player.
+         * @throws InterruptedException If the thread is interrupted during the delay.
+         */
         private void placeShips() throws IOException {
             sendMessage(Messages.SHIP_PLACEMENT);
             while (!ready) {
@@ -336,42 +485,92 @@ public class Battleship implements Runnable {
             }
         }
 
+        /**
+         * Sends a message to the player using the output stream.
+         *
+         * @param message The message to be sent to the player.
+         */
         public void sendMessage(String message) {
             out.println(message);
         }
 
+        /**
+         * Checks if the player is ready.
+         *
+         * @return True if the player is ready.
+         */
         public boolean isReady() {
             return ready;
         }
 
+        /**
+         * Sets the player as ready.
+         */
         public void setReady() {
             ready = true;
         }
 
+        /**
+         * Gets the received message from the player.
+         *
+         * @return The received message from the player.
+         */
         public String getMessage() {
             return message;
         }
 
+        /**
+         * Gets the character associated with the player.
+         *
+         * @return The character associated with the player.
+         */
         public Character getCharacter() {
             return character;
         }
 
+        /**
+         * Gets the map representing the player's own game board.
+         *
+         * @return The map representing the player's own game board.
+         */
         public List<List<String>> getMyMap() {
             return myMap;
         }
 
+        /**
+         * Sets the map type for the player.
+         *
+         * @param type The map type to be set for the player.
+         */
         public void setType(MapType type) {
             this.type = type;
         }
 
+        /**
+         * Gets the map representing the opponent's game board.
+         *
+         * @return The map representing the opponent's game board.
+         */
         public List<List<String>> getOppMap() {
             return oppMap;
         }
 
+        /**
+         * Gets the map type associated with the player.
+         *
+         * @return The map type associated with the player.
+         */
         public MapType getType() {
             return type;
         }
 
+        /**
+         * Checks if a ship is hit at the specified position on the player's game board.
+         *
+         * @param row The row coordinate of the target position.
+         * @param col The column coordinate of the target position.
+         * @return The ship that got hit, or null if no ship is hit at the specified position.
+         */
         public Ship checkIfHit(int row, int col) {
             for (Ship ship : character.getPlayerShips()) {
                 if (ship.gotHit(row, col)) {
@@ -388,6 +587,11 @@ public class Battleship implements Runnable {
 
         }
 
+        /**
+         * Checks if all ships belonging to the player are sunk.
+         *
+         * @return True if all ships are sunk.
+         */
         public boolean allShipsSinked() {
             for (Ship ship : character.getPlayerShips()) {
                 if (!ship.isSinked()) {
@@ -397,6 +601,13 @@ public class Battleship implements Runnable {
             return true;
         }
 
+        /**
+         * Awards points to the player based on hitting and sinking a ship.
+         * The player receives points for hitting a ship and additional points
+         * if the ship is sunk.
+         *
+         * @param ship The ship that was hit.
+         */
         public void winPoint(Ship ship) {
             playerPoints += HIT.getPoints();
             if (ship.isSinked()) {
@@ -404,15 +615,29 @@ public class Battleship implements Runnable {
             }
         }
 
+        /**
+         * Retrieves the current points accumulated by the player.
+         *
+         * @return The total points of the player.
+         */
         public int getPlayerPoints() {
             return playerPoints;
         }
 
+        /**
+         * Sets the player's points to the specified value.
+         *
+         * @param point The new point value for the player.
+         */
         public void setPlayerPoints(int point) {
             this.playerPoints = point;
         }
 
-
+        /**
+         * Closes the player's socket, input stream, and output stream.
+         * This method is used to gracefully close the player's connection
+         * to the server.
+         */
         public void close() {
             try {
                 socket.close();

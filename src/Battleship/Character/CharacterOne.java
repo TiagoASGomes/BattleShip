@@ -14,17 +14,12 @@ import java.util.List;
 
 import static commands.CommandHelper.*;
 
-/**
- * Represents a specific type of character in the Battleship game - Character One.
- * Extends the abstract class Character.
- */
-
-
 public class CharacterOne extends Character {
     /**
-     * Constructor for CharacterOne class.
+     * Constructs a CharacterOne instance with the specified array of ShipTypes,
+     * initializing the player's fleet with the corresponding ships.
      *
-     * @param ships An array of ShipType objects representing the initial ships for Character One.
+     * @param ships An array of ShipTypes representing the initial fleet composition for CharacterOne.
      */
     public CharacterOne(ShipType[] ships) {
         super(CharacterType.ONE);
@@ -35,14 +30,14 @@ public class CharacterOne extends Character {
     }
 
     /**
-     * Overrides the special action for Character Three
-     * Performs the special action for Character One.
+     * Overrides the special action for character one,
+     * targeting a row on the opponent's map based on the player's message.
      *
-     * @param playerHandler The player handler responsible for managing players.
+     * @param playerHandler The player handler for the current player.
      * @param game          The Battleship game instance.
      * @throws PlayerNotFoundException  If the opponent player is not found.
-     * @throws InvalidSyntaxException   If there is an invalid syntax in the action.
-     * @throws InvalidPositionException If there is an invalid position in the action.
+     * @throws InvalidSyntaxException   If there is an issue with the syntax of the player's message.
+     * @throws InvalidPositionException If there is an issue with the row extracted from the player's message.
      */
     @Override
     public void special(Battleship.PlayerHandler playerHandler, Battleship game) throws PlayerNotFoundException, InvalidSyntaxException, InvalidPositionException {
@@ -53,9 +48,10 @@ public class CharacterOne extends Character {
     }
 
     /**
-     * Performs the special action for Character One.
+     * Performs the special action for character one, targeting a row on the opponent's map.
+     * Checks for mines, handles mine explosions, and updates the player's map based on the hit result.
      *
-     * @param row           The row on the opponent's map where the special action is applied.
+     * @param row           The row position to be targeted.
      * @param opponent      The opponent player handler.
      * @param playerHandler The player handler for the current player.
      */
