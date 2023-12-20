@@ -85,6 +85,11 @@ public enum MapType {
         return MAP;
     }
 
+    /**
+     * Retrieves the name of the map.
+     *
+     * @return The string representation of the name of the map type.
+     */
     public String getMAP_NAME() {
         return MAP_NAME;
     }

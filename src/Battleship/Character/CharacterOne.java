@@ -20,8 +20,6 @@ public class CharacterOne extends Character {
      * @param ships An array of ShipTypes representing the initial fleet composition for CharacterOne.
      */
     public CharacterOne(ShipType[] ships) {
-        super(CharacterType.ONE);
-
         for (ShipType shipType : ships) {
             playerShips.add(ShipFactory.create(shipType));
         }
@@ -43,43 +41,6 @@ public class CharacterOne extends Character {
         int row = getRow(playerHandler.getMessage());
         checkValidRow(row, opponent.getMyMap());
         doSpecial(row, opponent, playerHandler);
-    }
-
-    /**
-     * Performs the special action for character one, targeting a row on the opponent's map.
-     * Checks for mines, handles mine explosions, and updates the player's map based on the hit result.
-     *
-     * @param row           The row position to be targeted.
-     * @param opponent      The opponent player handler.
-     * @param playerHandler The player handler for the current player.
-     */
-    private void doSpecial(int row, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
-        List<List<String>> playerMap = playerHandler.getOppMap();
-        List<List<String>> opponentMap = opponent.getMyMap();
-        for (int i = 1; i < playerMap.get(row).size() - 2; i++) {
-            if (checkInvalidPosition(row, i, opponentMap)) {
-                continue;
-            }
-            if (checkForMine(opponent, row, i)) {
-                mineExplosion(playerHandler, opponent, row, i);
-                continue;
-            }
-            checkHit(playerHandler, opponent, row, i);
-        }
-    }
-
-
-    /**
-     * Checks if the specified row is valid within the given map.
-     *
-     * @param row   The row to be checked.
-     * @param myMap The map to validate the row against.
-     * @throws InvalidPositionException If the row is not valid.
-     */
-    private void checkValidRow(int row, List<List<String>> myMap) throws InvalidPositionException {
-        if (row < 1 || row >= myMap.size() - 2) {
-            throw new InvalidPositionException(Messages.INVALID_POSITION);
-        }
     }
 
     /**
@@ -109,5 +70,42 @@ public class CharacterOne extends Character {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
+
+    /**
+     * Checks if the specified row is valid within the given map.
+     *
+     * @param row   The row to be checked.
+     * @param myMap The map to validate the row against.
+     * @throws InvalidPositionException If the row is not valid.
+     */
+    private void checkValidRow(int row, List<List<String>> myMap) throws InvalidPositionException {
+        if (row < 1 || row >= myMap.size() - 2) {
+            throw new InvalidPositionException(Messages.INVALID_POSITION);
+        }
+    }
+
+    /**
+     * Performs the special action for character one, targeting a row on the opponent's map.
+     * Checks for mines, handles mine explosions, and updates the player's map based on the hit result.
+     *
+     * @param row           The row position to be targeted.
+     * @param opponent      The opponent player handler.
+     * @param playerHandler The player handler for the current player.
+     */
+    private void doSpecial(int row, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
+        List<List<String>> playerMap = playerHandler.getOppMap();
+        List<List<String>> opponentMap = opponent.getMyMap();
+        for (int i = 1; i < playerMap.get(row).size() - 2; i++) {
+            if (checkInvalidPosition(row, i, opponentMap)) {
+                continue;
+            }
+            if (checkForMine(opponent, row, i)) {
+                mineExplosion(playerHandler, opponent, row, i);
+                continue;
+            }
+            checkHit(playerHandler, opponent, row, i);
+        }
+    }
+
 
 }

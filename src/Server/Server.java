@@ -15,7 +15,6 @@ public class Server {
     private ServerSocket serverSocket;
     private ExecutorService service;
     private final List<Battleship> games;
-    private int gameIndex;
 
     /**
      * Main method of the class Server
@@ -34,7 +33,6 @@ public class Server {
      */
     public Server() {
         games = new CopyOnWriteArrayList<>();
-        gameIndex = 0;
     }
 
     /**

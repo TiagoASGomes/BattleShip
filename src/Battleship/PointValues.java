@@ -4,8 +4,8 @@ public enum PointValues {
     HIT(1),
     SINK(2),
     MINE(0),
-    SONAR(5),
-    BOMB(4),
+    SONAR(0),
+    BOMB(0),
     SPECIAL(0);
 
     private final int points;

@@ -35,15 +35,6 @@ public class Battleship implements Runnable {
     private boolean finished;
 
     /**
-     * Checks whether the game has finished.
-     *
-     * @return True if the game has finished, false otherwise.
-     */
-    public boolean isFinished() {
-        return finished;
-    }
-
-    /**
      * Constructs a Battleship game instance with an initial player connected.
      *
      * @param client The socket representing the connection of the initial player.
@@ -77,18 +68,6 @@ public class Battleship implements Runnable {
         printWinner(loserIndex);
 
         closeGame();
-    }
-
-    /**
-     * Closes the Battleship game by setting the 'finished' flag to true
-     * and closing the connections for all connected players.
-     */
-    public void closeGame() {
-        finished = true;
-        broadCast(Messages.QUIT_COMMAND);
-        for (PlayerHandler player : players) {
-            player.close();
-        }
     }
 
     /**
@@ -289,15 +268,6 @@ public class Battleship implements Runnable {
     }
 
     /**
-     * Checks if the game is open for accepting new players.
-     *
-     * @return True if the game is open, allowing new players to join; false otherwise.
-     */
-    public boolean isOpen() {
-        return open;
-    }
-
-    /**
      * Accepts a new player by adding a player handler for the given socket to the game.
      * Marks the game as closed to new players after accepting the first player.
      * Submits each player handler to the executor service for concurrent processing.
@@ -312,6 +282,36 @@ public class Battleship implements Runnable {
         }
     }
 
+    /**
+     * Closes the Battleship game by setting the 'finished' flag to true
+     * and closing the connections for all connected players.
+     */
+    public void closeGame() {
+        finished = true;
+        broadCast(Messages.QUIT_COMMAND);
+        for (PlayerHandler player : players) {
+            player.close();
+        }
+    }
+
+    /**
+     * Checks if the game is open for accepting new players.
+     *
+     * @return True if the game is open, allowing new players to join; false otherwise.
+     */
+    public boolean isOpen() {
+        return open;
+    }
+
+    /**
+     * Checks whether the game has finished.
+     *
+     * @return True if the game has finished, false otherwise.
+     */
+    public boolean isFinished() {
+        return finished;
+    }
+
 
     public class PlayerHandler implements Runnable {
 
@@ -324,8 +324,6 @@ public class Battleship implements Runnable {
         private List<List<String>> myMap;
         private List<List<String>> oppMap;
         private int playerPoints;
-
-
         private MapType type;
 
         /**
@@ -342,6 +340,38 @@ public class Battleship implements Runnable {
                 this.out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+
+        }
+
+        /**
+         * Executes the main logic for handling a player's connection and participation in the Battleship game.
+         * The method begins by sending welcome messages to the player, prompting them to choose a map type, and
+         * waiting for the selected map type. Once the map type is selected, the player's maps are initialized based
+         * on the chosen type. The player is then prompted to choose a character type, and their ships are placed on the
+         * map. If an I/O error occurs during communication with the player or if an interruption occurs while waiting
+         * for events, appropriate actions are taken, such as closing the connection and printing error messages.
+         * Overrides the run method of the Runnable interface.
+         */
+        @Override
+        public void run() {
+
+            try {
+                sendMessage(Messages.WELCOME);
+                sendMessage(Messages.WELCOME_COMMAND);
+                chooseMap();
+                waitForMapSelected();
+
+                myMap = generateMap(type.getMAP());
+                oppMap = generateMap(type.getMAP());
+
+                chooseCharacter();
+
+                placeShips();
+
+            } catch (IOException | InterruptedException e) {
+                closeGame();
+
             }
 
         }
@@ -426,38 +456,6 @@ public class Battleship implements Runnable {
 
 
         /**
-         * Executes the main logic for handling a player's connection and participation in the Battleship game.
-         * The method begins by sending welcome messages to the player, prompting them to choose a map type, and
-         * waiting for the selected map type. Once the map type is selected, the player's maps are initialized based
-         * on the chosen type. The player is then prompted to choose a character type, and their ships are placed on the
-         * map. If an I/O error occurs during communication with the player or if an interruption occurs while waiting
-         * for events, appropriate actions are taken, such as closing the connection and printing error messages.
-         * Overrides the run method of the Runnable interface.
-         */
-        @Override
-        public void run() {
-
-            try {
-                sendMessage(Messages.WELCOME);
-                sendMessage(Messages.WELCOME_COMMAND);
-                chooseMap();
-                waitForMapSelected();
-
-                myMap = generateMap(type.getMAP());
-                oppMap = generateMap(type.getMAP());
-
-                chooseCharacter();
-
-                placeShips();
-
-            } catch (IOException | InterruptedException e) {
-                closeGame();
-
-            }
-
-        }
-
-        /**
          * Waits until the player has selected a map type before proceeding. It continuously checks
          * if the map type has been set (not null) at regular intervals. Once the map type is selected,
          * it sends a message to the player indicating that they can proceed to the next step.
@@ -533,6 +531,69 @@ public class Battleship implements Runnable {
         }
 
         /**
+         * Checks if a ship is hit at the specified position on the player's game board.
+         *
+         * @param row The row coordinate of the target position.
+         * @param col The column coordinate of the target position.
+         * @return The ship that got hit, or null if no ship is hit at the specified position.
+         */
+        public Ship checkIfHit(int row, int col) {
+            for (Ship ship : character.getPlayerShips()) {
+                if (ship.gotHit(row, col)) {
+                    String coloredVersion = Colors.RED + ship.getType().getICON() + Colors.RESET;
+                    myMap.get(row).set(col, coloredVersion);
+                    return ship;
+                }
+            }
+            myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
+            return null;
+
+        }
+
+        /**
+         * Checks if all ships belonging to the player are sunk.
+         *
+         * @return True if all ships are sunk.
+         */
+        public boolean allShipsSinked() {
+            for (Ship ship : character.getPlayerShips()) {
+                if (!ship.isSinked()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * Awards points to the player based on hitting and sinking a ship.
+         * The player receives points for hitting a ship and additional points
+         * if the ship is sunk.
+         *
+         * @param ship The ship that was hit.
+         */
+        public void winPoint(Ship ship) {
+            playerPoints += HIT.getPoints();
+            if (ship.isSinked()) {
+                playerPoints += SINK.getPoints();
+            }
+        }
+
+        /**
+         * Closes the player's socket, input stream, and output stream.
+         * This method is used to gracefully close the player's connection
+         * to the server.
+         */
+        public void close() {
+            try {
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+                System.out.println(Messages.ERROR);
+            }
+        }
+
+        /**
          * Checks if the player is ready.
          *
          * @return True if the player is ready.
@@ -603,54 +664,6 @@ public class Battleship implements Runnable {
         }
 
         /**
-         * Checks if a ship is hit at the specified position on the player's game board.
-         *
-         * @param row The row coordinate of the target position.
-         * @param col The column coordinate of the target position.
-         * @return The ship that got hit, or null if no ship is hit at the specified position.
-         */
-        public Ship checkIfHit(int row, int col) {
-            for (Ship ship : character.getPlayerShips()) {
-                if (ship.gotHit(row, col)) {
-                    String coloredVersion = Colors.RED + ship.getType().getICON() + Colors.RESET;
-                    myMap.get(row).set(col, coloredVersion);
-                    return ship;
-                }
-            }
-            myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
-            return null;
-
-        }
-
-        /**
-         * Checks if all ships belonging to the player are sunk.
-         *
-         * @return True if all ships are sunk.
-         */
-        public boolean allShipsSinked() {
-            for (Ship ship : character.getPlayerShips()) {
-                if (!ship.isSinked()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /**
-         * Awards points to the player based on hitting and sinking a ship.
-         * The player receives points for hitting a ship and additional points
-         * if the ship is sunk.
-         *
-         * @param ship The ship that was hit.
-         */
-        public void winPoint(Ship ship) {
-            playerPoints += HIT.getPoints();
-            if (ship.isSinked()) {
-                playerPoints += SINK.getPoints();
-            }
-        }
-
-        /**
          * Retrieves the current points accumulated by the player.
          *
          * @return The total points of the player.
@@ -666,21 +679,6 @@ public class Battleship implements Runnable {
          */
         public void setPlayerPoints(int point) {
             this.playerPoints = point;
-        }
-
-        /**
-         * Closes the player's socket, input stream, and output stream.
-         * This method is used to gracefully close the player's connection
-         * to the server.
-         */
-        public void close() {
-            try {
-                in.close();
-                out.close();
-                socket.close();
-            } catch (IOException e) {
-                System.out.println(Messages.ERROR);
-            }
         }
 
         /**

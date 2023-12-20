@@ -119,6 +119,15 @@ public abstract class Ship implements ShipI {
     }
 
     /**
+     * Removes the ship from the game grid.
+     * Resets shipParts to null and placed to false.
+     */
+    public void removeShip() {
+        shipParts = null;
+        placed = false;
+    }
+
+    /**
      * Gets the type of the ship.
      *
      * @return The type of the ship.
@@ -152,15 +161,6 @@ public abstract class Ship implements ShipI {
      */
     public List<ShipPart> getShipParts() {
         return shipParts;
-    }
-
-    /**
-     * Removes the ship from the game grid.
-     * Resets shipParts to null and placed to false.
-     */
-    public void removeShip() {
-        shipParts = null;
-        placed = false;
     }
 
     /**

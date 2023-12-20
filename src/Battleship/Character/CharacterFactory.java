@@ -12,8 +12,8 @@ public class CharacterFactory {
     public static Character create(CharacterType type) {
 
         return switch (type) {
-            case ONE -> new CharacterOne(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER});
-//                    new CharacterOne(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER, ShipType.SUBMARINE, ShipType.CRUISER, ShipType.SUBMARINE});
+            case ONE ->
+                    new CharacterOne(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER, ShipType.SUBMARINE, ShipType.CRUISER, ShipType.SUBMARINE});
             case TWO ->
                     new CharacterTwo(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.CRUISER}); //18
             case THREE ->
