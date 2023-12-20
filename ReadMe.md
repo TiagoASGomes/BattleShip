@@ -20,7 +20,7 @@ Instructions to start:
 
 Ship types:
 
-    Big Ship -> B B B B B   Carrier -> C C C C  Carrier -> C C C C  Submarine -> S S S
+    Big Ship -> B B B B B   Carrier -> C C C C  Submarine -> S S S
 
     Destroyer -> D D Cruiser -> Z Z   BattleCruiser -> P P P  
                                   Z Z                    P P
@@ -53,28 +53,32 @@ Instruction of BattleShip:
                                                  * * * * * * * * * * * * * * * * * * * * * * * * * * * *   	     * * * * * * * * * * * * * * * * * * * * * * * * * * * *
                                                  * A B C D E F G H I J K L M N O P Q R S T U V W X Y Z *   	     * A B C D E F G H I J K L M N O P Q R S T U V W X Y Z *
 	
+
+
 	Choose Character:
 		Choose one of the 3 characters available by pressing “1”, “2” or “3”;
 		Each character have specified set of battleships;
 
     Character 1:
         Ships:
-
+            Big ship | BattleCruiser | Cruiser  | Submarine | Submarine
         Special:
             Shoots an entire row of the map.
 
     Character 2:
         Ships:
-
+            Big ship | BattleCruiser | Cruiser | Destroyer | Destroyer
         Special:
             Shoots in a big cross.
 
     Character 3:
         Ships:
-
+            Big ship | Cross ship | Carrier | Submarine | Destroyer
         Special:
             Shoots in a big plus.
 	
+
+
 	Place Your Ships:
 		Each player has to place their ships in the board;
 		Place: To place the ships, type “place” followed by the number of the ship, the row number and the column letter

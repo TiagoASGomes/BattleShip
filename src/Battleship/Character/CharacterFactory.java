@@ -12,9 +12,12 @@ public class CharacterFactory {
     public static Character create(CharacterType type) {
 
         return switch (type) {
-            case ONE -> new CharacterOne(new ShipType[]{ShipType.CROSS_SHIP, ShipType.BATTLECRUISER});
-            case TWO -> new CharacterTwo(new ShipType[]{ShipType.BIG_SHIP});
-            case THREE -> new CharacterThree(new ShipType[]{ShipType.BIG_SHIP});
+            case ONE ->
+                    new CharacterOne(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER, ShipType.SUBMARINE, ShipType.CRUISER, ShipType.SUBMARINE}); //20
+            case TWO ->
+                    new CharacterTwo(new ShipType[]{ShipType.BIG_SHIP, ShipType.BATTLECRUISER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.CRUISER}); //18
+            case THREE ->
+                    new CharacterThree(new ShipType[]{ShipType.CROSS_SHIP, ShipType.BIG_SHIP, ShipType.CARRIER, ShipType.DESTROYER, ShipType.SUBMARINE});//19
         };
     }
 }
