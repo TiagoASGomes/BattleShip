@@ -105,6 +105,8 @@ Play game:
 		- hit opponent ship: 1 point;
 		- sink ship: 2 points;
 
+    Type "/quit" to leave the game.
+
 Special abilities:
 
 	To use special abilities you loose player points;
