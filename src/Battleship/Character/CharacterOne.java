@@ -1,13 +1,11 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.util.List;
@@ -70,13 +68,7 @@ public class CharacterOne extends Character {
                 mineExplosion(playerHandler, opponent, row, i);
                 continue;
             }
-            Ship ship = opponent.checkIfHit(row, i);
-            if (ship != null) {
-                playerHandler.winPoint(ship);
-                playerMap.get(row).set(i, Colors.RED + "X" + Colors.RESET);
-                continue;
-            }
-            playerMap.get(row).set(i, Colors.BLUE + "X" + Colors.RESET);
+            checkHit(playerHandler, opponent, row, i);
         }
     }
 

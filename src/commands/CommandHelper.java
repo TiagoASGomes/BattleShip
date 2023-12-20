@@ -109,12 +109,33 @@ public class CommandHelper {
 
         int randRow = (int) (Math.random() * (player.getMyMap().size() - 4 + 1) + 1);
         int randCol = (int) (Math.random() * (player.getMyMap().get(0).size() - 4 + 1) + 1);
+        checkHit(player, opponent, randRow, randCol);
+    }
+
+    /**
+     * Checks if a ship was hit by one player's shot, and marks it as hit if true.
+     * If a ship was not hit, it also marks the spot on the map.
+     *
+     * @param playerHandler receives a PlayerHandler as the one who shot.
+     * @param opponent      receives a PlayerHandler as the one who was targeted.
+     * @param row           receives int representing the row of that shot.
+     * @param col           receives int representing the column of that shot.
+     */
+    public static void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
         Ship ship = opponent.checkIfHit(row, col);
+
         if (ship != null) {
-            player.getMyMap().get(randRow).set(randCol, Colors.RED + "X" + Colors.RESET);
+            playerHandler.winPoint(ship);
+            if (ship.isSinked()) {
+                playerHandler.sendMessage(Messages.KABOOM);
+            } else {
+                playerHandler.sendMessage(Messages.BOOM_COMMAND);
+            }
+            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X" + Colors.RESET);
             return;
         }
-        player.getMyMap().get(randRow).set(randCol, Colors.BLUE + "X" + Colors.RESET);
+        playerHandler.sendMessage(Messages.MISSED_COMMAND);
+        playerHandler.getOppMap().get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
     }
 
 }

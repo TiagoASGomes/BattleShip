@@ -34,7 +34,7 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
         try {
-            client.start("10.10.226.162", 8888);
+            client.start("localhost", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
         }
@@ -80,17 +80,6 @@ public class Client {
             case Messages.WELCOME_COMMAND:
                 play(2);
                 break;
-//            case Messages.GIVE_TURN_PERMISSION:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                break;
-//            case Messages.GIVE_TURN_PERMISSION2:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                System.out.println(Messages.YOUR_TURN);
-//                break;
         }
     }
 

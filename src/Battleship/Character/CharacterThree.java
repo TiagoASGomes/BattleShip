@@ -1,16 +1,16 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-import static commands.CommandHelper.*;
+
 import java.util.List;
+
+import static commands.CommandHelper.*;
 
 /**
  * Represents a specific type of character in the Battleship game - Character Three.
@@ -59,10 +59,10 @@ public class CharacterThree extends Character {
      */
     private void doSpecial(int[] position, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
         for (int i = position[1] - 2; i < position[1] + 3; i++) {
-            checkHit(opponent, playerHandler, position[0], i);
+            shootPosition(opponent, playerHandler, position[0], i);
         }
         for (int i = position[0] - 2; i < position[0] + 3; i++) {
-            checkHit(opponent, playerHandler, i, position[1]);
+            shootPosition(opponent, playerHandler, i, position[1]);
         }
     }
 
@@ -74,10 +74,9 @@ public class CharacterThree extends Character {
      * @param row           The row position to be checked.
      * @param col           The column position to be checked.
      */
-    private void checkHit(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
+    private void shootPosition(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
         List<List<String>> playerMap = playerHandler.getOppMap();
         List<List<String>> opponentMap = opponent.getMyMap();
-        String positionString;
 
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
@@ -86,13 +85,7 @@ public class CharacterThree extends Character {
             mineExplosion(playerHandler, opponent, row, col);
             return;
         }
-        Ship ship = opponent.checkIfHit(row, col);
-        if (ship != null) {
-            playerHandler.winPoint(ship);
-            playerMap.get(row).set(col, Colors.RED + "X" + Colors.RESET);
-            return;
-        }
-        playerMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
+        checkHit(playerHandler, opponent, row, col);
     }
 
 //    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
@@ -106,6 +99,7 @@ public class CharacterThree extends Character {
 //        char positionChar = position.charAt(0);
 //        return positionChar == ' ' || positionChar == '*';
 //    }
+
     /**
      * Checks if the specified row and column positions on the opponent's map are invalid.
      *
@@ -179,6 +173,7 @@ public class CharacterThree extends Character {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
         }
     }
+
     /**
      * Gets the opponent player handler.
      *

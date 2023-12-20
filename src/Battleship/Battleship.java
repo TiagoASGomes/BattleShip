@@ -5,8 +5,8 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
-import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Colors;
+import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -39,6 +39,7 @@ public class Battleship implements Runnable {
 
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
+        players.getFirst().sendMessage(Messages.WAIT_FOR_OPPONENT);
         service = Executors.newFixedThreadPool(2);
 
         finished = false;
@@ -120,9 +121,25 @@ public class Battleship implements Runnable {
             }
         }
         int rand = new Random().nextInt(choices.size());
+        sendMapMessage(rand);
         players.get(0).setType(choices.get(rand));
         players.get(1).setType(choices.get(rand));
 
+    }
+
+    private void sendMapMessage(int rand) {
+        if (choices.get(0).equals(choices.get(1))) {
+            broadCast(Messages.SAME_CHOICE);
+            broadCast(Messages.MAP_CHOOSEN + choices.getFirst().getMAP_NAME());
+        } else {
+            broadCast(Messages.DIFFERENT_MAP);
+            broadCast(Messages.MAP_CHOOSEN + choices.get(rand).getMAP_NAME());
+        }
+    }
+
+    private void broadCast(String sameChoice) {
+        players.get(0).sendMessage(sameChoice);
+        players.get(1).sendMessage(sameChoice);
     }
 
     private void checkPlayersConnected() {
@@ -379,10 +396,7 @@ public class Battleship implements Runnable {
                     myMap.get(row).set(col, coloredVersion);
                     return ship;
                 }
-                if (ship.isSinked()) {
-                }
             }
-
             myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
             return null;
 
