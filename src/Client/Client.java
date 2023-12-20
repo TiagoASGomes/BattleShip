@@ -27,7 +27,7 @@ public class Client {
                 clips.get(i).open(ais);
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new RuntimeException(e);
+            System.out.println(Messages.ERROR);
         }
     }
 
@@ -37,6 +37,7 @@ public class Client {
             client.start("localhost", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
+            System.exit(0);
         }
     }
 
@@ -49,9 +50,9 @@ public class Client {
         new Thread(new KeyboardHandler(out, socket)).start();
 
         String line;
-        while ((line = in.readLine()) != null) {
+        while (!socket.isClosed() && (line = in.readLine()) != null) {
             if (line.startsWith("/")) {
-                checkCommand(line);
+                checkCommand(line, socket);
                 continue;
             }
             System.out.println(line);
@@ -60,7 +61,7 @@ public class Client {
         close(socket, in, out);
     }
 
-    private void checkCommand(String line) {
+    private void checkCommand(String line, Socket socket) {
         switch (line) {
             case Messages.BOOM_COMMAND:
                 System.out.println(Messages.BOOM);
@@ -80,6 +81,12 @@ public class Client {
             case Messages.WELCOME_COMMAND:
                 play(2);
                 break;
+            case Messages.QUIT_COMMAND:
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
         }
     }
 
@@ -127,6 +134,7 @@ public class Client {
                     close();
                 }
             }
+
         }
 
         private void close() {

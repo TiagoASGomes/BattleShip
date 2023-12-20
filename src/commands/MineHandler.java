@@ -30,17 +30,16 @@ public class MineHandler implements CommandHandler {
                 playerHandler.sendMessage(Messages.NOT_ENOUGH_POINTS);
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         } catch (PlayerNotFoundException e) {
-            //TODO mensagem desconecçao
             game.closeGame();
         } catch (InvalidSyntaxException | InvalidPositionException e) {
             try {
                 playerHandler.sendMessage(Messages.INVALID_SYNTAX);
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

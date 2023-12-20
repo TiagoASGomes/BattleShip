@@ -20,7 +20,6 @@ public class SpecialHandler implements CommandHandler {
             playerHandler.getCharacter().special(playerHandler, game);
             playerHandler.setPlayerPoints(playerHandler.getPlayerPoints() - PointValues.SPECIAL.getPoints());
         } catch (PlayerNotFoundException e) {
-            //TODO mensagem desconecção
             game.closeGame();
             throw new RuntimeException(e);
         } catch (InvalidSyntaxException | InvalidPositionException | NotEnoughPointsException e) {
@@ -28,7 +27,7 @@ public class SpecialHandler implements CommandHandler {
             try {
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         }
 

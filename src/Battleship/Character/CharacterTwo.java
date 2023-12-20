@@ -41,7 +41,6 @@ public class CharacterTwo extends Character {
     }
 
     private void shootPosition(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
-        List<List<String>> playerMap = playerHandler.getOppMap();
         List<List<String>> opponentMap = opponent.getMyMap();
 
         if (checkInvalidPosition(row, col, opponentMap)) {

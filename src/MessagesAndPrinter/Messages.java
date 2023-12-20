@@ -57,4 +57,5 @@ public class Messages {
     public static final String SAME_CHOICE = "Both players choose the same map.";
     public static final String MAP_CHOOSEN = "Map choosen: ";
     public static final String DIFFERENT_MAP = "Different maps chosen randomizing choices.";
+    public static final String QUIT_COMMAND = "/quit";
 }

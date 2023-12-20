@@ -18,6 +18,16 @@ Instructions to start:
 	The players have to place their ships in the board to start the game.
 	The player that sunk all the opponent ships wins the game.
 
+Ship types:
+
+    Big Ship -> B B B B B   Carrier -> C C C C  Carrier -> C C C C  Submarine -> S S S
+
+    Destroyer -> D D Cruiser -> Z Z   BattleCruiser -> P P P  
+                                  Z Z                    P P
+                   K
+    CrossShip -> K K K
+                   K
+
 Instruction of BattleShip:
 
 	Choose Map:
@@ -46,6 +56,24 @@ Instruction of BattleShip:
 	Choose Character:
 		Choose one of the 3 characters available by pressing “1”, “2” or “3”;
 		Each character have specified set of battleships;
+
+    Character 1:
+        Ships:
+
+        Special:
+            Shoots an entire row of the map.
+
+    Character 2:
+        Ships:
+
+        Special:
+            Shoots in a big cross.
+
+    Character 3:
+        Ships:
+
+        Special:
+            Shoots in a big plus.
 	
 	Place Your Ships:
 		Each player has to place their ships in the board;
@@ -86,7 +114,7 @@ Special abilities:
 	Bomb: send a bomb to your opponent, and it will hit 4 coordinates instead of 1;
 	costs 4 points; type “bomb” followed by row and column;
 
-	Special: this command will hit an entire row; costs 7 points; type “special” followed by row;
+	Special: costs 7 points; uses the selected character special ability.
 
 Instructions to run:
 

@@ -107,8 +107,13 @@ public class CommandHelper {
         opponent.getMyMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
         player.getOppMap().get(row).set(col, Colors.BLUE + "R" + Colors.RESET);
 
-        int randRow = (int) (Math.random() * (player.getMyMap().size() - 4 + 1) + 1);
-        int randCol = (int) (Math.random() * (player.getMyMap().get(0).size() - 4 + 1) + 1);
+        int randRow = (int) (Math.random() * (player.getMyMap().size() - 2 + 1) + 1);
+        int randCol = (int) (Math.random() * (player.getMyMap().getFirst().size() - 2 + 1) + 1);
+        while (checkInvalidPosition(randRow, randCol, opponent.getMyMap())) {
+            randRow = (int) (Math.random() * (player.getMyMap().size() - 2 + 1) + 1);
+            randCol = (int) (Math.random() * (player.getMyMap().getFirst().size() - 2 + 1) + 1);
+        }
+
         checkHit(player, opponent, randRow, randCol);
     }
 

@@ -18,11 +18,17 @@ public class Printer {
         for (int i = 0; i < map.size(); i++) {
             List<String> line = map.get(i);
             for (String position : line) {
+                if (position.equals("*")) {
+                    position = Colors.YELLOW + position + Colors.RESET;
+                }
                 finalMap.append(position).append(" ");
             }
             finalMap.append("\t\t");
             List<String> lineOpp = mapOpp.get(i);
             for (String position : lineOpp) {
+                if (position.equals("*")) {
+                    position = Colors.YELLOW + position + Colors.RESET;
+                }
                 finalMap.append(position).append(" ");
             }
             finalMap.append("\n");

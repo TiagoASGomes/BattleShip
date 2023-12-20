@@ -34,14 +34,13 @@ public class ShootHandler implements CommandHandler {
             }
             checkHit(playerHandler, opponent, coordinates[0], coordinates[1]);
         } catch (PlayerNotFoundException e) {
-            //TODO mensagem desconecçao
             game.closeGame();
         } catch (InvalidSyntaxException | InvalidPositionException e) {
             try {
                 playerHandler.sendMessage(Messages.INVALID_SYNTAX);
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         }
 
