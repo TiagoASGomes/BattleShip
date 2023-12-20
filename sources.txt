@@ -43,4 +43,3 @@
 ./src//commands/ReadyHandler.java
 ./src//commands/RotateHandler.java
 ./src//commands/CommandHandler.java
-./src//Client/Client.java
