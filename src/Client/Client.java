@@ -13,7 +13,7 @@ public class Client {
     private boolean myTurn;
 
     /**
-     *  Constructor method of the Client class,
+     * Constructor method of the Client class,
      */
     public Client() {
         getClips();
@@ -39,6 +39,7 @@ public class Client {
     /**
      * Main method of the Client class,
      * Has a default host and port, so client can access the server,     *
+     *
      * @param args address and port to start enter the server.
      */
     public static void main(String[] args) {
@@ -54,6 +55,7 @@ public class Client {
     /**
      * This method starts the connection between client and server,
      * Creates a new socket and a new thread that reads the input commands by the client and executes them.
+     *
      * @param host Host String as a parameter,
      * @param port int port as a parameter,
      * @throws IOException when it's not possible to connect to the server
@@ -77,6 +79,7 @@ public class Client {
 
         close(socket, in, out);
     }
+
     /**
      * Prints the correspondent Message, plays the correspondent song, and/or sets turn permission to true,
      * depending on the command it receives as parameter.
@@ -92,7 +95,7 @@ public class Client {
                 break;
             case Messages.MISSED_COMMAND:
                 System.out.println(Messages.MISSED);
-                play(1);
+                play(2);
                 break;
             case Messages.GIVE_TURN_PERMISSION:
                 myTurn = true;
@@ -102,7 +105,7 @@ public class Client {
                 System.out.println(Messages.YOUR_TURN);
                 break;
             case Messages.WELCOME_COMMAND:
-                play(2);
+                play(1);
                 break;
             case Messages.QUIT_COMMAND:
                 try {
