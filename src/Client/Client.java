@@ -77,6 +77,20 @@ public class Client {
                 myTurn = true;
                 System.out.println(Messages.YOUR_TURN);
                 break;
+            case Messages.WELCOME:
+                play(2);
+                break;
+//            case Messages.GIVE_TURN_PERMISSION:
+//                synchronized (lock) {
+//                    lock.notifyAll();
+//                }
+//                break;
+//            case Messages.GIVE_TURN_PERMISSION2:
+//                synchronized (lock) {
+//                    lock.notifyAll();
+//                }
+//                System.out.println(Messages.YOUR_TURN);
+//                break;
         }
     }
 

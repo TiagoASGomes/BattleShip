@@ -49,7 +49,6 @@ public class Messages {
     public static final String HIT_POINTS = "You earn 1 point!";
     public static final String SINK_POINTS = "You earn 2 point!";
     public static final String POINTS = "You have: %s points.";
-
     public static final String ROTATED_SHIP = "Rotated ship ";
     public static final String PLAYER_DISCONNECTED = "Player Disconnected";
     public static final String NOT_ENOUGH_POINTS = "You don't have enough points for that ability";
@@ -60,4 +59,5 @@ public class Messages {
     public static final String WAIT_FOR_OPPONENT = "Waiting for opponent.";
     public static final String ALL_SHIPS_PLACED = "All ships in place.";
     public static final String NOT_YOUR_TURN = "Not your turn wait for your opponent to finish.";
+    public static final String WELCOME_COMMAND = "/welcome";
 }

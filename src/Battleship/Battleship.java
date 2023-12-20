@@ -272,7 +272,7 @@ public class Battleship implements Runnable {
 
             try {
                 sendMessage(Messages.WELCOME);
-
+                sendMessage(Messages.WELCOME_COMMAND);
                 chooseMap();
                 waitForMapSelected();
 
