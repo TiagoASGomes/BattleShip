@@ -66,16 +66,14 @@ public class ShootHandler implements CommandHandler {
             if (ship.isSinked()) {
                 playerHandler.sendMessage(Messages.KABOOM);
             } else {
-                playerHandler.sendMessage(Messages.BOOM);
+                playerHandler.sendMessage(Messages.BOOM_COMMAND);
             }
-            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X"+ Colors.RESET);
+            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X" + Colors.RESET);
             return;
         }
-        playerHandler.sendMessage(Messages.MISSED);
-        playerHandler.getOppMap().get(row).set(col, Colors.BLUE +"X"+ Colors.RESET);
+        playerHandler.sendMessage(Messages.MISSED_COMMAND);
+        playerHandler.getOppMap().get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
     }
-
-
 
 
     /**
