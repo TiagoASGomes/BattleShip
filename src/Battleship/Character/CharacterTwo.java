@@ -1,13 +1,11 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.util.List;
@@ -34,18 +32,16 @@ public class CharacterTwo extends Character {
     private void doSpecial(int[] position, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
         int row = position[0] - 2;
         for (int col = position[1] - 2; col < position[1] + 3; col++) {
-            checkHit(opponent, playerHandler, row++, col);
+            shootPosition(opponent, playerHandler, row++, col);
         }
         row = position[0] + 2;
         for (int col = position[1] - 2; col < position[1] + 3; col++) {
-            checkHit(opponent, playerHandler, row--, col);
+            shootPosition(opponent, playerHandler, row--, col);
         }
     }
 
-    private void checkHit(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
-        List<List<String>> playerMap = playerHandler.getOppMap();
+    private void shootPosition(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
         List<List<String>> opponentMap = opponent.getMyMap();
-        String positionString;
 
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
@@ -54,13 +50,7 @@ public class CharacterTwo extends Character {
             mineExplosion(playerHandler, opponent, row, col);
             return;
         }
-        Ship ship = opponent.checkIfHit(row, col);
-        if (ship != null) {
-            playerHandler.winPoint(ship);
-            playerMap.get(row).set(col, Colors.RED + "X" + Colors.RESET);
-            return;
-        }
-        playerMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
+        checkHit(playerHandler, opponent, row, col);
     }
 
 

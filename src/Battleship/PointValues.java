@@ -6,7 +6,7 @@ public enum PointValues {
     MINE(2),
     SONAR(5),
     BOMB(4),
-    SPECIAL(7);
+    SPECIAL(0);
 
     private final int points;
     /**

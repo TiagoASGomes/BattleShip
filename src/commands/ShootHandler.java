@@ -1,11 +1,9 @@
 package commands;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -36,43 +34,16 @@ public class ShootHandler implements CommandHandler {
             }
             checkHit(playerHandler, opponent, coordinates[0], coordinates[1]);
         } catch (PlayerNotFoundException e) {
-            //TODO mensagem desconecçao
             game.closeGame();
         } catch (InvalidSyntaxException | InvalidPositionException e) {
             try {
                 playerHandler.sendMessage(Messages.INVALID_SYNTAX);
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         }
 
-    }
-
-    /**
-     * Checks if a ship was hit by one player's shot, and marks it as hit if true.
-     * If a ship was not hit, it also marks the spot on the map.
-     *
-     * @param playerHandler receives a PlayerHandler as the one who shot.
-     * @param opponent      receives a PlayerHandler as the one who was targeted.
-     * @param row           receives int representing the row of that shot.
-     * @param col           receives int representing the column of that shot.
-     */
-    private void checkHit(Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent, int row, int col) {
-        Ship ship = opponent.checkIfHit(row, col);
-
-        if (ship != null) {
-            playerHandler.winPoint(ship);
-            if (ship.isSinked()) {
-                playerHandler.sendMessage(Messages.KABOOM);
-            } else {
-                playerHandler.sendMessage(Messages.BOOM_COMMAND);
-            }
-            playerHandler.getOppMap().get(row).set(col, Colors.RED + "X" + Colors.RESET);
-            return;
-        }
-        playerHandler.sendMessage(Messages.MISSED_COMMAND);
-        playerHandler.getOppMap().get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
     }
 
 

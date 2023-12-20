@@ -5,8 +5,8 @@ import Battleship.Character.CharacterFactory;
 import Battleship.Character.CharacterType;
 import Battleship.Maps.MapType;
 import Battleship.ships.Ship;
-import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Colors;
+import MessagesAndPrinter.MapString;
 import MessagesAndPrinter.Messages;
 import MessagesAndPrinter.Printer;
 import commands.GameCommands;
@@ -39,6 +39,7 @@ public class Battleship implements Runnable {
 
     public Battleship(Socket client) {
         players.add(new PlayerHandler(client));
+        players.getFirst().sendMessage(Messages.WAIT_FOR_OPPONENT);
         service = Executors.newFixedThreadPool(2);
 
         finished = false;
@@ -64,6 +65,7 @@ public class Battleship implements Runnable {
 
     public void closeGame() {
         finished = true;
+        broadCast(Messages.QUIT_COMMAND);
         for (PlayerHandler player : players) {
             player.close();
         }
@@ -113,6 +115,11 @@ public class Battleship implements Runnable {
 
     private void mapSelection() {
         while (choices.size() < 2) {
+            for (PlayerHandler player : players) {
+                if (!player.isConnected()) {
+                    closeGame();
+                }
+            }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -120,9 +127,25 @@ public class Battleship implements Runnable {
             }
         }
         int rand = new Random().nextInt(choices.size());
+        sendMapMessage(rand);
         players.get(0).setType(choices.get(rand));
         players.get(1).setType(choices.get(rand));
 
+    }
+
+    private void sendMapMessage(int rand) {
+        if (choices.get(0).equals(choices.get(1))) {
+            broadCast(Messages.SAME_CHOICE);
+            broadCast(Messages.MAP_CHOOSEN + choices.getFirst().getMAP_NAME());
+        } else {
+            broadCast(Messages.DIFFERENT_MAP);
+            broadCast(Messages.MAP_CHOOSEN + choices.get(rand).getMAP_NAME());
+        }
+    }
+
+    private void broadCast(String sameChoice) {
+        players.get(0).sendMessage(sameChoice);
+        players.get(1).sendMessage(sameChoice);
     }
 
     private void checkPlayersConnected() {
@@ -152,10 +175,6 @@ public class Battleship implements Runnable {
         for (PlayerHandler player : players) {
             player.sendMessage(Printer.createMap(player));
         }
-    }
-
-    public List<PlayerHandler> getPlayers() {
-        return players;
     }
 
     private boolean checkPlayersNotReady() {
@@ -241,6 +260,7 @@ public class Battleship implements Runnable {
                     return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
+                    sendMessage(Messages.GIVE_TURN_PERMISSION);
                     chooseMap();
             }
         }
@@ -262,6 +282,7 @@ public class Battleship implements Runnable {
                     return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
+                    sendMessage(Messages.GIVE_TURN_PERMISSION);
                     chooseCharacter();
             }
         }
@@ -284,14 +305,10 @@ public class Battleship implements Runnable {
                 placeShips();
 
             } catch (IOException e) {
-                System.out.println("Something went wrong with the server. Connection closing...");
-                try {
-                    socket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                close();
+
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                closeGame();
             }
 
         }
@@ -379,10 +396,7 @@ public class Battleship implements Runnable {
                     myMap.get(row).set(col, coloredVersion);
                     return ship;
                 }
-                if (ship.isSinked()) {
-                }
             }
-
             myMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
             return null;
 
@@ -415,12 +429,16 @@ public class Battleship implements Runnable {
 
         public void close() {
             try {
-                socket.close();
                 in.close();
                 out.close();
+                socket.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println(Messages.ERROR);
             }
+        }
+
+        public boolean isConnected() {
+            return !socket.isClosed();
         }
     }
 

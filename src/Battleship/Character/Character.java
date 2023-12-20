@@ -20,7 +20,7 @@ public abstract class Character {
     /**
      * The type of the character.
      */
-    private CharacterType type;
+    private final CharacterType type;
 
     /**
      * Constructor for the Character class.
@@ -31,14 +31,6 @@ public abstract class Character {
         this.type = type;
 
     }
-
-    /**
-     * @param playerShips Receives a list of Ships and sets it has that Player's playerShips.
-     */
-    public void setPlayerShips(List<Ship> playerShips) {
-        this.playerShips = playerShips;
-    }
-
 
     /**
      * @return returns that Player's list of Ship objects.

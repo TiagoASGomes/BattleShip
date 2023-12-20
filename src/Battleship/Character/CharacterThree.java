@@ -1,16 +1,16 @@
 package Battleship.Character;
 
 import Battleship.Battleship;
-import Battleship.ships.Ship;
 import Battleship.ships.ShipFactory;
 import Battleship.ships.ShipType;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
-import static commands.CommandHelper.*;
+
 import java.util.List;
+
+import static commands.CommandHelper.*;
 
 /**
  * Represents a specific type of character in the Battleship game - Character Three.
@@ -59,10 +59,10 @@ public class CharacterThree extends Character {
      */
     private void doSpecial(int[] position, Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler) {
         for (int i = position[1] - 2; i < position[1] + 3; i++) {
-            checkHit(opponent, playerHandler, position[0], i);
+            shootPosition(opponent, playerHandler, position[0], i);
         }
         for (int i = position[0] - 2; i < position[0] + 3; i++) {
-            checkHit(opponent, playerHandler, i, position[1]);
+            shootPosition(opponent, playerHandler, i, position[1]);
         }
     }
 
@@ -74,10 +74,8 @@ public class CharacterThree extends Character {
      * @param row           The row position to be checked.
      * @param col           The column position to be checked.
      */
-    private void checkHit(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
-        List<List<String>> playerMap = playerHandler.getOppMap();
+    private void shootPosition(Battleship.PlayerHandler opponent, Battleship.PlayerHandler playerHandler, int row, int col) {
         List<List<String>> opponentMap = opponent.getMyMap();
-        String positionString;
 
         if (checkInvalidPosition(row, col, opponentMap)) {
             return;
@@ -86,45 +84,9 @@ public class CharacterThree extends Character {
             mineExplosion(playerHandler, opponent, row, col);
             return;
         }
-        Ship ship = opponent.checkIfHit(row, col);
-        if (ship != null) {
-            playerHandler.winPoint(ship);
-            playerMap.get(row).set(col, Colors.RED + "X" + Colors.RESET);
-            return;
-        }
-        playerMap.get(row).set(col, Colors.BLUE + "X" + Colors.RESET);
+        checkHit(playerHandler, opponent, row, col);
     }
 
-//    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
-//        if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
-//            return true;
-//        }
-//        String position = opponentMap.get(row).get(col);
-//        if (position.length() > 1) {
-//            return true;
-//        }
-//        char positionChar = position.charAt(0);
-//        return positionChar == ' ' || positionChar == '*';
-//    }
-    /**
-     * Checks if the specified row and column positions on the opponent's map are invalid.
-     *
-     * @param row         The row position to be checked.
-     * @param col         The column position to be checked.
-     * @param opponentMap The opponent's map to validate the positions against.
-     * @return True if the position is ' ' or '*'.
-     */
-    private boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
-        if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {
-            return true;
-        }
-        String position = opponentMap.get(row).get(col);
-        if (position.length() > 1) {
-            return true;
-        }
-        char positionChar = position.charAt(0);
-        return positionChar == ' ' || positionChar == '*';
-    }
 
     /**
      * Extracts the row and column positions from the player's message and validates them.
@@ -162,54 +124,5 @@ public class CharacterThree extends Character {
         }
     }
 
-    /**
-     * Checks the validity of the input message for ship placement.
-     *
-     * @param message The input message to be checked, expected to be an array of strings.
-     * @throws InvalidSyntaxException If there is an issue with the syntax of the ship placement message.
-     */
-    private void checkValidInput(String[] message) throws InvalidSyntaxException {
-        if (message.length != 3) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (isNotNumber(message[1])) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-        if (message[2].charAt(0) < 65 || message[2].charAt(0) > 90) {
-            throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);
-        }
-    }
-    /**
-     * Gets the opponent player handler.
-     *
-     * @param game          The Battleship game instance.
-     * @param playerHandler The player handler for the current player.
-     * @return The opponent player handler.
-     * @throws PlayerNotFoundException If the opponent player is not found.
-     */
-    private Battleship.PlayerHandler getOpponent(Battleship game, Battleship.PlayerHandler playerHandler) throws PlayerNotFoundException {
-        Battleship.PlayerHandler otherPlayer = game.getPlayers().stream()
-                .filter(player -> !player.equals(playerHandler))
-                .findFirst()
-                .orElse(null);
-        if (otherPlayer == null) {
-            throw new PlayerNotFoundException(Messages.PLAYER_DISCONNECTED);
-        }
-        return otherPlayer;
-    }
 
-    /**
-     * Checks if the given string is not a number.
-     *
-     * @param number The string to be checked.
-     * @return True if the string is not a number, false otherwise.
-     */
-    private boolean isNotNumber(String number) {
-        for (char digit : number.toCharArray()) {
-            if (!java.lang.Character.isDigit(digit)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -2,12 +2,10 @@ package commands;
 
 import Battleship.Battleship;
 import Battleship.PointValues;
-import Battleship.ships.Ship;
 import Exceptions.InvalidPositionException;
 import Exceptions.InvalidSyntaxException;
 import Exceptions.NotEnoughPointsException;
 import Exceptions.PlayerNotFoundException;
-import MessagesAndPrinter.Colors;
 import MessagesAndPrinter.Messages;
 
 import java.io.IOException;
@@ -36,10 +34,9 @@ public class BombHandler implements CommandHandler {
             try {
                 playerHandler.takeTurn();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                game.closeGame();
             }
         } catch (PlayerNotFoundException e) {
-            //TODO mensagem de desconecção
             game.closeGame();
         }
     }
@@ -66,13 +63,7 @@ public class BombHandler implements CommandHandler {
                     continue;
                 }
 
-                Ship ship = opponent.checkIfHit(i, j);
-                if (ship != null) {
-                    playerHandler.winPoint(ship);
-                    playerHandler.getOppMap().get(i).set(j, Colors.RED + "X" + Colors.RESET);
-                    continue;
-                }
-                playerHandler.getOppMap().get(i).set(j, Colors.BLUE + "X" + Colors.RESET);
+                checkHit(playerHandler, opponent, i, j);
             }
         }
     }
