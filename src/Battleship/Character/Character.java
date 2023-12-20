@@ -9,18 +9,10 @@ import Exceptions.PlayerNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The abstract base class representing a character in the Battleship game.
- */
 public abstract class Character {
-    /**
-     * The list of ships owned by the player.
-     */
+
     protected List<Ship> playerShips = new ArrayList<>();
-    /**
-     * The type of the character.
-     */
-    private final CharacterType type;
+    private CharacterType type;
 
     /**
      * Constructor for the Character class.
@@ -33,7 +25,19 @@ public abstract class Character {
     }
 
     /**
-     * @return returns that Player's list of Ship objects.
+     * Sets the list of ships for the player.
+     *
+     * @param playerShips A list of Ship objects representing the player's fleet.
+     */
+    public void setPlayerShips(List<Ship> playerShips) {
+        this.playerShips = playerShips;
+    }
+
+
+    /**
+     * Retrieves the list of ships owned by the player.
+     *
+     * @return A list of Ship objects representing the player's fleet.
      */
     public List<Ship> getPlayerShips() {
         return playerShips;

@@ -65,11 +65,22 @@ public enum MapType {
     private final String MAP;
     private final String MAP_NAME;
 
+    /**
+     * Constructs a new MapType with the specified string representation.
+     *
+     * @param MAP The string representation of the map type.
+     */
+
     MapType(String MAP, String MAP_NAME) {
         this.MAP = MAP;
         this.MAP_NAME = MAP_NAME;
     }
 
+    /**
+     * Retrieves the string representation of the map type.
+     *
+     * @return The string representation of the map type.
+     */
     public String getMAP() {
         return MAP;
     }
