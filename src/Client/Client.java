@@ -108,6 +108,7 @@ public class Client {
                 play("EntryMusic.wav");
                 break;
             case Messages.QUIT_COMMAND:
+                System.out.println(Messages.EXIT_INSTRUCTION);
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -130,6 +131,7 @@ public class Client {
      * Closes the Socket, the PrintWriter and the BufferedReader.
      */
     private void close(Socket socket, BufferedReader in, PrintWriter out) throws IOException {
+        socket.shutdownInput();
         socket.close();
         in.close();
         out.close();
