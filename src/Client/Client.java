@@ -45,7 +45,7 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
         try {
-            client.start("localhost", 8888);
+            client.start("192.168.3.110", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
             System.exit(0);

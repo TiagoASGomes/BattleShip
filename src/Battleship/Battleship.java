@@ -144,6 +144,13 @@ public class Battleship implements Runnable {
 
     }
 
+    /**
+     * Waits until all players are ready by continuously checking their readiness.
+     * The method sleeps for a short duration between checks to avoid excessive CPU usage.
+     * If any player is not ready, it keeps waiting until all players are ready.
+     *
+     * @throws RuntimeException If an InterruptedException occurs during the waiting process.
+     */
     private void checkPlayersReady() {
         while (checkPlayersNotReady()) {
             try {
@@ -191,6 +198,12 @@ public class Battleship implements Runnable {
             }
         }
     }
+
+    /**
+     * Sends messages related to map selection to both players.
+     *
+     * @param rand The index used to select a map from the choices.
+     */
     private void sendMapMessage(int rand) {
         if (choices.get(0).equals(choices.get(1))) {
             broadCast(Messages.SAME_CHOICE);
@@ -201,6 +214,11 @@ public class Battleship implements Runnable {
         }
     }
 
+    /**
+     * Sends the same message to both players in the game.
+     *
+     * @param sameChoice The message to be broadcasted to both players.
+     */
     private void broadCast(String sameChoice) {
         players.get(0).sendMessage(sameChoice);
         players.get(1).sendMessage(sameChoice);
@@ -237,6 +255,7 @@ public class Battleship implements Runnable {
             player.sendMessage(Printer.createMap(player));
         }
     }
+
     /**
      * Checks if any player is not ready to proceed with the game.
      *
@@ -655,6 +674,12 @@ public class Battleship implements Runnable {
             }
         }
 
+        /**
+         * Checks if the player is still connected to the server.
+         *
+         * @return {@code true} if the player's socket is not closed, indicating an active connection;
+         * {@code false} otherwise.
+         */
         public boolean isConnected() {
             return !socket.isClosed();
         }
