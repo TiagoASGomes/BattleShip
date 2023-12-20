@@ -56,6 +56,12 @@ public class Client {
         }
     }
 
+    /**
+     * Gets the port specified in the arguments
+     *
+     * @param args console arguments
+     * @return the specified port if its valid otherwise returns 8888
+     */
     private static int getPort(String[] args) {
         if (args.length < 2) {
             return 8888;
@@ -67,6 +73,12 @@ public class Client {
         }
     }
 
+    /**
+     * Gets the Ip specified in the arguments
+     *
+     * @param args console arguments
+     * @return the specified IP if its valid otherwise returns localhost
+     */
     private static InetAddress getIp(String[] args) {
         try {
             if (args.length < 2) {
@@ -121,7 +133,6 @@ public class Client {
 
         switch (line) {
             case Messages.BOOM_COMMAND:
-                System.out.println(Messages.BOOM);
                 play("Explosion.wav");
                 break;
             case Messages.MISSED_COMMAND:

@@ -146,7 +146,9 @@ public class CommandHelper {
             playerHandler.winPoint(ship);
             if (ship.isSinked()) {
                 playerHandler.sendMessage(Messages.KABOOM);
+                playerHandler.sendMessage(Messages.BOOM_COMMAND);
             } else {
+                playerHandler.sendMessage(Messages.BOOM);
                 playerHandler.sendMessage(Messages.BOOM_COMMAND);
             }
             playerHandler.getOppMap().get(row).set(col, Colors.RED + "X" + Colors.RESET);
