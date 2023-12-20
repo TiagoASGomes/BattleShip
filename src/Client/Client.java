@@ -12,12 +12,17 @@ public class Client {
     private final List<Clip> clips = new ArrayList<>();
     private boolean myTurn;
 
-
+    /**
+     *  Constructor method of the Client class,
+     */
     public Client() {
         getClips();
         myTurn = true;
     }
 
+    /**
+     * This method gets the music clips from a specified file.
+     */
     private void getClips() {
         try {
             File[] files = new File("Resources/SoundFiles").listFiles();
@@ -31,15 +36,27 @@ public class Client {
         }
     }
 
+    /**
+     * Main method of the Client class,
+     * Has a default host and port, so client can access the server,     *
+     * @param args address and port to start enter the server.
+     */
     public static void main(String[] args) {
         Client client = new Client();
         try {
-            client.start("10.10.226.162", 8888);
+            client.start("localhost", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
         }
     }
 
+    /**
+     * This method starts the connection between client and server,
+     * Creates a new socket and a new thread that reads the input commands by the client and executes them.
+     * @param host Host String as a parameter,
+     * @param port int port as a parameter,
+     * @throws IOException when it's not possible to connect to the server
+     */
     private void start(String host, int port) throws IOException {
 
         Socket socket = new Socket(host, port);
@@ -80,17 +97,6 @@ public class Client {
             case Messages.WELCOME_COMMAND:
                 play(2);
                 break;
-//            case Messages.GIVE_TURN_PERMISSION:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                break;
-//            case Messages.GIVE_TURN_PERMISSION2:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                System.out.println(Messages.YOUR_TURN);
-//                break;
         }
     }
 

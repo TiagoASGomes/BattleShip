@@ -9,12 +9,18 @@ public enum PointValues {
     SPECIAL(7);
 
     private final int points;
-
+    /**
+     * Constructor method of the enum PointValues that accepts one argument,
+     * @param points receives points as a parameter.
+     */
     PointValues(int points) {
         this.points = points;
 
     }
-
+    /**
+     * Getter for PointValues,
+     * @return points.
+     */
     public int getPoints() {
         return points;
     }

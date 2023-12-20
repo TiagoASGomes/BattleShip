@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Printer {
-
+    /**
+     * Receives a Battleship PlayerHandler object (playerHandler),
+     * @param playerHandler object representing the player's handler in the Battleship game,
+     * @return a String of the finalMap.
+     */
     public static String createMap(Battleship.PlayerHandler playerHandler) {
 
         List<List<String>> map = playerHandler.getMyMap();
@@ -30,6 +34,11 @@ public class Printer {
         return finalMap.toString();
     }
 
+    /**
+     * This method is responsible for creating a formatted string that represents the player's ships,
+     * @param playerHandler object representing the player's handler in the Battleship game,
+     * @return a formatted string obtained by converting the StringBuilder to a regular string.
+     */
     public static String createShipString(Battleship.PlayerHandler playerHandler) {
         List<String> shipsText = createShipTextArray(playerHandler.getCharacter().getPlayerShips());
         StringBuilder messageToPrint = new StringBuilder();
@@ -40,6 +49,11 @@ public class Printer {
         return messageToPrint.toString();
     }
 
+    /**
+     * Receives a list of Ship objects representing player's ships,
+     * @param playerShips list of Ship objects representing player's ships,
+     * @return a List of String representations of the ships.
+     */
     private static List<String> createShipTextArray(List<Ship> playerShips) {
         List<String> ships = new ArrayList<>();
         for (Ship ship : playerShips) {
@@ -50,7 +64,6 @@ public class Printer {
 
     /**
      * Receives Ship, checks his type and if it is rotated or not,
-     *
      * @param ship receives a Ship,
      * @return String of the ship that represents is form.
      */

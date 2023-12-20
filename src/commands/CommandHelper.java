@@ -28,6 +28,7 @@ public class CommandHelper {
     }
 
     /**
+     * Receives a String array of inputs,
      * @param separated receives an array of String as parameter.
      * @throws InvalidSyntaxException throws InvalidSyntaxException if that array is not of length 3,
      *                                if the second index of that array is not a number,
@@ -97,7 +98,6 @@ public class CommandHelper {
 
     /**
      * Marks the mine at opponent's map has hit, and shoots randomly at player's own map as backfire.
-     *
      * @param player   receives a PlayerHandler as the one who shot the opponent's mine.
      * @param opponent receives a PlayerHandler as the one who's mine was targeted.
      * @param row      receives int representing the row of that mine.

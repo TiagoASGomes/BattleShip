@@ -16,7 +16,12 @@ import java.util.List;
 import static commands.CommandHelper.*;
 
 public class BombHandler implements CommandHandler {
-
+    /**
+     * Receives a message with coordinates to place a bomb in opponent map. Calls doExplosion method.
+     * Throws exceptions if the input is not correct (syntax , invalid position or not enough points).
+     * @param playerHandler provided access to the PlayerHandler methods and properties,
+     * @param game represents an instance of a class game.
+     */
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
 
@@ -39,7 +44,13 @@ public class BombHandler implements CommandHandler {
         }
     }
 
-
+    /**
+     * This method handles the logic of the consequences of an explosion. It takes a coordinate and if valid,
+     * set´s an explosion at the opponent's map.
+     * @param coordinates receives coordinates as parameter,
+     * @param playerHandler receives a playerHandler as a parameter,
+     * @param opponent receives an opponent as a parameter.
+     */
     private void doExplosion(int[] coordinates, Battleship.PlayerHandler playerHandler, Battleship.PlayerHandler opponent) {
         int startRow = coordinates[0];
         int startCol = coordinates[1];
@@ -66,7 +77,14 @@ public class BombHandler implements CommandHandler {
         }
     }
 
-
+    /**
+     * Receives an input String, and after validation turns it into an array of int to become the coordinates,
+     * @param message input message as parameter,
+     * @param map receives a map as parameter,
+     * @return the coordinates after validation, in which it will be performed some action.
+     * @throws InvalidSyntaxException if the input doesn't have the right syntax,
+     * @throws InvalidPositionException if the input doesn't have a valid position.
+     */
     private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
