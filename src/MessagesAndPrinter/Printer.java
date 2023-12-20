@@ -50,6 +50,7 @@ public class Printer {
 
     /**
      * Receives Ship, checks his type and if it is rotated or not,
+     *
      * @param ship receives a Ship,
      * @return String of the ship that represents is form.
      */
@@ -60,6 +61,7 @@ public class Printer {
             case SUBMARINE -> ship.isRotated() ? TextShips.SUBMARINE_V : TextShips.SUBMARINE_H;
             case DESTROYER -> ship.isRotated() ? TextShips.DESTROYER_V : TextShips.DESTROYER_H;
             case CRUISER -> ship.isRotated() ? TextShips.CRUISER_V : TextShips.CRUISER_H;
+            case BATTLECRUISER -> null;
         };
     }
 }

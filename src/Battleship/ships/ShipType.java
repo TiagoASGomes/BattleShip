@@ -5,7 +5,8 @@ public enum ShipType {
     CARRIER(4, "C"),
     SUBMARINE(3, "S"),
     DESTROYER(2, "D"),
-    CRUISER(4, "Z");
+    CRUISER(4, "Z"),
+    BATTLECRUISER(5, "P");
 
     private final int SIZE;
     private final String ICON;
@@ -14,6 +15,7 @@ public enum ShipType {
         this.SIZE = SIZE;
         this.ICON = ICON;
     }
+
     public int getSIZE() {
         return SIZE;
     }
