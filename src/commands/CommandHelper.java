@@ -15,6 +15,8 @@ import java.util.Optional;
 public class CommandHelper {
 
     /**
+     * Checks if a String is not a number.
+     *
      * @param number Receives a String
      * @return Returns true if that String is not a number
      */
@@ -60,6 +62,13 @@ public class CommandHelper {
         return opponent.get();
     }
 
+    /**
+     * Checks if a player has enough points to call a certain command.
+     *
+     * @param playerHandler receives PlayerHandler representing a player.
+     * @param type          receives PointValues representing the cost in player points for each command.
+     * @throws NotEnoughPointsException if the player does not have enough points to call that command.
+     */
     public static void checkPlayerPoints(Battleship.PlayerHandler playerHandler, PointValues type) throws NotEnoughPointsException {
         if (playerHandler.getPlayerPoints() < type.getPoints()) {
             throw new NotEnoughPointsException(Messages.NOT_ENOUGH_POINTS);
@@ -67,12 +76,14 @@ public class CommandHelper {
     }
 
     /**
+     * Check's if the coordinates received for row and column are valid for the map boundaries.
+     * Row must not exceed the List size.
+     * Column must not exceed the size of the List within the List (index represented by row).
+     *
      * @param row         receives int representing row on the map.
      * @param col         receives int representing column on the map.
      * @param opponentMap receives List of a List of Strings representing a map.
      * @return returns true if either row or column are bigger than map size, thus exceeding the boundaries of the map.
-     * Row must not exceed the List size.
-     * Column must not exceed the size of the List within the List (index represented by row).
      */
     public static boolean checkInvalidPosition(int row, int col, List<List<String>> opponentMap) {
         if (row < 1 || row >= opponentMap.size() - 2 || col < 1 || col >= opponentMap.get(1).size() - 2) {

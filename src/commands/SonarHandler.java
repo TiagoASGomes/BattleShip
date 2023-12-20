@@ -16,7 +16,13 @@ import static commands.CommandHelper.*;
 
 public class SonarHandler implements CommandHandler {
 
-
+    /**
+     * Check's if the player has points,executes the SONAR GameCommand and pays its cost in player points.
+     * Calls placeSonar method.
+     *
+     * @param playerHandler receives a PlayerHandler representing the player.
+     * @param game          receives a Battleship representing the game.
+     */
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<List<String>> map = playerHandler.getOppMap();
@@ -39,7 +45,14 @@ public class SonarHandler implements CommandHandler {
         }
     }
 
-
+    /**
+     * Check's in the opponent's representation of his own map if the coordinates are valid.
+     * Calls method putMarkOnMap to place the sonar on our representation of opponent's map.
+     *
+     * @param coordinates receives an array of ints representing coordinates.
+     * @param map         receives a List of a List of Strings representing a map.
+     * @param opponentMap receives another List of a List of Strings representing the opponent's map.
+     */
     private void placeSonar(int[] coordinates, List<List<String>> map, List<List<String>> opponentMap) {
         int startRow = coordinates[0] - 1;
         int startCol = coordinates[1] - 1;

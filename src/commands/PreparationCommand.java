@@ -35,6 +35,7 @@ public enum PreparationCommand {
         return NOT_FOUND;
     }
 
+
     /**
      * Getter for CommandHandler,
      * @return handler.
