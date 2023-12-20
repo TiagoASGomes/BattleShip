@@ -34,7 +34,7 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
         try {
-            client.start("10.10.226.162", 8888);
+            client.start("localhost", 8888);
         } catch (IOException e) {
             System.out.println(Messages.LOST_CONNECTION);
         }
@@ -60,6 +60,12 @@ public class Client {
         close(socket, in, out);
     }
 
+    /**
+     * Prints the correspondent Message, plays the correspondent song, and/or sets turn permission to true,
+     * depending on the command it receives as parameter.
+     *
+     * @param line receives a String that represents a command.
+     */
     private void checkCommand(String line) {
         switch (line) {
             case Messages.BOOM_COMMAND:
@@ -80,26 +86,23 @@ public class Client {
             case Messages.WELCOME_COMMAND:
                 play(2);
                 break;
-//            case Messages.GIVE_TURN_PERMISSION:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                break;
-//            case Messages.GIVE_TURN_PERMISSION2:
-//                synchronized (lock) {
-//                    lock.notifyAll();
-//                }
-//                System.out.println(Messages.YOUR_TURN);
-//                break;
+
         }
     }
 
+    /**
+     * Plays a Clip from certain index.
+     *
+     * @param index receives an int that is the index position of that Clip.
+     */
     private void play(int index) {
         clips.get(index).setMicrosecondPosition(0);
         clips.get(index).start();
     }
 
-
+    /**
+     * Closes the Socket, the PrintWriter and the BufferedReader.
+     */
     private void close(Socket socket, BufferedReader in, PrintWriter out) throws IOException {
         socket.close();
         in.close();
@@ -112,7 +115,13 @@ public class Client {
         private final Socket socket;
         private final BufferedReader in;
 
-
+        /**
+         * Constructor for KeyboardHandler.
+         * Initializes PrintWriter, BufferedReader and Socket.
+         *
+         * @param out    receives a PrintWriter as parameter.
+         * @param socket receives a Socket as parameter
+         */
         public KeyboardHandler(PrintWriter out, Socket socket) {
             this.out = out;
             this.socket = socket;
@@ -120,6 +129,10 @@ public class Client {
 
         }
 
+        /**
+         * Runs KeyboardHandler. While Socket is not closed,
+         * receives inputs and checks if it is the client's turn to play.
+         */
         @Override
         public void run() {
             while (!socket.isClosed()) {
@@ -140,6 +153,9 @@ public class Client {
             }
         }
 
+        /**
+         * Closes the Socket, the PrintWriter and the BufferedReader.
+         */
         private void close() {
             try {
                 in.close();

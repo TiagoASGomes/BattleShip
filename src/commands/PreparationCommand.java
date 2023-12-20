@@ -24,6 +24,7 @@ public enum PreparationCommand {
         return NOT_FOUND;
     }
 
+
     public CommandHandler getHandler() {
         return handler;
     }

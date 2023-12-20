@@ -13,7 +13,13 @@ import static commands.CommandHelper.isNotNumber;
 
 public class PlaceHandler implements CommandHandler {
 
-
+    /**
+     * Executes the PLACE PreparationCommand to place each Ship in the map.
+     * Calls methods setPosition and placeShipInMap, and checks position validations.
+     *
+     * @param playerHandler receives a PlayerHandler as parameter.
+     * @param game          receives a Battleship representing a game as parameter.
+     */
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         List<Ship> shipList = playerHandler.getCharacter().getPlayerShips();
@@ -39,6 +45,13 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
+    /**
+     * It removes the Ship from the map by replacing the String on each location it occupies
+     * for the default String of the map.
+     *
+     * @param ship  receives a Ship as parameter.
+     * @param myMap receives List of a List of Strings representing a map.
+     */
     private void removeFromMap(Ship ship, List<List<String>> myMap) {
         for (ShipPart shipPart : ship.getShipParts()) {
             int row = shipPart.getRow();
@@ -48,6 +61,13 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
+    /**
+     * It draws the Ship on the map by replacing the String on each location for the String
+     * that represents that specific Ship type.
+     *
+     * @param ship  receives a Ship as parameter.
+     * @param myMap receives List of a List of Strings representing a map.
+     */
     private void placeShipInMap(Ship ship, List<List<String>> myMap) {
         for (ShipPart shipPart : ship.getShipParts()) {
             int row = shipPart.getRow();
@@ -56,6 +76,15 @@ public class PlaceHandler implements CommandHandler {
             myMap.get(row).set(col, ship.getType().getICON());
         }
     }
+
+    /**
+     * Check's if the Ship fits on those coordinates of the map.
+     *
+     * @param playerHandler receives a PlayerHandler representing a player.
+     * @param ship          receives a Ship.
+     * @throws InvalidPositionException if the String of that position on the map is not equal to '~',
+     *                                  or if the row and column for any part of the Ship go off the boundaries of the map.
+     */
 
     private void checkIfValidPosition(Battleship.PlayerHandler playerHandler, Ship ship) throws InvalidPositionException {
 
@@ -78,6 +107,16 @@ public class PlaceHandler implements CommandHandler {
         }
     }
 
+    /**
+     * Takes the input message and returns an array of ints representing the Ship that is being placed,
+     * and the row and column for the intended location.
+     *
+     * @param message  receives a String representing the message input.
+     * @param shipList receives a List of Ships as in the Ships owned by that player.
+     * @return returns an array of ints.
+     * @throws InvalidSyntaxException if the int representing the Ship
+     *                                is bigger than the List of Ships owned by the player.
+     */
     private int[] getPlacementPosition(String message, List<Ship> shipList) throws InvalidSyntaxException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
@@ -94,6 +133,14 @@ public class PlaceHandler implements CommandHandler {
         return newMessage;
     }
 
+    /**
+     * Check's if the user input is valid.
+     *
+     * @param separated receives an array of String as parameter.
+     * @throws InvalidSyntaxException throws InvalidSyntaxException if that array is not of length 4,
+     *                                if the second or third index of that array is not a number,
+     *                                and if the fourth index of that array is not a char between A and Z.
+     */
     private void checkValidInput(String[] separated) throws InvalidSyntaxException {
         if (separated.length != 4) {
             throw new InvalidSyntaxException(Messages.INVALID_PLACEMENT_SYNTAX);

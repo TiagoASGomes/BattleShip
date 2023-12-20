@@ -13,6 +13,13 @@ import static commands.CommandHelper.checkPlayerPoints;
 
 public class SpecialHandler implements CommandHandler {
 
+    /**
+     * Implements the SPECIAL GameCommand and pays its cost in player points.
+     * Calls the Character method special for that PlayerHandler.
+     *
+     * @param playerHandler receives a PlayerHandler as parameter.
+     * @param game          receives a Battleship as parameter.
+     */
     @Override
     public void execute(Battleship.PlayerHandler playerHandler, Battleship game) {
         try {
