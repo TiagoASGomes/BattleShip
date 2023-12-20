@@ -29,7 +29,7 @@ public class Messages {
     public static final String GIVE_TURN_PERMISSION2 = "/turn2";
     public static final String MISSED = "Sorry, you missed.💦";
     public static final String BOOM ="💥 Boom! You hit the ship.";
-    public static final String KABOOM = "💥 Kaboom! You sunk the ship.";
+    public static final String KABOOM = "💥 Kaboom! You sunk the ship.💥";
     public static final String WINNER = "Great! You won the battle!";
     public static final String LOSER = "Sorry, you lost this time.";
     public static final String SHIP_PLACEMENT = "Please place your ships.";
@@ -47,7 +47,6 @@ public class Messages {
     public static final String HIT_POINTS = "You earn 1 point!";
     public static final String SINK_POINTS = "You earn 2 point!";
     public static final String POINTS = "You have: %s points.";
-
     public static final String ROTATED_SHIP = "Rotated ship ";
     public static final String PLAYER_DISCONNECTED = "Player Disconnected";
     public static final String NOT_ENOUGH_POINTS = "You don't have enough points for that ability";
@@ -57,4 +56,5 @@ public class Messages {
     public static final String WAS_TARGETED = "That location was already targeted!";
     public static final String WAIT_FOR_OPPONENT = "Waiting for opponent.";
     public static final String ALL_SHIPS_PLACED = "All ships in place.";
+    public static final String WELCOME_COMMAND = "/welcome";
 }

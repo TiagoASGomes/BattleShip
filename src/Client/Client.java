@@ -67,6 +67,9 @@ public class Client {
             case Messages.MISSED:
                 play(1);
                 break;
+            case Messages.WELCOME:
+                play(2);
+                break;
 //            case Messages.GIVE_TURN_PERMISSION:
 //                synchronized (lock) {
 //                    lock.notifyAll();
@@ -82,8 +85,8 @@ public class Client {
     }
 
     private void play(int index) {
-//        clips.get(index).setMicrosecondPosition(0);
-//        clips.get(index).start();
+       clips.get(index).setMicrosecondPosition(0);
+        clips.get(index).start();
     }
 
 
