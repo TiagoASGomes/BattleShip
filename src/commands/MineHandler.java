@@ -28,7 +28,7 @@ public class MineHandler implements CommandHandler {
         try {
             checkPlayerPoints(playerHandler, PointValues.MINE);
             Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
-            int[] coordinates = getCoordinates(playerHandler.getMessage(), opponent.getMyMap(), playerHandler.getMyMap());
+            int[] coordinates = getCoordinates(playerHandler.getMessage(), playerHandler.getMyMap());
             placeMine(playerHandler, coordinates[0], coordinates[1]);
             playerHandler.takeTurn();
         } catch (NotEnoughPointsException e) {
@@ -69,14 +69,13 @@ public class MineHandler implements CommandHandler {
      *
      * @param map     receives a List of a List of Strings representing a map.
      * @param message receives a String message.
-     * @param oppMap
      * @return returns an array of ints representing two coordinates (row and column) on the map.
-     * @throws InvalidSyntaxException
+     * @throws InvalidSyntaxException   if the input doesn't have the right syntax,
      * @throws InvalidPositionException if the coordinates are bigger than row size (List size)
      *                                  or column size (size of list within the list, as in size of given index of the List).
      *                                  Also throws this exception if the char on that position is not a '~' representing the water.
      */
-    private int[] getCoordinates(String message, List<List<String>> oppMap, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
+    private int[] getCoordinates(String message, List<List<String>> map) throws InvalidSyntaxException, InvalidPositionException {
         String[] separated = message.split(" ");
         checkValidInput(separated);
 

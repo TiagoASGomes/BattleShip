@@ -498,8 +498,7 @@ public class Battleship implements Runnable {
          * it notifies the player that all ships are placed and instructs them to wait for the opponent.
          * Additionally, it introduces a delay to allow time for the opponent to finish ship placement.
          *
-         * @throws IOException          If an I/O error occurs while interacting with the player.
-         * @throws InterruptedException If the thread is interrupted during the delay.
+         * @throws IOException If an I/O error occurs while interacting with the player.
          */
         private void placeShips() throws IOException {
             sendMessage(Messages.SHIP_PLACEMENT);
