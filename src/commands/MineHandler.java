@@ -11,7 +11,8 @@ import MessagesAndPrinter.Messages;
 import java.io.IOException;
 import java.util.List;
 
-import static commands.CommandHelper.*;
+import static commands.CommandHelper.checkPlayerPoints;
+import static commands.CommandHelper.checkValidInput;
 
 public class MineHandler implements CommandHandler {
 
@@ -27,7 +28,6 @@ public class MineHandler implements CommandHandler {
 
         try {
             checkPlayerPoints(playerHandler, PointValues.MINE);
-            Battleship.PlayerHandler opponent = getOpponent(game, playerHandler);
             int[] coordinates = getCoordinates(playerHandler.getMessage(), playerHandler.getMyMap());
             placeMine(playerHandler, coordinates[0], coordinates[1]);
             playerHandler.takeTurn();
