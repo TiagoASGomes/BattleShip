@@ -27,7 +27,7 @@ public class Client {
      */
     private void getClips() {
         try {
-            File[] files = new File("../Resources/SoundFiles").listFiles();
+            File[] files = new File("./Resources/SoundFiles").listFiles();
             for (File file : files) {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(file);
                 clips.put(file.getName(), AudioSystem.getClip());

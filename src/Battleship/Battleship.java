@@ -410,12 +410,15 @@ public class Battleship implements Runnable {
             switch (playerChoice) {
                 case "1":
                     submitMapChoice(MapType.SQUARE_MAP);
+                    sendMessage("Map chosen");
                     return;
                 case "2":
                     submitMapChoice(MapType.HEXA_MAP);
+                    sendMessage("Map chosen");
                     return;
                 case "3":
                     submitMapChoice(MapType.ROCK_MAP);
+                    sendMessage("Map chosen");
                     return;
                 default:
                     sendMessage(Messages.NO_SUCH_COMMAND);
