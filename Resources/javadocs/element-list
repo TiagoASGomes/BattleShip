@@ -1,0 +1,10 @@
+Battleship
+Battleship.Character
+Battleship.Maps
+Battleship.ships
+Battleship.ships.ship_parts
+Client
+commands
+Exceptions
+MessagesAndPrinter
+Server

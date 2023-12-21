@@ -28,6 +28,12 @@ public class Server {
         server.start(port);
     }
 
+    /**
+     * Gets the port specified in the arguments
+     *
+     * @param args console arguments
+     * @return the specified port if its valid otherwise returns 8888
+     */
     private static int getPort(String[] args) {
         if (args.length < 1) {
             return 8888;
